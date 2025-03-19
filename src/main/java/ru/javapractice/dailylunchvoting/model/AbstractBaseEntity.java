@@ -2,7 +2,7 @@ package ru.javapractice.dailylunchvoting.model;
 
 public abstract class AbstractBaseEntity {
 
-    Integer id;
+    protected Integer id;
 
     public AbstractBaseEntity(Integer id) {
         this.id = id;
@@ -14,5 +14,14 @@ public abstract class AbstractBaseEntity {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public boolean isNew() {
+        return this.id == null;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + ":" + id;
     }
 }

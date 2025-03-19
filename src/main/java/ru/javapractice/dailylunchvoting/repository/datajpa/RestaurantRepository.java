@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface RestaurantRepository {
 
-    Restaurant get(String id);
+    Restaurant get(Integer id);
     List<Restaurant> getAll();
     Restaurant save(Restaurant restaurant);
     boolean delete(Integer id);
