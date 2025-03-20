@@ -2,6 +2,7 @@ package ru.javapractice.dailylunchvoting.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -10,7 +11,7 @@ public class Vote extends AbstractBaseEntity {
 
     @Column(name = "vote_date", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
-    private Date voteDate = new Date();
+    private LocalDateTime voteDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -25,9 +26,11 @@ public class Vote extends AbstractBaseEntity {
     public Vote() {
     }
 
-    public Vote(Integer id) {
+    public Vote(Integer id, LocalDateTime voteDate, User user, Restaurant restaurant) {
         super(id);
-        this.voteDate = new Date();
+        this.voteDate = voteDate;
+        this.user = user;
+        this.restaurant = restaurant;
     }
 
     @Override
@@ -46,14 +49,6 @@ public class Vote extends AbstractBaseEntity {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Date getVoteDate() {
-        return voteDate;
-    }
-
-    public void setVoteDate(Date voteDate) {
-        this.voteDate = voteDate;
     }
 
     public Restaurant getRestaurant() {

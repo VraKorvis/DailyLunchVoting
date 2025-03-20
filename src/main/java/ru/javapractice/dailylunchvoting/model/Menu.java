@@ -1,9 +1,6 @@
 package ru.javapractice.dailylunchvoting.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -14,11 +11,10 @@ public class Menu extends AbstractBaseEntity {
     @JoinColumn(name="restaurant_id")
     private Restaurant restaurant;
 
-    @Column(name = "date_time", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
-    @NotNull
-    private Date created;
-
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "menu", fetch = FetchType.LAZY)
+    @JoinTable(name = "menu_menuitem",
+            joinColumns = @JoinColumn(name = "menu_id"),
+            inverseJoinColumns = @JoinColumn(name = "menuitem_id"))
     private List<MenuItem> menuItems;
 
     public Menu() {
@@ -33,17 +29,8 @@ public class Menu extends AbstractBaseEntity {
         return "Menu{" +
                 "id=" + id +
                 ", menuItems=" + menuItems +
-                ", created=" + created +
                 ", restaurant=" + restaurant +
                 '}';
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
     }
 
     public List<MenuItem> getMenuItems() {

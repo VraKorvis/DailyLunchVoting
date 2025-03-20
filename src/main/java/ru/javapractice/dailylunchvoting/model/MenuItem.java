@@ -3,8 +3,8 @@ package ru.javapractice.dailylunchvoting.model;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Entity
 @Table(name="menuitem")
@@ -14,6 +14,9 @@ public class MenuItem extends AbstractNamedBaseEntity {
     @NotBlank
     @Range(min = 1)
     private Float price;
+
+    @ManyToMany(mappedBy = "menuItems", fetch = FetchType.LAZY)
+    private List<Menu> menus;
 
     public MenuItem() {
     }
