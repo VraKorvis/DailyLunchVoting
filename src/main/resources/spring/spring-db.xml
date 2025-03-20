@@ -1,0 +1,68 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+       http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+    <context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/>
+
+    <!-- JDBC Initialization -->
+    <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
+        <jdbc:script encoding="utf-8" location="${jdbc.initLocation}"/>
+        <jdbc:script encoding="utf-8" location="${jdbc.populateLocation}"/>
+    </jdbc:initialize-database>
+
+    <!-- HSQLDB -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${database.driver}"/>
+        <property name="url" value="${database.url}"/>
+        <property name="username" value="${database.username}"/>
+        <property name="password" value="${database.password}"/>
+    </bean>
+
+    <context:component-scan base-package="ru.javapractice.**.repository.datajpa"/>
+    <jpa:repositories base-package="ru.javapractice.**.repository.datajpa"/>
+
+    <!-- Configure the entity manager factory bean -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="ru.javapractice.**.model"/>
+        <property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter"/>
+        <!-- Set DataJPA properties -->
+        <property name="jpaPropertyMap">
+            <props>
+                <prop key="#{T(org.hibernate.cfg.AvailableSettings).FORMAT_SQL}">"${hibernate.format_sql}"</prop>
+                <prop key="#{T(org.hibernate.cfg.AvailableSettings).USE_SQL_COMMENTS}">"${hibernate.use_sql_comments}"</prop>
+                <prop key="#{T(org.hibernate.cfg.AvailableSettings).JPA_PROXY_COMPLIANCE}">false</prop>
+<!--                <prop key="#{T(org.hibernate.cfg.AvailableSettings).DIALECT}">"${database.dialect}"</prop>-->
+
+                <prop key="hibernate.ejb.use_class_enhancer">true</prop>
+            </props>
+        </property>
+        <!-- Set share cache mode -->
+<!--        <property name="sharedCacheMode" value="ENABLE_SELECTIVE"/>-->
+        <!-- Set validation mode -->
+<!--        <property name="validationMode" value="NONE"/>-->
+    </bean>
+
+    <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="showSql" value="${jpa.showSql}"/>
+    </bean>
+
+    <!-- Configure the transaction manager bean -->
+    <!-- Transaction manager for a single JPA EntityManagerFactory (alternative to JTA) -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <!-- Enable annotation driven transaction management -->
+    <tx:annotation-driven/>
+
+
+</beans>
