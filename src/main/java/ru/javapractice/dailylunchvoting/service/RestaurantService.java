@@ -1,13 +1,18 @@
 package ru.javapractice.dailylunchvoting.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.javapractice.dailylunchvoting.model.Restaurant;
-import ru.javapractice.dailylunchvoting.repository.datajpa.RestaurantRepository;
+import ru.javapractice.dailylunchvoting.repository.RestaurantRepository;
 
 import java.util.List;
 
 import static ru.javapractice.dailylunchvoting.util.ValidationUtil.checkNotFound;
 
+@Service
 public class RestaurantService {
+
+    @Autowired
     private RestaurantRepository repository;
 
     public Restaurant create(Restaurant restaurant) {

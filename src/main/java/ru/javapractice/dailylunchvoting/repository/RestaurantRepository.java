@@ -1,4 +1,4 @@
-package ru.javapractice.dailylunchvoting.repository.datajpa;
+package ru.javapractice.dailylunchvoting.repository;
 
 import ru.javapractice.dailylunchvoting.model.Restaurant;
 

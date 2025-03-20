@@ -1,14 +1,19 @@
 package ru.javapractice.dailylunchvoting.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.javapractice.dailylunchvoting.model.Vote;
-import ru.javapractice.dailylunchvoting.repository.datajpa.VoteRepository;
+import ru.javapractice.dailylunchvoting.repository.VoteRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class VoteService {
 
+    @Autowired
     private VoteRepository repository;
+
     public List<Vote> getAll() {
         repository.getAll();
         return null;

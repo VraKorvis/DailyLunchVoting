@@ -1,10 +1,11 @@
-package ru.javapractice.dailylunchvoting.repository.datajpa;
+package ru.javapractice.dailylunchvoting.repository;
 
+import org.springframework.stereotype.Repository;
 import ru.javapractice.dailylunchvoting.model.User;
 
 import java.util.List;
 
-public interface UserRepository {
+public interface ProfileRepository {
     List<User> getAll();
     User get(Integer id);
     User getByEmail(String email);

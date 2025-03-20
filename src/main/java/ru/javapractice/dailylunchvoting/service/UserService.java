@@ -1,14 +1,19 @@
 package ru.javapractice.dailylunchvoting.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.javapractice.dailylunchvoting.model.User;
-import ru.javapractice.dailylunchvoting.repository.datajpa.UserRepository;
+import ru.javapractice.dailylunchvoting.repository.ProfileRepository;
 
 import java.util.List;
 
 import static ru.javapractice.dailylunchvoting.util.ValidationUtil.checkNotFound;
 
+@Service
 public class UserService {
-    private UserRepository repository;
+
+    @Autowired
+    private ProfileRepository repository;
 
     public User create(User user) {
         return repository.save(user);

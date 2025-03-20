@@ -2,15 +2,19 @@ package ru.javapractice.dailylunchvoting.web.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import ru.javapractice.dailylunchvoting.model.User;
 import ru.javapractice.dailylunchvoting.service.UserService;
 
 import java.util.List;
 
+@Controller
 public class ProfileRestController {
 
     private final Logger log = LoggerFactory.getLogger(ProfileRestController.class);
 
+    @Autowired
     private UserService service;
 
     public List<User> getAll() {
