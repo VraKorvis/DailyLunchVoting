@@ -9,14 +9,13 @@ import ru.javapractice.dailylunchvoting.repository.MenuItemRepository;
 import java.util.Arrays;
 
 public class SpringMain {
-//    private static Logger logger = LoggerFactory.getLogger(SpringMain.class);
+    private static final Logger logger = LoggerFactory.getLogger("default");
     public static void main(String[] args) {
         ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml");
-        System.out.println("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));
 
-//        logger.info("Bean definition names: {Arrays.toString(appCtx.getBeanDefinitionNames())}");
+        logger.info("Bean definition names: {}", Arrays.toString(appCtx.getBeanDefinitionNames()));
         MenuItemRepository menuItemRepository = appCtx.getBean(MenuItemRepository.class);
-        menuItemRepository.getAll().forEach(System.out::println);
+        menuItemRepository.getAll().forEach(x -> logger.info(x.toString()));
         appCtx.close();
     }
 }
