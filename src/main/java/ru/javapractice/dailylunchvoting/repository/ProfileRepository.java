@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface ProfileRepository {
     List<User> getAll();
-    User get(Integer id);
+    User get(int id);
     User getByEmail(String email);
     User save(User user);
-    boolean delete(Integer id);
+    boolean delete(int id);
 }

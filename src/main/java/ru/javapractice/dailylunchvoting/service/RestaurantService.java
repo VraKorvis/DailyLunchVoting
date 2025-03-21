@@ -32,6 +32,6 @@ public class RestaurantService {
     }
 
     public void update(Restaurant restaurant) {
-        checkNotFound(repository.save(restaurant), restaurant.getId());
+        checkNotFound(repository.save(restaurant), restaurant.id());
     }
 }

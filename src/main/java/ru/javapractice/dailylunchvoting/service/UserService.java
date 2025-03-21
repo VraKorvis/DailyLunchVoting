@@ -36,6 +36,6 @@ public class UserService {
     }
 
     public void update(User user) {
-        checkNotFound(repository.save(user), user.getId());
+        checkNotFound(repository.save(user), user.id());
     }
 }

@@ -25,7 +25,7 @@ public class DataJpaProfileRepository implements ProfileRepository {
     }
 
     @Override
-    public User get(Integer id) {
+    public User get(int id) {
         return proxyCrudProfileRepository.getReferenceById(id);
     }
 
@@ -40,7 +40,7 @@ public class DataJpaProfileRepository implements ProfileRepository {
     }
 
     @Override
-    public boolean delete(Integer id) {
+    public boolean delete(int id) {
         return proxyCrudProfileRepository.delete(id) != 0;
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javapractice.dailylunchvoting.model.Vote;
 import ru.javapractice.dailylunchvoting.service.VoteService;
+import ru.javapractice.dailylunchvoting.util.SecurityUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,26 +26,26 @@ public class VoteController {
         return service.getAll();
     }
 
-    public Vote get(int userId, LocalDateTime localDateTime) {
-        log.info("get");
-        return service.get(userId, localDateTime);
+    public Vote get(int id) {
+        log.info("get "+ id);
+        return service.get(id, SecurityUtil.authUserId());
     }
 
     public Vote create(Vote vote) {
         log.info("create {}", vote);
         checkIsNew(vote);
-        return service.create(vote);
+        return service.create(vote, SecurityUtil.authUserId());
     }
 
     public void delete(int id) {
         log.info("delete {}", id);
-        service.delete(id);
+        service.delete(id, SecurityUtil.authUserId());
     }
 
     public void update(Vote vote, int id) {
         log.info("update {} with id={}", vote, id);
         assureIdConsistent(vote, id);
-        service.update(vote);
+        service.update(vote, SecurityUtil.authUserId());
     }
 
 }

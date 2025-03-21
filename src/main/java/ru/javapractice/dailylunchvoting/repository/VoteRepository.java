@@ -8,8 +8,8 @@ import java.util.List;
 public interface VoteRepository {
 
     List<Vote> getAll();
-    List<Vote> getAllByUser(Integer userId);
-    Vote get(Integer userId, LocalDateTime localDateTime);
-    Vote save(Vote vote);
-    boolean delete(Integer id);
+    List<Vote> getAllByUser(int userId);
+    Vote get(int id, int userId);
+    Vote save(Vote vote, int userId);
+    boolean delete(int id, int userId);
 }

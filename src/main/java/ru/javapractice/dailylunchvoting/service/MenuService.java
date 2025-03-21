@@ -32,6 +32,6 @@ public class MenuService {
     }
 
     public void update(MenuItem menuItem) {
-        checkNotFound(repository.save(menuItem), menuItem.getId());
+        checkNotFound(repository.save(menuItem), menuItem.id());
     }
 }

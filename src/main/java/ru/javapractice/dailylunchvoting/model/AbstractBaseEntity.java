@@ -1,6 +1,7 @@
 package ru.javapractice.dailylunchvoting.model;
 
 import org.springframework.data.domain.Persistable;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
 
@@ -24,6 +25,12 @@ public abstract class AbstractBaseEntity implements Persistable<Integer> {
 
     public AbstractBaseEntity(Integer id) {
         this.id = id;
+    }
+
+    // doesn't work for hibernate lazy proxy
+    public int id() {
+        Assert.notNull(id, "Entity must have id");
+        return id;
     }
 
     @Override

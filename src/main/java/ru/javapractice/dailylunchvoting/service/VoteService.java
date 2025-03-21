@@ -8,6 +8,8 @@ import ru.javapractice.dailylunchvoting.repository.VoteRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.javapractice.dailylunchvoting.util.ValidationUtil.checkNotFound;
+
 @Service
 public class VoteService {
 
@@ -19,17 +21,19 @@ public class VoteService {
         return null;
     }
 
-    public Vote create(Vote vote) {
-        return repository.save(vote);
+    public Vote create(Vote vote, int userId) {
+        return repository.save(vote, userId);
     }
 
-    public Vote get(int id, LocalDateTime localDateTime) {
-        return repository.get(id, localDateTime);
+    public Vote get(int id, int userId) {
+        return checkNotFound(repository.get(id, userId), id);
     }
 
-    public void delete(int id) {
+    public void delete(int id, int userId) {
+        checkNotFound(repository.delete(id, userId), id);
     }
 
-    public void update(Vote vote) {
+    public void update(Vote vote, int userId) {
+        checkNotFound(repository.save(vote, userId), vote.id());
     }
 }
