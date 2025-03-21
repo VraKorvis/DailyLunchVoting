@@ -4,6 +4,8 @@ import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 
+import static org.hibernate.proxy.HibernateProxyHelper.getClassWithoutInitializingProxy;
+
 @MappedSuperclass
 // http://stackoverflow.com/questions/594597/hibernate-annotations-which-is-better-field-or-property-access
 @Access(AccessType.FIELD)
@@ -24,6 +26,7 @@ public abstract class AbstractBaseEntity implements Persistable<Integer> {
         this.id = id;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
@@ -39,5 +42,18 @@ public abstract class AbstractBaseEntity implements Persistable<Integer> {
     @Override
     public String toString() {
         return getClass().getSimpleName() + ":" + id;
+    }
+
+    //  https://stackoverflow.com/a/78077907/548473
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClassWithoutInitializingProxy(this) != getClassWithoutInitializingProxy(o)) return false;
+        return getId() != null && getId().equals(((AbstractBaseEntity) o).getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return getClassWithoutInitializingProxy(this).hashCode();
     }
 }

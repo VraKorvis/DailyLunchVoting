@@ -3,15 +3,14 @@ package ru.javapractice.dailylunchvoting.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name="vote")
 public class Vote extends AbstractBaseEntity {
 
-    @Column(name = "vote_date", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
+    @Column(name = "date_time", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
-    private LocalDateTime voteDate;
+    private LocalDateTime dateTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -26,9 +25,9 @@ public class Vote extends AbstractBaseEntity {
     public Vote() {
     }
 
-    public Vote(Integer id, LocalDateTime voteDate, User user, Restaurant restaurant) {
+    public Vote(Integer id, LocalDateTime dateTime, User user, Restaurant restaurant) {
         super(id);
-        this.voteDate = voteDate;
+        this.dateTime = dateTime;
         this.user = user;
         this.restaurant = restaurant;
     }
@@ -37,7 +36,7 @@ public class Vote extends AbstractBaseEntity {
     public String toString() {
         return "Vote{" +
                 "id=" + id +
-                ", voteDate=" + voteDate +
+                ", dateTime=" + dateTime +
                 ", restaurant=" + restaurant +
                 ", user=" + user +
                 '}';
