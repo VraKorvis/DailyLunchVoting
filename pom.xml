@@ -19,9 +19,8 @@
 
         <!--        spring-->
         <spring-data-jpa.version>2.7.18</spring-data-jpa.version>
-        <spring-context-support.version>6.2.5</spring-context-support.version>
 
-        <spring.version>5.3.39</spring.version>
+        <spring.version>6.2.5</spring.version>
         <spring-data-jpa.version>2.7.18</spring-data-jpa.version>
 
         <!-- Hibernate -->
@@ -32,6 +31,9 @@
         <!-- Logging -->
         <logback.version>1.2.13</logback.version>
         <slf4j.version>1.7.36</slf4j.version>
+
+        <!-- test -->
+        <junit.version> 4.13.2</junit.version>
 
     </properties>
 
@@ -66,11 +68,9 @@
 
     <dependencies>
         <!-- Spring -->
-        <!-- https://mvnrepository.com/artifact/org.springframework/spring-context-support -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
-            <version>${spring-context-support.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -95,6 +95,19 @@
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
             <version>2.7.1</version>
+        </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
 
 
