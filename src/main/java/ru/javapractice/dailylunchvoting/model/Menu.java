@@ -11,10 +11,10 @@ public class Menu extends AbstractBaseEntity {
     @JoinColumn(name="restaurant_id")
     private Restaurant restaurant;
 
-    @ManyToMany(mappedBy = "menu", fetch = FetchType.LAZY)
-    @JoinTable(name = "menu_menuitem",
-            joinColumns = @JoinColumn(name = "menu_id"),
-            inverseJoinColumns = @JoinColumn(name = "menuitem_id"))
+    @ManyToMany(mappedBy = "menus", fetch = FetchType.LAZY)
+//    @JoinTable(name = "menu_menuitem",
+//            joinColumns = @JoinColumn(name = "menu_id"),
+//            inverseJoinColumns = @JoinColumn(name = "menuitem_id"))
     private List<MenuItem> menuItems;
 
     public Menu() {

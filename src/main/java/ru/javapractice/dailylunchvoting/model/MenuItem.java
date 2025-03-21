@@ -15,7 +15,10 @@ public class MenuItem extends AbstractNamedBaseEntity {
     @Range(min = 1)
     private Float price;
 
-    @ManyToMany(mappedBy = "menuItems", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "menu_menuitem",
+            joinColumns = @JoinColumn(name = "menuitem_id"),
+            inverseJoinColumns = @JoinColumn(name = "menu_id"))
     private List<Menu> menus;
 
     public MenuItem() {
