@@ -7,14 +7,10 @@ import java.util.List;
 @Table(name="menu")
 public class Menu extends AbstractBaseEntity {
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="restaurant_id")
-    private Restaurant restaurant;
-
-    @ManyToMany(mappedBy = "menus", fetch = FetchType.LAZY)
-//    @JoinTable(name = "menu_menuitem",
-//            joinColumns = @JoinColumn(name = "menu_id"),
-//            inverseJoinColumns = @JoinColumn(name = "menuitem_id"))
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "menu_menuitem_link",
+            joinColumns = @JoinColumn(name = "menu_id"),
+            inverseJoinColumns = @JoinColumn(name = "menuitem_id"))
     private List<MenuItem> menuItems;
 
     public Menu() {
@@ -28,8 +24,6 @@ public class Menu extends AbstractBaseEntity {
     public String toString() {
         return "Menu{" +
                 "id=" + id +
-                ", menuItems=" + menuItems +
-                ", restaurant=" + restaurant +
                 '}';
     }
 

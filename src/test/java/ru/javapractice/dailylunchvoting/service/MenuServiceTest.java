@@ -8,8 +8,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.*;
-
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
         "classpath:/spring/spring-db.xml"
@@ -24,10 +22,6 @@ public class MenuServiceTest {
     @Test
     public void create() {
 //        menuService.create();
-    }
-
-    @Test
-    public void delete() {
     }
 
     @Test

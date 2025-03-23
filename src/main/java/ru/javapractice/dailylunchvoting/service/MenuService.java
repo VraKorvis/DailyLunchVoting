@@ -22,7 +22,7 @@ public class MenuService {
     }
 
     public void delete(int id) {
-        checkNotFound(repository.delete(id), id);
+        throw new UnsupportedOperationException("Deletion is not allowed. All data is stored in the database as history.");
     }
 
     public MenuItem get(int id) {

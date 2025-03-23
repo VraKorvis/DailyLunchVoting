@@ -4,7 +4,6 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 
 @Entity
 @Table(name="menuitem")
@@ -14,12 +13,6 @@ public class MenuItem extends AbstractNamedBaseEntity {
     @NotBlank
     @Range(min = 1)
     private Float price;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "menu_menuitem",
-            joinColumns = @JoinColumn(name = "menuitem_id"),
-            inverseJoinColumns = @JoinColumn(name = "menu_id"))
-    private List<Menu> menus;
 
     public MenuItem() {
     }

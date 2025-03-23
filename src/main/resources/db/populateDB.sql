@@ -1,6 +1,6 @@
 DELETE FROM vote;
-DELETE FROM menu_history;
-DELETE FROM menu_menuitem;
+DELETE FROM restaurant_menu_history;
+DELETE FROM menu_menuitem_link;
 DELETE FROM menuitem;
 DELETE FROM menu;
 DELETE FROM restaurant;
@@ -39,7 +39,7 @@ VALUES ('Burger', 300),
        ('Dessert', 450),
        ('Soup', 150),
        ('eggs', '300'),
-       ('steik', '400'),
+       ('steak', '400'),
        ('shi', '500');
 
 

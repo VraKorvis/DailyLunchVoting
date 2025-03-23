@@ -30,6 +30,7 @@ public class DataJpaVoteRepository implements VoteRepository {
         return voteRepository.getAllByUserId(userId);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public Vote get(int id, int userId) {
         Vote vote = voteRepository.findById(id).orElse(null);

@@ -37,9 +37,8 @@ public class VoteService {
         return checkNotFound(repository.get(id, userId), id);
     }
 
-    //TODO probably dont need delete votes
     public void delete(int id, int userId) {
-        checkNotFound(repository.delete(id, userId), id);
+        throw new UnsupportedOperationException("Deletion is not allowed. All data is stored in the database as history.");
     }
 
     public void update(Vote vote, int userId) {

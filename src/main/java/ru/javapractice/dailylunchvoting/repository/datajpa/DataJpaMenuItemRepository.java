@@ -26,7 +26,7 @@ public class DataJpaMenuItemRepository implements MenuItemRepository {
 
     @Override
     public MenuItem get(Integer id) {
-        return null;
+        return proxyCrudRepository.findById(id).orElse(null);
     }
 
     @Override

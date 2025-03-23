@@ -12,8 +12,9 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javapractice.dailylunchvoting.model.Vote;
 import ru.javapractice.dailylunchvoting.util.VotingTimeChecker;
-import ru.javapractice.dailylunchvoting.util.exception.NotFoundException;
 import ru.javapractice.dailylunchvoting.util.exception.VotingProcessException;
+
+import static ru.javapractice.dailylunchvoting.service.VoteData.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -36,54 +37,38 @@ public class VoteServiceTest {
 
     @Test
     public void getAll() {
-        VoteData.VOTE_MATCHER.assertMatch(voteService.getAll(), VoteData.allVotes());
+        MATCHER.assertMatch(voteService.getAll(), getAllTestVotesSortedByDate());
     }
 
     @Test
     public void create() {
         if (VotingTimeChecker.isVotingTimeExpired()) {
-            Assert.assertThrows(VotingProcessException.class, () -> voteService.create(VoteData.getNew(), UserData.USER1_ID));
+            Assert.assertThrows(VotingProcessException.class, () -> voteService.create(getNew(), UserData.USER1_ID));
         } else {
-            Vote created = voteService.create(VoteData.getNew(), UserData.USER1_ID);
+            Vote created = voteService.create(getNew(), UserData.USER1_ID);
             int createdId = created.id();
-            Vote newVote = VoteData.getNew();
+            Vote newVote = getNew();
             newVote.setId(createdId);
-            VoteData.VOTE_MATCHER.assertMatch(created, newVote);
+            MATCHER.assertMatch(created, newVote);
         }
     }
 
     @Test
     public void get() {
-        VoteData.VOTE_MATCHER.assertMatch(voteService.get(VoteData.USER1_VOTE1_ID, UserData.USER1_ID), VoteData.USER1_VOTE1);
-    }
-
-    @Test
-    public void delete() {
-        voteService.delete(VoteData.USER1_VOTE1_ID, UserData.USER1_ID);
-        Assert.assertThrows(NotFoundException.class, () -> voteService.get(VoteData.USER1_VOTE1_ID, UserData.USER1_ID));
-    }
-
-    @Test
-    public void deleteNotFound() {
-        Assert.assertThrows(NotFoundException.class, () -> voteService.delete(VoteData.NOT_FOUND_ID, UserData.USER1_ID));
-    }
-
-    @Test
-    public void deleteNotOwn() {
-        Assert.assertThrows(NotFoundException.class, () -> voteService.delete(VoteData.USER1_VOTE1_ID, UserData.USER2_ID));
+        MATCHER.assertMatch(voteService.get(USER1_VOTE1_ID, UserData.USER1_ID), USER1_VOTE1);
     }
 
     @Test
     public void update() {
         var isExpired = VotingTimeChecker.isVotingTimeExpired();
-        Vote updated = VoteData.getUpdated();
+        Vote updated = getUpdated();
 
         if (isExpired) {
             Assert.assertThrows(VotingProcessException.class, () ->  voteService.update(updated, UserData.USER1_ID));
         }
         else {
             voteService.update(updated, UserData.USER1_ID);
-            VoteData.VOTE_MATCHER.assertMatch(voteService.get(VoteData.USER1_VOTE1_ID, UserData.USER1_ID), VoteData.getUpdated());
+            MATCHER.assertMatch(voteService.get(USER1_VOTE1_ID, UserData.USER1_ID), getUpdated());
         }
     }
 }

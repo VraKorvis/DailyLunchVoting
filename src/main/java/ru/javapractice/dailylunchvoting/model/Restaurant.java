@@ -7,28 +7,28 @@ import javax.validation.constraints.NotNull;
 @Table(name = "restaurant")
 public class Restaurant extends AbstractNamedBaseEntity {
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(name = "restaurant_menu_history",
+            joinColumns = @JoinColumn(name = "restaurant_id"),
+            inverseJoinColumns = @JoinColumn(name = "menu_id"))
     private Menu menu;
+
+    //TODO fk field
+//    @Column(name="fk_key", updatable=false, insertable=false)
+//    private Long menu_fk;
 
     public Restaurant() {}
 
-    public Restaurant(String name, Menu menu) {
-        this(null, name, menu);
+    public Restaurant(Restaurant r) {
+        this(r.id, r.name);
     }
 
-    public Restaurant(Integer id, String name, Menu menu) {
+    public Restaurant(String name) {
+        this(null, name);
+    }
+
+    public Restaurant(Integer id, String name) {
         super(id, name);
-        this.menu = menu;
-    }
-
-    @Override
-    public String toString() {
-        return "Restaurant{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", menu=" + menu +
-                '}';
     }
 
     public Menu getMenu() {
@@ -37,5 +37,13 @@ public class Restaurant extends AbstractNamedBaseEntity {
 
     public void setMenu(Menu menu) {
         this.menu = menu;
+    }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

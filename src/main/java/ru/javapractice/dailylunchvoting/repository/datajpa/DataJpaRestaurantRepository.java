@@ -1,6 +1,5 @@
 package ru.javapractice.dailylunchvoting.repository.datajpa;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import ru.javapractice.dailylunchvoting.model.Restaurant;
@@ -15,12 +14,12 @@ public class DataJpaRestaurantRepository implements RestaurantRepository {
     private ProxyCrudRestaurantRepository proxyCrudRestaurantRepository;
 
     public DataJpaRestaurantRepository(ProxyCrudRestaurantRepository proxyCrudRestaurantRepository) {
-        proxyCrudRestaurantRepository = proxyCrudRestaurantRepository;
+        this.proxyCrudRestaurantRepository = proxyCrudRestaurantRepository;
     }
 
     @Override
     public Restaurant get(Integer id) {
-        return proxyCrudRestaurantRepository.getReferenceById(id);
+        return proxyCrudRestaurantRepository.findById(id).orElse(null);
     }
 
     @Override
