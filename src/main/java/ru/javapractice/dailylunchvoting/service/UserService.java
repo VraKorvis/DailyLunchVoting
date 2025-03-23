@@ -1,7 +1,7 @@
 package ru.javapractice.dailylunchvoting.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import ru.javapractice.dailylunchvoting.model.User;
 import ru.javapractice.dailylunchvoting.repository.ProfileRepository;
 
@@ -12,8 +12,11 @@ import static ru.javapractice.dailylunchvoting.util.ValidationUtil.checkNotFound
 @Service
 public class UserService {
 
-    @Autowired
-    private ProfileRepository repository;
+    private final ProfileRepository repository;
+
+    public UserService(ProfileRepository repository) {
+        this.repository = repository;
+    }
 
     public User create(User user) {
         return repository.save(user);
@@ -36,6 +39,7 @@ public class UserService {
     }
 
     public void update(User user) {
+        Assert.notNull(user, "user must not be null");
         checkNotFound(repository.save(user), user.id());
     }
 }

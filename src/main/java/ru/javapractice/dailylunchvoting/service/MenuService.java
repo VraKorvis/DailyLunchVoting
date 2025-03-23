@@ -1,6 +1,5 @@
 package ru.javapractice.dailylunchvoting.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.javapractice.dailylunchvoting.model.MenuItem;
 import ru.javapractice.dailylunchvoting.repository.MenuItemRepository;
@@ -12,8 +11,11 @@ import static ru.javapractice.dailylunchvoting.util.ValidationUtil.checkNotFound
 @Service
 public class MenuService {
 
-    @Autowired
-    private MenuItemRepository repository;
+    private final MenuItemRepository repository;
+
+    public MenuService(MenuItemRepository repository) {
+        this.repository = repository;
+    }
 
     public MenuItem create(MenuItem menuItem) {
         return repository.save(menuItem);

@@ -1,6 +1,5 @@
 package ru.javapractice.dailylunchvoting.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.javapractice.dailylunchvoting.model.Restaurant;
 import ru.javapractice.dailylunchvoting.repository.RestaurantRepository;
@@ -12,8 +11,11 @@ import static ru.javapractice.dailylunchvoting.util.ValidationUtil.checkNotFound
 @Service
 public class RestaurantService {
 
-    @Autowired
-    private RestaurantRepository repository;
+    private final RestaurantRepository repository;
+
+    public RestaurantService(RestaurantRepository repository) {
+        this.repository = repository;
+    }
 
     public Restaurant create(Restaurant restaurant) {
         return repository.save(restaurant);
