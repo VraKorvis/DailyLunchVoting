@@ -13,7 +13,7 @@ public class DataJpaProfileRepository implements ProfileRepository {
 
     private static final Sort SORT_NAME_EMAIL = Sort.by(Sort.Direction.ASC, "name", "email");
 
-    private ProxyCrudProfileRepository proxyCrudProfileRepository;
+    private final ProxyCrudProfileRepository proxyCrudProfileRepository;
 
     public DataJpaProfileRepository(ProxyCrudProfileRepository proxyCrudProfileRepository) {
         this.proxyCrudProfileRepository = proxyCrudProfileRepository;
@@ -26,7 +26,7 @@ public class DataJpaProfileRepository implements ProfileRepository {
 
     @Override
     public User get(int id) {
-        return proxyCrudProfileRepository.getReferenceById(id);
+        return proxyCrudProfileRepository.findById(id).orElse(null);
     }
 
     @Override
