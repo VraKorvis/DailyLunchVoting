@@ -13,6 +13,10 @@ public class Restaurant extends AbstractNamedBaseEntity {
 
     public Restaurant() {}
 
+    public Restaurant(String name, Menu menu) {
+        this(null, name, menu);
+    }
+
     public Restaurant(Integer id, String name, Menu menu) {
         super(id, name);
         this.menu = menu;
