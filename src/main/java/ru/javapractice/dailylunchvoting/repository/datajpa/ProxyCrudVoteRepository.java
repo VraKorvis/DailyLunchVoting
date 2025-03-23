@@ -14,7 +14,7 @@ public interface ProxyCrudVoteRepository extends JpaRepository<Vote, Integer> {
 
     @Transactional
     @Modifying
-    @Query("SELECT v FROM Vote v WHERE v.id=:id AND v.user.id=:userId")
+    @Query("DELETE FROM Vote v WHERE v.id=:id AND v.user.id=:userId")
     int delete(@Param("id") int id, @Param("userId") int userId);
 
     @Transactional

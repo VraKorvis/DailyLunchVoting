@@ -9,20 +9,29 @@ DELETE FROM users;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO users (name, email, password)
-VALUES ('User', 'user@yandex.ru', 'password'),
+VALUES ('User1', 'user1@yandex.ru', 'password'),
+       ('User2', 'user2@yandex.ru', 'password'),
        ('Admin', 'admin@gmail.com', 'admin'),
        ('Guest', 'guest@gmail.com', 'guest');
 
 INSERT INTO user_role (role, user_id)
 VALUES ('USER', 100000),
-       ('ADMIN', 100001);
+       ('USER', 100001),
+       ('ADMIN', 100002);
 
 INSERT INTO restaurant (name)
 VALUES ('Restaurant A'),
        ('Restaurant B'),
        ('Restaurant C');
 
--- Заполнение таблицы menuitem с английскими названиями
+INSERT INTO vote (date_time, user_id, restaurant_id)
+VALUES ('2025-03-20 07:00:00', '100000', '100004'),
+       ('2025-03-20 08:00:00', '100001', '100005'),
+       ('2025-03-20 09:00:00', '100002', '100006'),
+       ('2025-03-21 08:00:00', '100000', '100005'),
+       ('2025-03-21 09:00:00', '100001', '100004'),
+       ('2025-03-21 10:00:00', '100002', '100006');
+
 INSERT INTO menuitem (name, price)
 VALUES ('Burger', 300),
        ('Pizza', 800),
