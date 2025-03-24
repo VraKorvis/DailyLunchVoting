@@ -69,7 +69,7 @@ public class VoteServiceTest {
 
     @Test
     public void getAllByUserId() {
-        MATCHER_IGNORE_FIELDS.assertMatch(voteService.getAllByUserId(UserData.USER1_ID), getAllTestVotesSortedByDate());
+        MATCHER_IGNORE_FIELDS.assertMatch(voteService.getAllByUserId(UserData.USER1_ID), USER1_TODAY_VOTE, USER1_VOTE3, USER1_VOTE2);
     }
 
     @Test
