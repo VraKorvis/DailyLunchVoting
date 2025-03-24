@@ -2,6 +2,7 @@ package ru.javapractice.dailylunchvoting.util;
 
 import ru.javapractice.dailylunchvoting.configuration.ConstConfig;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class VotingTimeChecker {
@@ -12,4 +13,9 @@ public class VotingTimeChecker {
         LocalTime votingDeadline = ConstConfig.VOTING_DEADLINE;
         return currentTime.isAfter(votingDeadline) || currentTime.equals(votingDeadline);
     }
+
+    public static boolean isToday(LocalDate date) {
+        return date.equals(LocalDate.now());
+    }
+
 }

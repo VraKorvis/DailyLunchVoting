@@ -11,7 +11,7 @@ import java.util.List;
 public class DataJpaRestaurantRepository implements RestaurantRepository {
     private static final Sort SORT_NAME = Sort.by(Sort.Direction.ASC, "name");
 
-    private ProxyCrudRestaurantRepository proxyCrudRestaurantRepository;
+    private final ProxyCrudRestaurantRepository proxyCrudRestaurantRepository;
 
     public DataJpaRestaurantRepository(ProxyCrudRestaurantRepository proxyCrudRestaurantRepository) {
         this.proxyCrudRestaurantRepository = proxyCrudRestaurantRepository;

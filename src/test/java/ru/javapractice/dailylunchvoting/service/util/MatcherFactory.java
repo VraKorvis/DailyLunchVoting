@@ -1,4 +1,4 @@
-package ru.javapractice.dailylunchvoting.service;
+package ru.javapractice.dailylunchvoting.service.util;
 
 import java.util.Arrays;
 

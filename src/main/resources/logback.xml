@@ -20,10 +20,11 @@
         </encoder>
     </appender>
 
-    <logger name="ru.javapractice.dailylunchvoting" level="debug"/>
+    <logger name="ru.javapractice.dailylunchvoting" level="info"/>
 
     <root level="info">
         <appender-ref ref="file"/>
         <appender-ref ref="console"/>
     </root>
+
 </configuration>
