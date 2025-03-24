@@ -1,6 +1,7 @@
-package ru.javapractice.dailylunchvoting.service;
+package ru.javapractice.dailylunchvoting.service.testdata;
 
 import ru.javapractice.dailylunchvoting.model.Restaurant;
+import ru.javapractice.dailylunchvoting.service.util.MatcherFactory;
 
 import static ru.javapractice.dailylunchvoting.model.AbstractBaseEntity.START_SEQ;
 

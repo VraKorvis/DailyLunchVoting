@@ -9,9 +9,12 @@ import ru.javapractice.dailylunchvoting.model.Restaurant;
 
 @Transactional(readOnly = true)
 public interface ProxyCrudRestaurantRepository extends JpaRepository<Restaurant, Integer> {
+
     @Transactional
     @Modifying
 //  @Query(name = Restaurant.DELETE)
     @Query("DELETE FROM Restaurant r WHERE r.id=:id")
-    int delete(@Param("id") int id);
+    default int delete(@Param("id") int id){
+        throw new UnsupportedOperationException("Deletion is not allowed. All data is stored in the database as history.");
+    }
 }

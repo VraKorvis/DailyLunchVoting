@@ -6,7 +6,13 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="vote")
+@NamedEntityGraph(
+        name = Vote.WITH_RESTAURANT,
+        attributeNodes = @NamedAttributeNode("restaurant")
+)
 public class Vote extends AbstractBaseEntity {
+
+    public static final String WITH_RESTAURANT = "Vote.withRestaurant";
 
     @Column(name = "date_time", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
@@ -25,8 +31,9 @@ public class Vote extends AbstractBaseEntity {
     public Vote() {
     }
 
-    public Vote(LocalDateTime dateTime, Restaurant restaurant) {
-       this(null, dateTime, restaurant);
+    @SuppressWarnings("CopyConstructorMissesField")
+    public Vote(Vote v) {
+        this(v.id, v.dateTime, v.restaurant);
     }
 
     public Vote(Integer id, LocalDateTime dateTime, Restaurant restaurant) {
@@ -53,6 +60,10 @@ public class Vote extends AbstractBaseEntity {
 
     public LocalDateTime getDateTime() {
         return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     @Override

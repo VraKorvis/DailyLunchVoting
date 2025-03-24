@@ -1,5 +1,6 @@
 package ru.javapractice.dailylunchvoting.service;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javapractice.dailylunchvoting.model.User;
+import ru.javapractice.dailylunchvoting.service.testdata.UserData;
 import ru.javapractice.dailylunchvoting.util.exception.NotFoundException;
 
 import static org.junit.Assert.*;
@@ -34,8 +36,13 @@ public class UserServiceTest {
 
     @Test
     public void delete() {
-        service.delete(UserData.USER1_ID);
-        assertThrows(NotFoundException.class, () -> service.get(UserData.USER1_ID));
+        assertThrows(UnsupportedOperationException.class, () -> service.delete(UserData.USER1_ID));
+    }
+
+    @Test
+    public void setEnable() {
+        service.setEnable(UserData.USER1_ID, false);
+        assertFalse(service.get(UserData.USER1_ID).isEnabled());
     }
 
     @Test
@@ -50,7 +57,7 @@ public class UserServiceTest {
 
     @Test
     public void getAll() {
-        UserData.USER_MATCHER.assertMatch(service.getAll(), UserData.ADMIN, UserData.GUEST, UserData.USER_1);
+        UserData.USER_MATCHER.assertMatch(service.getAll(), UserData.ADMIN, UserData.GUEST, UserData.USER_1, UserData.USER_2);
     }
 
     @Test

@@ -22,7 +22,7 @@ public class RestaurantService {
     }
 
     public void delete(int id) {
-        throw new UnsupportedOperationException("Deletion is not allowed. All data is stored in the database as history.");
+        repository.delete(id);
     }
 
     public Restaurant get(int id) {

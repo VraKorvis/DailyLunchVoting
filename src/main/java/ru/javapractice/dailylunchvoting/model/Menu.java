@@ -1,5 +1,7 @@
 package ru.javapractice.dailylunchvoting.model;
 
+import org.hibernate.annotations.BatchSize;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,6 +13,7 @@ public class Menu extends AbstractBaseEntity {
     @JoinTable(name = "menu_menuitem_link",
             joinColumns = @JoinColumn(name = "menu_id"),
             inverseJoinColumns = @JoinColumn(name = "menuitem_id"))
+    @BatchSize(size = 200)
     private List<MenuItem> menuItems;
 
     public Menu() {

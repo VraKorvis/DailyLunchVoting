@@ -17,6 +17,14 @@ public class MenuItem extends AbstractNamedBaseEntity {
     public MenuItem() {
     }
 
+    public MenuItem(MenuItem item) {
+        this(item.id, item.name, item.price);
+    }
+
+    public MenuItem(String name, Float price) {
+        this(null, name, price);
+    }
+
     public MenuItem(Integer id, String name, Float price) {
         super(id, name);
         this.price = price;

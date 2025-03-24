@@ -19,11 +19,18 @@ public class UserService {
     }
 
     public User create(User user) {
+        Assert.notNull(user, "user must not be null");
         return repository.save(user);
     }
 
     public void delete(int id) {
         checkNotFound(repository.delete(id), id);
+    }
+
+    public void setEnable(int id, boolean enable) {
+        var u = checkNotFound(repository.get(id), id);
+        u.setEnabled(enable);
+        repository.save(u);
     }
 
     public User get(int id) {

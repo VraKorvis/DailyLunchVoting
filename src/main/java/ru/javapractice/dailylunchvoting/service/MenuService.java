@@ -1,8 +1,9 @@
 package ru.javapractice.dailylunchvoting.service;
 
 import org.springframework.stereotype.Service;
-import ru.javapractice.dailylunchvoting.model.MenuItem;
-import ru.javapractice.dailylunchvoting.repository.MenuItemRepository;
+import org.springframework.util.Assert;
+import ru.javapractice.dailylunchvoting.model.Menu;
+import ru.javapractice.dailylunchvoting.repository.datajpa.DataJpaMenuRepository;
 
 import java.util.List;
 
@@ -11,29 +12,32 @@ import static ru.javapractice.dailylunchvoting.util.ValidationUtil.checkNotFound
 @Service
 public class MenuService {
 
-    private final MenuItemRepository repository;
+    private final DataJpaMenuRepository repository;
 
-    public MenuService(MenuItemRepository repository) {
+    public MenuService(DataJpaMenuRepository repository) {
         this.repository = repository;
     }
 
-    public MenuItem create(MenuItem menuItem) {
-        return repository.save(menuItem);
+    public Menu create(Menu menu) {
+        Assert.notNull(menu, "menu must not be null");
+        return repository.save(menu);
     }
 
-    public void delete(int id) {
-        throw new UnsupportedOperationException("Deletion is not allowed. All data is stored in the database as history.");
-    }
-
-    public MenuItem get(int id) {
+    public Menu get(int id) {
         return checkNotFound(repository.get(id), id);
     }
 
-    public List<MenuItem> getAll() {
+    public List<Menu> getAll() {
         return repository.getAll();
     }
 
-    public void update(MenuItem menuItem) {
-        checkNotFound(repository.save(menuItem), menuItem.id());
+    public void update(Menu menu) {
+        Assert.notNull(menu, "menu must not be null");
+        checkNotFound(repository.save(menu), menu.id());
     }
+
+    public void delete(int id) {
+        repository.delete(id);
+    }
+
 }

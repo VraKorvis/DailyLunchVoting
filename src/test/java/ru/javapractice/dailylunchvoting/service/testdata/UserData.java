@@ -1,7 +1,8 @@
-package ru.javapractice.dailylunchvoting.service;
+package ru.javapractice.dailylunchvoting.service.testdata;
 
 import ru.javapractice.dailylunchvoting.model.Role;
 import ru.javapractice.dailylunchvoting.model.User;
+import ru.javapractice.dailylunchvoting.service.util.MatcherFactory;
 
 import java.util.Collections;
 import java.util.Date;
@@ -18,11 +19,11 @@ public class UserData {
     public static final int GUEST_ID = START_SEQ + 3;
     public static final int NOT_FOUND = 10;
 
-    public static final User USER_1 = new User(USER1_ID, "User", "user@yandex.ru", "password", Role.USER);
-    public static final User USER_2 = new User(USER2_ID, "User", "user@yandex.ru", "password", Role.USER);
+    public static final User USER_1 = new User(USER1_ID, "User1", "user1@yandex.ru", "password", Role.USER);
+    public static final User USER_2 = new User(USER2_ID, "User2", "user2@yandex.ru", "password", Role.USER);
     public static final User ADMIN = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", Role.ADMIN);
     public static final User GUEST = new User(GUEST_ID, "Guest", "guest@gmail.com", "guest");
-    public static final String USER1_EMAIL = "user@yandex.ru";
+    public static final String USER1_EMAIL = "user1@yandex.ru";
 
     private UserData() {
     }

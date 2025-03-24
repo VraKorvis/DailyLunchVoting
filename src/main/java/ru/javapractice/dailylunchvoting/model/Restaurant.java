@@ -1,7 +1,6 @@
 package ru.javapractice.dailylunchvoting.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "restaurant")
@@ -19,6 +18,7 @@ public class Restaurant extends AbstractNamedBaseEntity {
 
     public Restaurant() {}
 
+    @SuppressWarnings("CopyConstructorMissesField")
     public Restaurant(Restaurant r) {
         this(r.id, r.name);
     }

@@ -7,9 +7,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
+import ru.javapractice.dailylunchvoting.model.MenuItem;
 
-import static ru.javapractice.dailylunchvoting.service.testdata.RestaurantData.*;
-import static ru.javapractice.dailylunchvoting.service.testdata.RestaurantData.RESTAURANT_A_ID;
+import java.util.List;
+
+import static ru.javapractice.dailylunchvoting.service.testdata.MenuItemData.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -17,36 +19,36 @@ import static ru.javapractice.dailylunchvoting.service.testdata.RestaurantData.R
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-public class RestaurantServiceTest {
+public class MenuItemServiceTest {
 
     @Autowired
-    private RestaurantService service;
+    private MenuItemService service;
 
     @Test
     public void create() {
         var created = service.create(getNew());
-        int newId = created.id();
-        var newRestaurant = getNew();
-        newRestaurant.setId(newId);
-        MATCHER.assertMatch(created, newRestaurant);
+        int createdId = created.id();
+        var newMenuItem = getNew();
+        newMenuItem.setId(createdId);
+        MATCHER.assertMatch(created, newMenuItem);
     }
 
     @Test
     public void get() {
-        var restaurant = service.get(RESTAURANT_A_ID);
-        MATCHER.assertMatch(restaurant, RESTAURANT_A);
+        MATCHER.assertMatch(service.get(BURGER_ID), BURGER);
     }
 
     @Test
     public void getAll() {
-        var restaurants = service.getAll();
-        MATCHER.assertMatch(restaurants, RESTAURANT_A, RESTAURANT_B, RESTAURANT_C);
+        List<MenuItem> items = service.getAll();
+        MATCHER.assertMatch(items, getAllSorted());
     }
 
     @Test
     public void update() {
-        var updated = getUpdated(RESTAURANT_A);
-        service.update(updated);
-        MATCHER.assertMatch(service.get(RESTAURANT_A_ID), updated);
+        var updatedBurger = getUpdated(BURGER);
+        service.update(updatedBurger);
+        MATCHER.assertMatch(service.get(BURGER_ID), updatedBurger);
     }
+
 }

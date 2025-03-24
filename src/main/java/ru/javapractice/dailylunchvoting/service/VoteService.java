@@ -28,36 +28,56 @@ public class VoteService {
         return repository.getAll();
     }
 
-    public Vote create(Vote vote, int userId) {
-        Assert.notNull(vote, "vote must not be null");
-        return processVote(vote, userId);
+    public List<Vote> getAllByUserId(int userId) {
+        return repository.getAllByUserId(userId);
     }
 
     public Vote get(int id, int userId) {
         return checkNotFound(repository.get(id, userId), id);
     }
 
-    public void delete(int id, int userId) {
-        throw new UnsupportedOperationException("Deletion is not allowed. All data is stored in the database as history.");
+    public Vote getWithRestaurant(int id, int userId) {
+        return checkNotFound(repository.getWithRestaurant(id, userId), id);
+    }
+
+    public List<Vote> getAllWithRestaurant() {
+        return repository.getAllWithRestaurant();
+    }
+
+    public List<Vote> getAllWithRestaurantByUserId(int userId) {
+        return repository.getAllWithRestaurantByUserId(userId);
+    }
+
+    public Vote create(Vote vote, int userId) {
+        Assert.notNull(vote, "vote must not be null");
+        if (canVote(vote)) {
+            log.info("The vote was successfully processed.");
+            return repository.save(vote, userId);
+        } else {
+            log.info("The time for voting has expired. You can't vote/revote for the restaurant.");
+            throw new VotingProcessException("The time for voting has expired. You can't vote for the restaurant.");
+        }
     }
 
     public void update(Vote vote, int userId) {
-        if (VotingTimeChecker.isVotingTimeExpired()){
+        if (canVote(vote)) {
+            log.info("The revote was successfully processed.");
+            checkNotFound(repository.save(vote, userId), vote.id());
+        } else {
             log.info("The time for voting has expired. You can't revote for the restaurant.");
             throw new VotingProcessException("The time for voting has expired. You can't vote for the restaurant.");
         }
-        else {
-            checkNotFound(repository.save(vote, userId), vote.id());
-        }
     }
 
-    private Vote processVote(Vote vote, int userId) {
+    public boolean canVote(Vote vote) {
         if (VotingTimeChecker.isVotingTimeExpired()) {
-            log.info("The time for voting has expired. You can't vote for the restaurant.");
-            throw new VotingProcessException("The time for voting has expired. You can't vote for the restaurant.");
-        } else {
-            log.info("The vote was successfully processed.");
-            return repository.save(vote, userId);
+            return false;
         }
+        return VotingTimeChecker.isToday(vote.getDateTime().toLocalDate());
     }
+
+    public void delete(int id, int userId) {
+        repository.delete(id, userId);
+    }
+
 }
