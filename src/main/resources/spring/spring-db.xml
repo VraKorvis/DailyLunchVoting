@@ -33,18 +33,23 @@
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="packagesToScan" value="ru.javapractice.**.model"/>
-        <property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                  <property name="showSql" value="${jpa.showSql}"/>
+            </bean>
+        </property>
+
         <!-- Set DataJPA properties -->
         <property name="jpaPropertyMap">
-            <props>
-                <prop key="#{T(org.hibernate.cfg.AvailableSettings).FORMAT_SQL}">"${hibernate.format_sql}"</prop>
-                <prop key="#{T(org.hibernate.cfg.AvailableSettings).USE_SQL_COMMENTS}">"${hibernate.use_sql_comments}"</prop>
-                <prop key="#{T(org.hibernate.cfg.AvailableSettings).JPA_PROXY_COMPLIANCE}">false</prop>
-<!--                <prop key="#{T(org.hibernate.cfg.AvailableSettings).DIALECT}">"${database.dialect}"</prop>-->
-
-                <prop key="hibernate.ejb.use_class_enhancer">true</prop>
-            </props>
+            <map>
+                <entry key="#{T(org.hibernate.cfg.AvailableSettings).FORMAT_SQL}" value="${hibernate.format_sql}"/>
+                <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SQL_COMMENTS}"
+                       value="${hibernate.use_sql_comments}"/>
+                <entry key="#{T(org.hibernate.cfg.AvailableSettings).JPA_PROXY_COMPLIANCE}" value="false"/>
+            </map>
         </property>
+
+
         <!-- Set share cache mode -->
 <!--        <property name="sharedCacheMode" value="ENABLE_SELECTIVE"/>-->
         <!-- Set validation mode -->
