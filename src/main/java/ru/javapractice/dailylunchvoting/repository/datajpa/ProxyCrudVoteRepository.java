@@ -20,19 +20,19 @@ public interface ProxyCrudVoteRepository extends JpaRepository<Vote, Integer> {
         throw new UnsupportedOperationException("Deletion is not allowed. All data is stored in the database as history.");
     }
 
-    @Query("SELECT v FROM Vote v WHERE v.user.id=:userId ORDER BY v.dateTime DESC")
+    @Query("SELECT v FROM Vote v WHERE v.user.id=:userId ORDER BY v.date DESC, v.id DESC")
     List<Vote> getAllByUserId(@Param("userId") int userId);
 
     @EntityGraph(attributePaths = {"restaurant"})
-    @Query("SELECT v FROM Vote v ORDER BY v.dateTime DESC")
+    @Query("SELECT v FROM Vote v ORDER BY v.date DESC, v.id DESC")
     List<Vote> getAllWithRestaurant();
 
     @EntityGraph(attributePaths = {"restaurant"})
-    @Query("SELECT v FROM Vote v WHERE v.user.id=:userId ORDER BY v.dateTime DESC")
+    @Query("SELECT v FROM Vote v WHERE v.user.id=:userId ORDER BY v.date DESC, v.id DESC")
     List<Vote> getAllWithRestaurantByUserId(@Param("userId") int userId);
 
     @EntityGraph(attributePaths = {"restaurant"})
-    @Query("SELECT v FROM Vote v WHERE v.id = :id AND v.user.id = :userId ORDER BY v.dateTime DESC")
+    @Query("SELECT v FROM Vote v WHERE v.id = :id AND v.user.id = :userId ORDER BY v.date DESC, v.id DESC")
     Vote getWithRestaurant(@Param("id") int id, @Param("userId") int userId);
 
 }

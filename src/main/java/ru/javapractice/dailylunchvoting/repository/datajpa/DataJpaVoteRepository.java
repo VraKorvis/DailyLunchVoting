@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public class DataJpaVoteRepository implements VoteRepository {
-    private static final Sort SORT_NAME = Sort.by(Sort.Direction.DESC, "dateTime");
+    private static final Sort SORT_NAME = Sort.by(Sort.Direction.DESC, "date", "id");
 
     private final ProxyCrudVoteRepository voteRepository;
     private final ProxyCrudProfileRepository userRepository;

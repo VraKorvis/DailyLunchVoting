@@ -2,7 +2,7 @@ package ru.javapractice.dailylunchvoting.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name="vote")
@@ -14,9 +14,9 @@ public class Vote extends AbstractBaseEntity {
 
     public static final String WITH_RESTAURANT = "Vote.withRestaurant";
 
-    @Column(name = "date_time", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
+    @Column(name = "vote_date", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
-    private LocalDateTime dateTime;
+    private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -33,12 +33,12 @@ public class Vote extends AbstractBaseEntity {
 
     @SuppressWarnings("CopyConstructorMissesField")
     public Vote(Vote v) {
-        this(v.id, v.dateTime, v.restaurant);
+        this(v.id, v.date, v.restaurant);
     }
 
-    public Vote(Integer id, LocalDateTime dateTime, Restaurant restaurant) {
+    public Vote(Integer id, LocalDate date, Restaurant restaurant) {
         super(id);
-        this.dateTime = dateTime;
+        this.date = date;
         this.restaurant = restaurant;
     }
 
@@ -58,19 +58,20 @@ public class Vote extends AbstractBaseEntity {
         this.restaurant = restaurant;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
+
 
     @Override
     public String toString() {
         return "Vote{" +
                 "id=" + id +
-                ", dateTime=" + dateTime +
+                ", voteDate=" + date +
                 '}';
     }
 }

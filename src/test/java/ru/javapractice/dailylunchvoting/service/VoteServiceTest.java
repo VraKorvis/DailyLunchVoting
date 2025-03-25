@@ -89,7 +89,7 @@ public class VoteServiceTest {
 
     @Test
     public void getAllWithRestaurantByUserId() {
-        MATCHER.assertMatch(voteService.getAllWithRestaurantByUserId(UserData.USER1_ID), getAllTestVotesSortedByDate());
+        MATCHER.assertMatch(voteService.getAllWithRestaurantByUserId(UserData.USER1_ID), USER1_TODAY_VOTE, USER1_VOTE3, USER1_VOTE2);
     }
 
     @Test

@@ -73,7 +73,7 @@ public class VoteService {
         if (VotingTimeChecker.isVotingTimeExpired()) {
             return false;
         }
-        return VotingTimeChecker.isToday(vote.getDateTime().toLocalDate());
+        return VotingTimeChecker.isToday(vote.getDate());
     }
 
     public void delete(int id, int userId) {

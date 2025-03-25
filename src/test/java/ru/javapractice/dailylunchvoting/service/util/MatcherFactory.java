@@ -1,5 +1,4 @@
 package ru.javapractice.dailylunchvoting.service.util;
-
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +30,10 @@ public class MatcherFactory {
         }
 
         public void assertMatch(Iterable<T> actual, Iterable<T> expected) {
-            assertThat(actual).usingRecursiveFieldByFieldElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(expected);
+            assertThat(actual)
+                    .usingRecursiveFieldByFieldElementComparatorIgnoringFields(fieldsToIgnore)
+                    .isEqualTo(expected);
         }
+
     }
 }
