@@ -51,11 +51,9 @@ public class VoteService {
     public Vote create(Vote vote, int userId) {
         Assert.notNull(vote, "vote must not be null");
         if (canVote(vote)) {
-            log.info("The vote was successfully processed.");
             return repository.save(vote, userId);
         } else {
-            log.info("The time for voting has expired. You can't vote/revote for the restaurant.");
-            throw new VotingProcessException("The time for voting has expired. You can't vote for the restaurant.");
+            throw new VotingProcessException("it is too late, vote can't be changed");
         }
     }
 
@@ -64,8 +62,7 @@ public class VoteService {
             log.info("The revote was successfully processed.");
             checkNotFound(repository.save(vote, userId), vote.id());
         } else {
-            log.info("The time for voting has expired. You can't revote for the restaurant.");
-            throw new VotingProcessException("The time for voting has expired. You can't vote for the restaurant.");
+            throw new VotingProcessException("it is too late, vote can't be changed");
         }
     }
 

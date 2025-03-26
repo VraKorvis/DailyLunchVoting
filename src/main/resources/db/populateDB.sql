@@ -1,8 +1,7 @@
 DELETE FROM vote;
-DELETE FROM restaurant_menu_history;
-DELETE FROM menu_menuitem_link;
+DELETE FROM menus_menuitems_link;
 DELETE FROM menuitem;
-DELETE FROM menu;
+DELETE FROM menus;
 DELETE FROM restaurant;
 DELETE FROM user_role;
 DELETE FROM users;
@@ -36,12 +35,12 @@ VALUES ('Burger', 450),
        ('Chicken', 400),
        ('Coffee', 100);
 
-INSERT INTO menu
-VALUES (DEFAULT),
-       (DEFAULT),
-       (DEFAULT);
+INSERT INTO menus (menu_date, restaurant_id)
+VALUES (CURRENT_DATE, 100004),
+       (CURRENT_DATE, 100005),
+       (CURRENT_DATE, 100006);
 
-INSERT INTO menu_menuitem_link (menu_id, menuitem_id)
+INSERT INTO menus_menuitems_link (menu_id, menuitem_id)
 VALUES (100017, 100007),
        (100017, 100008),
        (100017, 100009),
