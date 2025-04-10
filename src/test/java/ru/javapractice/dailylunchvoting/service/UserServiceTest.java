@@ -1,22 +1,21 @@
 package ru.javapractice.dailylunchvoting.service;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import ru.javapractice.dailylunchvoting.model.User;
-import ru.javapractice.dailylunchvoting.service.testdata.UserData;
+import ru.javapractice.dailylunchvoting.testdata.UserData;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ContextConfiguration({
+
+@SpringJUnitConfig(locations = {
         "classpath:spring/spring-app.xml",
         "classpath:/spring/spring-db.xml"
 })
-@RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class UserServiceTest {
 

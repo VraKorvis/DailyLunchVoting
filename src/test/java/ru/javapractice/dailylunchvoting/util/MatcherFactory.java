@@ -1,4 +1,4 @@
-package ru.javapractice.dailylunchvoting.service.util;
+package ru.javapractice.dailylunchvoting.util;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;

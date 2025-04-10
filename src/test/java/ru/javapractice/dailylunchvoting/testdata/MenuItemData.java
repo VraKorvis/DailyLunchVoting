@@ -1,7 +1,7 @@
-package ru.javapractice.dailylunchvoting.service.testdata;
+package ru.javapractice.dailylunchvoting.testdata;
 
 import ru.javapractice.dailylunchvoting.model.MenuItem;
-import ru.javapractice.dailylunchvoting.service.util.MatcherFactory;
+import ru.javapractice.dailylunchvoting.util.MatcherFactory;
 
 import java.util.Comparator;
 import java.util.List;
