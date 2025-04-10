@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 import static ru.javapractice.dailylunchvoting.model.AbstractBaseEntity.START_SEQ;
 
 public class MenuItemData {
-    public static final MatcherFactory.Matcher<MenuItem> MATCHER = MatcherFactory.usingIgnoringFieldsComparator();
+    public static final MatcherFactory.Matcher<MenuItem> MATCHER = MatcherFactory.usingEqualsComparator(MenuItem.class);
 
     public static final int BURGER_ID = START_SEQ + 7;
     public static final MenuItem BURGER = new MenuItem(BURGER_ID, "Burger", 450.0f);

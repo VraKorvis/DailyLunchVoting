@@ -6,7 +6,8 @@ import ru.javapractice.dailylunchvoting.util.MatcherFactory;
 import static ru.javapractice.dailylunchvoting.model.AbstractBaseEntity.START_SEQ;
 
 public class RestaurantData {
-    public static final MatcherFactory.Matcher<Restaurant> MATCHER = MatcherFactory.usingIgnoringFieldsComparator("menu");
+    public static final MatcherFactory.Matcher<Restaurant> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class,"menu");
+    public static final MatcherFactory.Matcher<Restaurant> MATCHER_WITH_MENU = MatcherFactory.usingEqualsComparator(Restaurant.class);
 
     public static final int RESTAURANT_A_ID = START_SEQ + 4;
 

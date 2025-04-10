@@ -33,23 +33,23 @@ public class UserServiceTest {
 
     @Test
     public void delete() {
-        assertThrows(UnsupportedOperationException.class, () -> service.delete(UserData.USER1_ID));
+        assertThrows(UnsupportedOperationException.class, () -> service.delete(UserData.USER_1_ID));
     }
 
     @Test
     public void setEnable() {
-        service.setEnable(UserData.USER1_ID, false);
-        assertFalse(service.get(UserData.USER1_ID).isEnabled());
+        service.setEnable(UserData.USER_1_ID, false);
+        assertFalse(service.get(UserData.USER_1_ID).isEnabled());
     }
 
     @Test
     public void get() {
-        UserData.USER_MATCHER.assertMatch(service.get(UserData.USER1_ID), UserData.USER_1);
+        UserData.USER_MATCHER.assertMatch(service.get(UserData.USER_1_ID), UserData.USER_1);
     }
 
     @Test
     public void getByEmail() {
-        UserData.USER_MATCHER.assertMatch(service.getByEmail(UserData.USER1_EMAIL), UserData.USER_1);
+        UserData.USER_MATCHER.assertMatch(service.getByEmail(UserData.USER_1_EMAIL), UserData.USER_1);
     }
 
     @Test
@@ -61,6 +61,6 @@ public class UserServiceTest {
     public void update() {
         User updated = UserData.getUpdated(UserData.USER_1);
         service.update(updated);
-        UserData.USER_MATCHER.assertMatch(service.get(UserData.USER1_ID), updated);
+        UserData.USER_MATCHER.assertMatch(service.get(UserData.USER_1_ID), updated);
     }
 }

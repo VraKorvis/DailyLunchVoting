@@ -30,6 +30,14 @@ public class MenuItem extends AbstractNamedBaseEntity {
         this.price = price;
     }
 
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
         return "MenuItem{" +
@@ -37,13 +45,5 @@ public class MenuItem extends AbstractNamedBaseEntity {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 '}';
-    }
-
-    public Float getPrice() {
-        return price;
-    }
-
-    public void setPrice(Float price) {
-        this.price = price;
     }
 }
