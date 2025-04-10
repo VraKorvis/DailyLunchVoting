@@ -1,48 +1,43 @@
 package ru.javapractice.dailylunchvoting.web.user;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import ru.javapractice.dailylunchvoting.model.User;
-import ru.javapractice.dailylunchvoting.service.UserService;
 
-import java.util.List;
+import java.util.Map;
 
-@Controller
-public class ProfileRestController {
+import static ru.javapractice.dailylunchvoting.util.SecurityUtil.authUserId;
 
-    private final Logger log = LoggerFactory.getLogger(ProfileRestController.class);
+@RestController
+@RequestMapping(value = ProfileRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+public class ProfileRestController extends AbstractUserController {
+    static final String REST_URL = "/rest/profile";
 
-    @Autowired
-    private UserService service;
-
-    public List<User> getAll() {
-        log.info("getAll");
-
-        return null;
+    @GetMapping
+    public User get() {
+        return super.get(authUserId());
     }
 
-    public User get(int id) {
-        log.info("get {}", id);
-        return null;
+    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void setEnable(@RequestBody Map<String, Object> patchFields) {
+        Boolean enable = (Boolean) patchFields.get("enable");
+        if (enable == null) {
+            throw new IllegalArgumentException("Enable field must not be null");
+        }
+        super.setEnable(authUserId(), enable);
     }
 
-    public User create(User user) {
-        log.info("create {}", user);
-        return null;
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@RequestBody User user) {
+        super.update(user, authUserId());
     }
 
-    public void delete(int id) {
-        log.info("delete {}", id);
+    @GetMapping("/text")
+    public String testUTF() {
+        return "Русский текст";
     }
 
-    public void update(User user, int id) {
-        log.info("update {}", id);
-    }
-
-    public User getByMail(String email) {
-        log.info("getByMail {}", email);
-        return null;
-    }
 }
