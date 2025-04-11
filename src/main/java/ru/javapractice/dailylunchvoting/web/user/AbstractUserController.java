@@ -4,12 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.javapractice.dailylunchvoting.model.User;
 import ru.javapractice.dailylunchvoting.service.UserService;
 
 import java.util.List;
-import java.util.Map;
 
 import static ru.javapractice.dailylunchvoting.util.ValidationUtil.assureIdConsistent;
 import static ru.javapractice.dailylunchvoting.util.ValidationUtil.checkIsNew;

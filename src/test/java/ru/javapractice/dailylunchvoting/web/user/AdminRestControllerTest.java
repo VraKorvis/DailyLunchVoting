@@ -7,8 +7,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javapractice.dailylunchvoting.model.User;
 import ru.javapractice.dailylunchvoting.service.UserService;
-import ru.javapractice.dailylunchvoting.testdata.UserData;
-import ru.javapractice.dailylunchvoting.util.exception.NotFoundException;
 import ru.javapractice.dailylunchvoting.web.AbstractControllerTest;
 import ru.javapractice.dailylunchvoting.web.json.JsonUtil;
 
@@ -92,7 +90,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(ADMIN, GUEST, USER_1));
+                .andExpect(USER_MATCHER.contentJson(ADMIN, GUEST, USER_1, USER_2));
     }
 
 }
