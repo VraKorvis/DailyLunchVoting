@@ -3,20 +3,19 @@ package ru.javapractice.dailylunchvoting.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import ru.javapractice.dailylunchvoting.model.Vote;
 import ru.javapractice.dailylunchvoting.service.VoteService;
 import ru.javapractice.dailylunchvoting.util.SecurityUtil;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static ru.javapractice.dailylunchvoting.util.ValidationUtil.assureIdConsistent;
 import static ru.javapractice.dailylunchvoting.util.ValidationUtil.checkIsNew;
 
-@Controller
+@RestController
 public class VoteController {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(VoteController.class);
 
     @Autowired
     private VoteService service;

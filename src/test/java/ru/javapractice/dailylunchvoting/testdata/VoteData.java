@@ -27,7 +27,7 @@ public class VoteData {
     private VoteData() {
     }
 
-    public static List<Vote> getAllTestVotesSortedByDate() {
+    public static List<Vote> getAllTestVotes() {
         return Stream.of(USER2_TODAY_VOTE, USER1_TODAY_VOTE, USER1_VOTE2, USER2_VOTE1, USER2_VOTE2, USER1_VOTE3, ADMIN_VOTE_1)
                 .sorted(Comparator.comparing(Vote::getDate)
                         .reversed()

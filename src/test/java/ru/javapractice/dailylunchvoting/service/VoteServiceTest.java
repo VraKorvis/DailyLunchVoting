@@ -13,6 +13,8 @@ import ru.javapractice.dailylunchvoting.util.TimingExtension;
 import ru.javapractice.dailylunchvoting.util.VotingTimeChecker;
 import ru.javapractice.dailylunchvoting.util.exception.VotingProcessException;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javapractice.dailylunchvoting.testdata.VoteData.*;
@@ -32,7 +34,7 @@ public class VoteServiceTest {
 
     @Test
     public void getAll() {
-        MATCHER.assertMatch(voteService.getAll(), getAllTestVotesSortedByDate());
+        MATCHER.assertMatch(voteService.getAll(), getAllTestVotes());
     }
 
     @Test
@@ -52,7 +54,7 @@ public class VoteServiceTest {
 
     @Test
     public void getAllWithRestaurantForToday() {
-        MATCHER.assertMatch(voteService.getAllWithRestaurantForToday(), getAllTestVotesSortedByDate());
+        MATCHER.assertMatch(voteService.getAllWithRestaurantForToday(), Arrays.asList(USER2_TODAY_VOTE, USER1_TODAY_VOTE));
     }
 
     @Test
