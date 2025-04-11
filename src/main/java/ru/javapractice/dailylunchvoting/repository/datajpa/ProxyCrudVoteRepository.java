@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javapractice.dailylunchvoting.model.Vote;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface ProxyCrudVoteRepository extends JpaRepository<Vote, Integer> {
@@ -33,6 +34,8 @@ public interface ProxyCrudVoteRepository extends JpaRepository<Vote, Integer> {
 
     @EntityGraph(attributePaths = {"restaurant"})
     @Query("SELECT v FROM Vote v WHERE v.id = :id AND v.user.id = :userId ORDER BY v.date DESC, v.id DESC")
-    Vote getWithRestaurant(@Param("id") int id, @Param("userId") int userId);
+    Optional<Vote> getWithRestaurant(@Param("id") int id, @Param("userId") int userId);
 
+    @Query("SELECT v FROM Vote v WHERE v.user.id = :userId and v.date = CURRENT_DATE")
+    Optional<Vote> getForToday(@Param("userId") int userId);
 }

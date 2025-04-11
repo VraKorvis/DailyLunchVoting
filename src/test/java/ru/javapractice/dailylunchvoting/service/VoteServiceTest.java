@@ -63,29 +63,15 @@ public class VoteServiceTest {
     }
 
     @Test
-    public void create() {
+    public void createOrUpdate() {
         if (VotingTimeChecker.isVotingTimeExpired()) {
-            assertThrows(VotingProcessException.class, () -> voteService.create(getNew(), UserData.USER_1_ID));
+            assertThrows(VotingProcessException.class, () -> voteService.createOrUpdate(getNew(), UserData.USER_1_ID));
         } else {
-            Vote created = voteService.create(getNew(), UserData.USER_1_ID);
+            Vote created = voteService.createOrUpdate(getNew(), UserData.USER_1_ID);
             int createdId = created.id();
             Vote newVote = getNew();
             newVote.setId(createdId);
             MATCHER.assertMatch(created, newVote);
-        }
-    }
-
-    @Test
-    public void update() {
-        var isExpired = VotingTimeChecker.isVotingTimeExpired();
-        Vote updated = getUpdated(USER1_TODAY_VOTE);
-
-        if (isExpired) {
-            assertThrows(VotingProcessException.class, () ->  voteService.update(updated, UserData.USER_1_ID));
-        }
-        else {
-            voteService.update(updated, UserData.USER_1_ID);
-            MATCHER.assertMatch(voteService.getWithRestaurant(USER1_VOTE1_ID, UserData.USER_1_ID), updated);
         }
     }
 

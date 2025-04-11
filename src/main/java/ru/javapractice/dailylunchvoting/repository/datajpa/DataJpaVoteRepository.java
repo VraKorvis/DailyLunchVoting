@@ -3,10 +3,13 @@ package ru.javapractice.dailylunchvoting.repository.datajpa;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javapractice.dailylunchvoting.model.User;
 import ru.javapractice.dailylunchvoting.model.Vote;
 import ru.javapractice.dailylunchvoting.repository.VoteRepository;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class DataJpaVoteRepository implements VoteRepository {
@@ -40,29 +43,35 @@ public class DataJpaVoteRepository implements VoteRepository {
         return voteRepository.getAllWithRestaurantByUserId(userId);
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
     public Vote get(int id, int userId) {
-        var vote = voteRepository.findById(id).orElse(null);
-        return vote != null && vote.getUser().getId() == userId ? vote : null;
+        return voteRepository.findById(id)
+                .filter(v -> Objects.equals(v.getUser().getId(), userId))
+                .orElse(null);
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
     public Vote getWithRestaurant(int id, int userId) {
-        var vote = voteRepository.getWithRestaurant(id, userId);
-        return vote != null && vote.getUser().getId() == userId ? vote : null;
+        return voteRepository.getWithRestaurant(id, userId)
+                .filter(v -> Objects.equals(v.getUser().getId(), userId))
+                .orElse(null);
     }
 
     @Override
     @Transactional
-    public Vote save(Vote vote, int userId) {
-        var user = userRepository.getReferenceById(userId);
+    public Vote createOrUpdate(Vote vote, int userId) {
+        User user = userRepository.getReferenceById(userId);
         vote.setUser(user);
-        if (vote.isNew()){
+
+        Optional<Vote> existingVoteOpt = voteRepository.getForToday(userId);
+
+        if (existingVoteOpt.isPresent()) {
+            Vote existingVote = existingVoteOpt.get();
+            existingVote.setRestaurant(vote.getRestaurant());
+            return voteRepository.save(existingVote);
+        } else {
             return voteRepository.save(vote);
         }
-       return get(vote.id(), userId) == null ? null : voteRepository.save(vote);
     }
 
     @Override

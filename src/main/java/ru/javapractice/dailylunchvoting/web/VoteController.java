@@ -11,7 +11,6 @@ import ru.javapractice.dailylunchvoting.util.SecurityUtil;
 import java.util.List;
 
 import static ru.javapractice.dailylunchvoting.util.ValidationUtil.assureIdConsistent;
-import static ru.javapractice.dailylunchvoting.util.ValidationUtil.checkIsNew;
 
 @RestController
 public class VoteController {
@@ -30,21 +29,14 @@ public class VoteController {
         return service.get(id, SecurityUtil.authUserId());
     }
 
-    public Vote create(Vote vote) {
-        log.info("create {}", vote);
-        checkIsNew(vote);
-        return service.create(vote, SecurityUtil.authUserId());
+    public Vote createOrUpdate(Vote vote) {
+        assureIdConsistent(vote, SecurityUtil.authUserId());
+        return service.createOrUpdate(vote, SecurityUtil.authUserId());
     }
 
     public void delete(int id) {
         log.info("delete {}", id);
         service.delete(id, SecurityUtil.authUserId());
-    }
-
-    public void update(Vote vote, int id) {
-        log.info("update {} with id={}", vote, id);
-        assureIdConsistent(vote, id);
-        service.update(vote, SecurityUtil.authUserId());
     }
 
 }

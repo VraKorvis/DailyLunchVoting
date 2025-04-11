@@ -48,33 +48,21 @@ public class VoteService {
         return repository.getAllWithRestaurantByUserId(userId);
     }
 
-    public Vote create(Vote vote, int userId) {
+    public Vote createOrUpdate(Vote vote, int userId) {
         Assert.notNull(vote, "vote must not be null");
         if (canVote(vote)) {
-            return repository.save(vote, userId);
+            log.info("The vote was successfully processed.");
+            return repository.createOrUpdate(vote, userId);
         } else {
             throw new VotingProcessException("it is too late, vote can't be changed");
         }
-    }
-
-    public void update(Vote vote, int userId) {
-        if (canVote(vote)) {
-            log.info("The revote was successfully processed.");
-            checkNotFound(repository.save(vote, userId), vote.id());
-        } else {
-            throw new VotingProcessException("it is too late, vote can't be changed");
-        }
-    }
-
-    public boolean canVote(Vote vote) {
-        if (VotingTimeChecker.isVotingTimeExpired()) {
-            return false;
-        }
-        return VotingTimeChecker.isToday(vote.getDate());
     }
 
     public void delete(int id, int userId) {
         repository.delete(id, userId);
     }
 
+    private boolean canVote(Vote vote) {
+        return VotingTimeChecker.isToday(vote.getDate()) && !VotingTimeChecker.isVotingTimeExpired();
+    }
 }
