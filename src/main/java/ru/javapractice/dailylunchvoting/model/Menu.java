@@ -3,25 +3,25 @@ package ru.javapractice.dailylunchvoting.model;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
-@Table(name="menus")
+@Table(name="menu", uniqueConstraints = @UniqueConstraint(columnNames = {"restaurant_id", "menu_date"}, name = "unique_menu_per_day"))
 public class Menu extends AbstractBaseEntity {
 
-    @Column(name = "menu_date")
-    private Date menuDate;
+    @Column(name = "menu_date", nullable = false)
+    private LocalDate menuDate;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "menus_menuitems_link",
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "menu_menuitems_link",
             joinColumns = @JoinColumn(name = "menu_id"),
             inverseJoinColumns = @JoinColumn(name = "menuitem_id"))
     @BatchSize(size = 200)
-    private List<MenuItem> menuItems;
+    private Set<MenuItem> menuItems;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
 //    TODO try to simplify using fk field
@@ -31,15 +31,18 @@ public class Menu extends AbstractBaseEntity {
     public Menu() {
     }
 
-    public Menu(Integer id) {
+    public Menu(Integer id, LocalDate menuDate, Restaurant restaurant, Set<MenuItem> menuItems) {
         super(id);
+        this.menuDate = menuDate;
+        this.restaurant = restaurant;
+        this.menuItems = menuItems;
     }
 
-    public Date getMenuDate() {
+    public LocalDate getMenuDate() {
         return menuDate;
     }
 
-    public void setMenuDate(Date menuDate) {
+    public void setMenuDate(LocalDate menuDate) {
         this.menuDate = menuDate;
     }
 
@@ -51,11 +54,11 @@ public class Menu extends AbstractBaseEntity {
         this.restaurant = restaurant;
     }
 
-    public List<MenuItem> getMenuItems() {
+    public Set<MenuItem> getMenuItems() {
         return menuItems;
     }
 
-    public void setMenuItems(List<MenuItem> menuItems) {
+    public void setMenuItems(Set<MenuItem> menuItems) {
         this.menuItems = menuItems;
     }
 
@@ -63,6 +66,7 @@ public class Menu extends AbstractBaseEntity {
     public String toString() {
         return "Menu{" +
                 "id=" + id +
+                ", menuDate=" + menuDate +
                 '}';
     }
 }

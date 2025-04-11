@@ -28,6 +28,11 @@ public class DataJpaRestaurantRepository implements RestaurantRepository {
     }
 
     @Override
+    public List<Restaurant> getAllRestaurantsWithMenuForToday() {
+        return proxyCrudRestaurantRepository.findRestaurantsWithMenuForToday();
+    }
+
+    @Override
     public Restaurant save(Restaurant restaurant) {
         return proxyCrudRestaurantRepository.save(restaurant);
     }

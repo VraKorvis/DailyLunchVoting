@@ -31,8 +31,8 @@ public class DataJpaVoteRepository implements VoteRepository {
     }
 
     @Override
-    public List<Vote> getAllWithRestaurant() {
-        return voteRepository.getAllWithRestaurant();
+    public List<Vote> getAllWithRestaurantForToday() {
+        return voteRepository.getAllWithRestaurantForToday();
     }
 
     @Override

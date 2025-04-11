@@ -30,13 +30,19 @@ public class RestaurantServiceTest {
     @Test
     public void get() {
         var restaurant = service.get(RESTAURANT_A_ID);
-        MATCHER.assertMatch(restaurant, RESTAURANT_A);
+        MATCHER_WITH_MENU.assertMatch(restaurant, RESTAURANT_A);
     }
 
     @Test
     public void getAll() {
         var restaurants = service.getAll();
-        MATCHER.assertMatch(restaurants, RESTAURANT_A, RESTAURANT_B, RESTAURANT_C);
+        MATCHER_WITH_MENU.assertMatch(restaurants, RESTAURANT_A, RESTAURANT_B, RESTAURANT_C);
+    }
+
+    @Test
+    public void getAllRestaurantsWithMenuForToday() {
+        var restaurants = service.getAllRestaurantsWithMenuForToday();
+        MATCHER_WITH_MENU.assertMatch(restaurants, RESTAURANT_A, RESTAURANT_B, RESTAURANT_C);
     }
 
     @Test

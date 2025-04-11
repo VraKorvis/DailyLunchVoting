@@ -8,6 +8,7 @@ public interface RestaurantRepository {
 
     Restaurant get(Integer id);
     List<Restaurant> getAll();
+    List<Restaurant> getAllRestaurantsWithMenuForToday();
     Restaurant save(Restaurant restaurant);
     boolean delete(Integer id);
 

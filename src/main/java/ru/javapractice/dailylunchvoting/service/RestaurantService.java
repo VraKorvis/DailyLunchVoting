@@ -36,4 +36,8 @@ public class RestaurantService {
     public void update(Restaurant restaurant) {
         checkNotFound(repository.save(restaurant), restaurant.id());
     }
+
+    public List<Restaurant> getAllRestaurantsWithMenuForToday() {
+        return repository.getAllRestaurantsWithMenuForToday();
+    }
 }

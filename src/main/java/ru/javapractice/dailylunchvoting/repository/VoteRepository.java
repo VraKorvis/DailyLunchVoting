@@ -12,7 +12,7 @@ public interface VoteRepository {
     Vote save(Vote vote, int userId);
     boolean delete(int id, int userId);
     Vote getWithRestaurant(int id, int userId);
-    List<Vote> getAllWithRestaurant();
+    List<Vote> getAllWithRestaurantForToday();
     List<Vote> getAllWithRestaurantByUserId(int userId);
 
 }

@@ -12,8 +12,7 @@ import java.util.stream.Stream;
 import static ru.javapractice.dailylunchvoting.model.AbstractBaseEntity.START_SEQ;
 
 public class VoteData {
-    public static final MatcherFactory.Matcher<Vote> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Vote.class, "user");
-    public static final MatcherFactory.Matcher<Vote> MATCHER_IGNORE_FIELDS = MatcherFactory.usingIgnoringFieldsComparator(Vote.class, "restaurant", "user");
+    public static final MatcherFactory.Matcher<Vote> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Vote.class, "restaurant.menus", "user");
 
     public static final int USER1_VOTE1_ID = START_SEQ + 20;
     public static final int NOT_FOUND_ID = 10;

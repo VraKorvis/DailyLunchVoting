@@ -32,17 +32,17 @@ public class VoteServiceTest {
 
     @Test
     public void getAll() {
-        MATCHER_IGNORE_FIELDS.assertMatch(voteService.getAll(), getAllTestVotesSortedByDate());
+        MATCHER.assertMatch(voteService.getAll(), getAllTestVotesSortedByDate());
     }
 
     @Test
     public void getAllByUserId() {
-        MATCHER_IGNORE_FIELDS.assertMatch(voteService.getAllByUserId(UserData.USER_1_ID), USER1_TODAY_VOTE, USER1_VOTE3, USER1_VOTE2);
+        MATCHER.assertMatch(voteService.getAllByUserId(UserData.USER_1_ID), USER1_TODAY_VOTE, USER1_VOTE3, USER1_VOTE2);
     }
 
     @Test
     public void get() {
-        MATCHER_IGNORE_FIELDS.assertMatch(voteService.get(USER1_VOTE1_ID, UserData.USER_1_ID), USER1_TODAY_VOTE);
+        MATCHER.assertMatch(voteService.get(USER1_VOTE1_ID, UserData.USER_1_ID), USER1_TODAY_VOTE);
     }
 
     @Test
@@ -51,12 +51,12 @@ public class VoteServiceTest {
     }
 
     @Test
-    public void getAllWithRestaurant() {
-        MATCHER.assertMatch(voteService.getAllWithRestaurant(), getAllTestVotesSortedByDate());
+    public void getAllWithRestaurantForToday() {
+        MATCHER.assertMatch(voteService.getAllWithRestaurantForToday(), getAllTestVotesSortedByDate());
     }
 
     @Test
-    public void getAllWithRestaurantByUserId() {
+    public void getAllWithRestaurantForTodayByUserId() {
         MATCHER.assertMatch(voteService.getAllWithRestaurantByUserId(UserData.USER_1_ID), USER1_TODAY_VOTE, USER1_VOTE3, USER1_VOTE2);
     }
 

@@ -40,8 +40,8 @@ public class VoteService {
         return checkNotFound(repository.getWithRestaurant(id, userId), id);
     }
 
-    public List<Vote> getAllWithRestaurant() {
-        return repository.getAllWithRestaurant();
+    public List<Vote> getAllWithRestaurantForToday() {
+        return repository.getAllWithRestaurantForToday();
     }
 
     public List<Vote> getAllWithRestaurantByUserId(int userId) {

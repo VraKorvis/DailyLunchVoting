@@ -1,5 +1,8 @@
 package ru.javapractice.dailylunchvoting.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -35,6 +38,7 @@ public class User extends AbstractNamedBaseEntity {
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_idx")})
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles;
 
     public User() {
