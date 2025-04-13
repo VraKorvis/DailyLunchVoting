@@ -2,8 +2,6 @@ package ru.javapractice.dailylunchvoting.repository.datajpa;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import ru.javapractice.dailylunchvoting.model.User;
 import ru.javapractice.dailylunchvoting.model.Vote;
 import ru.javapractice.dailylunchvoting.repository.VoteRepository;
 
@@ -58,20 +56,13 @@ public class DataJpaVoteRepository implements VoteRepository {
     }
 
     @Override
-    @Transactional
-    public Vote createOrUpdate(Vote vote, int userId) {
-        User user = userRepository.getReferenceById(userId);
-        vote.setUser(user);
+    public Optional<Vote> findByUserIdForToday(int id){
+        return voteRepository.findByUserIdAndDate(id);
+    }
 
-        Optional<Vote> existingVoteOpt = voteRepository.getForToday(userId);
-
-        if (existingVoteOpt.isPresent()) {
-            Vote existingVote = existingVoteOpt.get();
-            existingVote.setRestaurant(vote.getRestaurant());
-            return voteRepository.save(existingVote);
-        } else {
-            return voteRepository.save(vote);
-        }
+    @Override
+    public Vote save(Vote vote, int userId){
+        return voteRepository.save(vote);
     }
 
     @Override

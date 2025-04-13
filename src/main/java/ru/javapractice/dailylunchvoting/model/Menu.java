@@ -1,9 +1,11 @@
 package ru.javapractice.dailylunchvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,6 +24,7 @@ public class Menu extends AbstractBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
+    @JsonBackReference
     private Restaurant restaurant;
 
 //    TODO try to simplify using fk field
@@ -58,7 +61,7 @@ public class Menu extends AbstractBaseEntity {
         return menuItems;
     }
 
-    public void setMenuItems(Set<MenuItem> menuItems) {
+    public void setMenuItems(HashSet<MenuItem> menuItems) {
         this.menuItems = menuItems;
     }
 

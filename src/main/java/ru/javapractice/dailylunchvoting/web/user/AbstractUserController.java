@@ -2,7 +2,6 @@ package ru.javapractice.dailylunchvoting.web.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import ru.javapractice.dailylunchvoting.model.User;
 import ru.javapractice.dailylunchvoting.service.UserService;
@@ -15,8 +14,11 @@ import static ru.javapractice.dailylunchvoting.util.ValidationUtil.checkIsNew;
 public abstract class AbstractUserController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private UserService service;
+    private final UserService service;
+
+    public AbstractUserController(UserService service) {
+        this.service = service;
+    }
 
     public List<User> getAll() {
         log.info("getAll");

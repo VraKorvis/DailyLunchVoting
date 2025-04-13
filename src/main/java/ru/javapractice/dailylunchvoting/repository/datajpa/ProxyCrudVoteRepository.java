@@ -28,14 +28,15 @@ public interface ProxyCrudVoteRepository extends JpaRepository<Vote, Integer> {
     @Query("SELECT v FROM Vote v WHERE v.date = CURRENT_DATE ORDER BY v.date DESC, v.id DESC")
     List<Vote> getAllWithRestaurantForToday();
 
-    @EntityGraph(attributePaths = {"restaurant"})
+    @EntityGraph(attributePaths = {"restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT v FROM Vote v WHERE v.user.id=:userId ORDER BY v.date DESC, v.id DESC")
     List<Vote> getAllWithRestaurantByUserId(@Param("userId") int userId);
 
-    @EntityGraph(attributePaths = {"restaurant"})
+    @EntityGraph(attributePaths = {"restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT v FROM Vote v WHERE v.id = :id AND v.user.id = :userId ORDER BY v.date DESC, v.id DESC")
     Optional<Vote> getWithRestaurant(@Param("id") int id, @Param("userId") int userId);
 
+    @EntityGraph(attributePaths = {"restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT v FROM Vote v WHERE v.user.id = :userId and v.date = CURRENT_DATE")
-    Optional<Vote> getForToday(@Param("userId") int userId);
+    Optional<Vote> findByUserIdAndDate(@Param("userId") int userId);
 }

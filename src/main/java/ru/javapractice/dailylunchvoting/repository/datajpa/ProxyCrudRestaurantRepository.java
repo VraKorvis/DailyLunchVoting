@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javapractice.dailylunchvoting.model.Restaurant;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface ProxyCrudRestaurantRepository extends JpaRepository<Restaurant, Integer> {
@@ -21,4 +22,7 @@ public interface ProxyCrudRestaurantRepository extends JpaRepository<Restaurant,
     default int delete(@Param("id") int id){
         throw new UnsupportedOperationException("Deletion is not allowed. All data is stored in the database as history.");
     }
+
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m WHERE r.id=:id AND m.menuDate=CURRENT_DATE ORDER BY r.name ASC")
+    Optional<Restaurant> getWithMenu(@Param("id") Integer id);
 }

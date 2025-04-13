@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.javapractice.dailylunchvoting.model.User;
+import ru.javapractice.dailylunchvoting.service.UserService;
 
 import java.util.Map;
 
@@ -13,6 +14,10 @@ import static ru.javapractice.dailylunchvoting.util.SecurityUtil.authUserId;
 @RequestMapping(value = ProfileRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProfileRestController extends AbstractUserController {
     static final String REST_URL = "/rest/profile";
+
+    public ProfileRestController(UserService service) {
+        super(service);
+    }
 
     @GetMapping
     public User get() {

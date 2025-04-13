@@ -23,6 +23,16 @@ public class DataJpaRestaurantRepository implements RestaurantRepository {
     }
 
     @Override
+    public Restaurant getReferenceById(Integer id) {
+        return proxyCrudRestaurantRepository.getReferenceById(id);
+    }
+
+    @Override
+    public Restaurant getWithMenuForToday(Integer id) {
+        return proxyCrudRestaurantRepository.getWithMenu(id).orElse(null);
+    }
+
+    @Override
     public List<Restaurant> getAll() {
         return proxyCrudRestaurantRepository.findAll(SORT_NAME);
     }

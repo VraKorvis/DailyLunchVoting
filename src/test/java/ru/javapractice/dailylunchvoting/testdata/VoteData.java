@@ -1,5 +1,6 @@
 package ru.javapractice.dailylunchvoting.testdata;
 
+import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
 import ru.javapractice.dailylunchvoting.model.Vote;
 import ru.javapractice.dailylunchvoting.util.MatcherFactory;
 
@@ -9,9 +10,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration.builder;
 import static ru.javapractice.dailylunchvoting.model.AbstractBaseEntity.START_SEQ;
 
 public class VoteData {
+
+    private final static RecursiveComparisonConfiguration CONFIG = builder()
+            .withIgnoreAllOverriddenEquals(true)
+            .withIgnoredFields("restaurant.menus", "user")
+            .build();
+
     public static final MatcherFactory.Matcher<Vote> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Vote.class, "restaurant.menus", "user");
 
     public static final int USER1_VOTE1_ID = START_SEQ + 20;

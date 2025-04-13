@@ -66,7 +66,6 @@ public class Vote extends AbstractBaseEntity {
         this.date = date;
     }
 
-
     @Override
     public String toString() {
         return "Vote{" +

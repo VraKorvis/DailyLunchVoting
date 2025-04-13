@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javapractice.dailylunchvoting.model.User;
+import ru.javapractice.dailylunchvoting.service.UserService;
 
 import java.net.URI;
 import java.util.List;
@@ -16,6 +17,10 @@ import java.util.Map;
 public class AdminRestController extends AbstractUserController {
 
     static final String REST_URL = "/rest/admin/users";
+
+    public AdminRestController(UserService service) {
+        super(service);
+    }
 
     @Override
     @GetMapping

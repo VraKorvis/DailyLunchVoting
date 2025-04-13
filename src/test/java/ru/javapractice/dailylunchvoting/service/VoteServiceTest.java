@@ -14,8 +14,10 @@ import ru.javapractice.dailylunchvoting.util.VotingTimeChecker;
 import ru.javapractice.dailylunchvoting.util.exception.VotingProcessException;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javapractice.dailylunchvoting.testdata.VoteData.*;
 
@@ -63,16 +65,31 @@ public class VoteServiceTest {
     }
 
     @Test
-    public void createOrUpdate() {
-        if (VotingTimeChecker.isVotingTimeExpired()) {
-            assertThrows(VotingProcessException.class, () -> voteService.createOrUpdate(getNew(), UserData.USER_1_ID));
-        } else {
-            Vote created = voteService.createOrUpdate(getNew(), UserData.USER_1_ID);
-            int createdId = created.id();
+    public void save(){
+        Vote newVOte = getNew();
+        if (VotingTimeChecker.canVoteToday()){
+            voteService.vote(newVOte, UserData.USER_2_ID);
+            Optional<Vote> created = voteService.getWithRestaurantForToday(UserData.USER_2_ID);
+            assertTrue(created.isPresent(), "Vote should be created");
+            int createdId = created.get().id();
             Vote newVote = getNew();
             newVote.setId(createdId);
-            MATCHER.assertMatch(created, newVote);
+            MATCHER.assertMatch(created.get(), newVote);
+        }
+        else {
+            assertThrows(VotingProcessException.class, () -> voteService.vote(newVOte, UserData.USER_2_ID));
         }
     }
 
+    @Test
+    public void update() {
+        Vote updated = getUpdated(USER1_TODAY_VOTE);
+        if (VotingTimeChecker.canUpdateVote(updated)) {
+            voteService.vote(updated, UserData.USER_1_ID);
+            Vote actual = voteService.get(USER1_VOTE1_ID, UserData.USER_1_ID);
+            MATCHER.assertMatch(actual, updated);
+        } else {
+            assertThrows(VotingProcessException.class, () -> voteService.vote(updated, UserData.USER_1_ID));
+        }
+    }
 }

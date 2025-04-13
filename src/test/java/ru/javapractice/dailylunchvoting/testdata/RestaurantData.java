@@ -6,26 +6,34 @@ import ru.javapractice.dailylunchvoting.model.Restaurant;
 import ru.javapractice.dailylunchvoting.util.MatcherFactory;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.*;
 
 import static ru.javapractice.dailylunchvoting.model.AbstractBaseEntity.START_SEQ;
 import static ru.javapractice.dailylunchvoting.testdata.MenuItemData.*;
 
 public class RestaurantData {
-    public static final MatcherFactory.Matcher<Restaurant> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class,"menus");
-    public static final MatcherFactory.Matcher<Restaurant> MATCHER_WITH_MENU = MatcherFactory.usingEqualsComparator(Restaurant.class);
+
+    public static final MatcherFactory.Matcher<Restaurant> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "menus");
+    public static final MatcherFactory.Matcher<Restaurant> MATCHER_WITH_MENU = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "menus.restaurant");
 
     public static final int RESTAURANT_A_ID = START_SEQ + 4;
 
-    public static final Restaurant RESTAURANT_A = new Restaurant(RESTAURANT_A_ID,"Restaurant A");
-    public static final Restaurant RESTAURANT_B = new Restaurant(RESTAURANT_A_ID + 1,"Restaurant B");
-    public static final Restaurant RESTAURANT_C = new Restaurant(RESTAURANT_A_ID + 2,"Restaurant C");
+    public static final Restaurant RESTAURANT_A = new Restaurant(RESTAURANT_A_ID, "Restaurant A");
+    public static final Restaurant RESTAURANT_B = new Restaurant(RESTAURANT_A_ID + 1, "Restaurant B");
+    public static final Restaurant RESTAURANT_C = new Restaurant(RESTAURANT_A_ID + 2, "Restaurant C");
 
-    public static final Set<MenuItem> menuitems = Set.of(BURGER, PIZZA, SALAD, DESSERT);
-    public static final Menu menu_one = new Menu(100017, LocalDate.now(), RESTAURANT_A, menuitems);
+    public static final Set<MenuItem> MENUITEMS_1 = Set.of(BURGER, PIZZA, SALAD, DESSERT);
+    public static final Set<MenuItem> MENUITEMS_2 = Set.of(SOUP, EGGS);
+    public static final Set<MenuItem> MENUITEMS_3 = Set.of(DESSERT, EGGS, STEAK, SUSHI, COFFEE);
+
+    public static final Menu MENU_1 = new Menu(100017, LocalDate.now(), RESTAURANT_A, MENUITEMS_1);
+    public static final Menu MENU_2 = new Menu(100018, LocalDate.now(), RESTAURANT_A, MENUITEMS_2);
+    public static final Menu MENU_3 = new Menu(100019, LocalDate.now(), RESTAURANT_A, MENUITEMS_3);
 
     static {
-        RESTAURANT_A.setMenus(Set.of(menu_one));
+        RESTAURANT_A.setMenus(List.of(MENU_1));
+        RESTAURANT_B.setMenus(List.of(MENU_2));
+        RESTAURANT_C.setMenus(List.of(MENU_3));
     }
 
     private RestaurantData() {
@@ -40,4 +48,5 @@ public class RestaurantData {
         newR.setName("Restaurant updated name");
         return newR;
     }
+
 }

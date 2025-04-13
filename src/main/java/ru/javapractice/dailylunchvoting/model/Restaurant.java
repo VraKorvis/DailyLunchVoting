@@ -1,6 +1,9 @@
 package ru.javapractice.dailylunchvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,13 +26,14 @@ public class Restaurant extends AbstractNamedBaseEntity {
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
-    public Set<Menu> menus = Set.of();
+    @JsonManagedReference
+    public List<Menu> menus = List.of();
 
-    public Set<Menu> getMenus() {
+    public List<Menu> getMenus() {
         return menus;
     }
 
-    public void setMenus(Set<Menu> menus) {
+    public void setMenus(List<Menu> menus) {
         this.menus = menus;
     }
 

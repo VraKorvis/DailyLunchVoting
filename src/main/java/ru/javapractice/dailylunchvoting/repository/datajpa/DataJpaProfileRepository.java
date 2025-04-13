@@ -27,6 +27,10 @@ public class DataJpaProfileRepository implements ProfileRepository {
     public User get(int id) {
         return proxyCrudProfileRepository.findById(id).orElse(null);
     }
+    @Override
+    public User getReferenceById(int id){
+        return proxyCrudProfileRepository.getReferenceById(id);
+    }
 
     @Override
     public User getByEmail(String email) {

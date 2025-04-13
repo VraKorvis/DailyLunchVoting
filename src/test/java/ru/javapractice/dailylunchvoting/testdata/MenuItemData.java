@@ -22,8 +22,8 @@ public class MenuItemData {
     public static final MenuItem EGGS = new MenuItem(BURGER_ID + 5, "Eggs", 150.0f);
     public static final MenuItem STEAK = new MenuItem(BURGER_ID + 6, "Steak", 900.0f);
     public static final MenuItem SUSHI = new MenuItem(BURGER_ID + 7, "Sushi", 750.0f);
-    public static final MenuItem TACOS = new MenuItem(BURGER_ID + 8, "Chicken", 400.0f);
-    public static final MenuItem PASTA = new MenuItem(BURGER_ID + 9, "Coffee", 100.0f);
+    public static final MenuItem CHICKEN = new MenuItem(BURGER_ID + 8, "Chicken", 400.0f);
+    public static final MenuItem COFFEE = new MenuItem(BURGER_ID + 9, "Coffee", 100.0f);
 
     private MenuItemData(){}
 
@@ -39,7 +39,7 @@ public class MenuItemData {
     }
 
     public static List<MenuItem> getAllSorted() {
-        return Stream.of(BURGER, PIZZA, SALAD, DESSERT, SOUP, EGGS, STEAK, SUSHI, TACOS, PASTA )
+        return Stream.of(BURGER, PIZZA, SALAD, DESSERT, SOUP, EGGS, STEAK, SUSHI, CHICKEN, COFFEE)
                 .sorted(Comparator.comparing(MenuItem::getName))
                 .collect(Collectors.toList());
     }

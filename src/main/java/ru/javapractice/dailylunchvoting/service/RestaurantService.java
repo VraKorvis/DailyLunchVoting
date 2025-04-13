@@ -29,6 +29,10 @@ public class RestaurantService {
         return checkNotFound(repository.get(id), id);
     }
 
+    public Restaurant getWithMenuForToday(int id) {
+        return checkNotFound(repository.getWithMenuForToday(id), id);
+    }
+
     public List<Restaurant> getAll() {
         return repository.getAll();
     }
@@ -37,7 +41,7 @@ public class RestaurantService {
         checkNotFound(repository.save(restaurant), restaurant.id());
     }
 
-    public List<Restaurant> getAllRestaurantsWithMenuForToday() {
+    public List<Restaurant> getAllWithMenuForToday() {
         return repository.getAllRestaurantsWithMenuForToday();
     }
 }
