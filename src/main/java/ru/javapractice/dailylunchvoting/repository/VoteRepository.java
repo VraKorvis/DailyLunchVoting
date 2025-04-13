@@ -7,14 +7,12 @@ import java.util.Optional;
 
 public interface VoteRepository {
 
-    List<Vote> getAll();
-    List<Vote> getAllByUserId(int userId);
-    Vote get(int id, int userId);
     Vote save(Vote vote, int userId);
-    boolean delete(int id, int userId);
-    Vote getWithRestaurant(int id, int userId);
-    List<Vote> getAllWithRestaurantForToday();
-    List<Vote> getAllWithRestaurantByUserId(int userId);
+
+    List<Vote> getAll();
+
+    List<Vote> getAllForToday();
+    List<Vote> getAllByUserId(int userId);
 
     Optional<Vote> findByUserIdForToday(int userId);
 }

@@ -14,7 +14,6 @@ import ru.javapractice.dailylunchvoting.util.VotingTimeChecker;
 import ru.javapractice.dailylunchvoting.util.exception.VotingProcessException;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -45,13 +44,8 @@ public class VoteServiceTest {
     }
 
     @Test
-    public void get() {
-        MATCHER.assertMatch(voteService.get(USER1_VOTE1_ID, UserData.USER_1_ID), USER1_TODAY_VOTE);
-    }
-
-    @Test
-    public void getWithRestaurant() {
-        MATCHER.assertMatch(voteService.getWithRestaurant(USER1_VOTE1_ID, UserData.USER_1_ID), USER1_TODAY_VOTE);
+    public void findByUserIdForToday() {
+        MATCHER.assertMatch(voteService.findByUserIdForToday(UserData.USER_1_ID), USER1_TODAY_VOTE);
     }
 
     @Test
@@ -69,12 +63,11 @@ public class VoteServiceTest {
         Vote newVOte = getNew();
         if (VotingTimeChecker.canVoteToday()){
             voteService.vote(newVOte, UserData.USER_2_ID);
-            Optional<Vote> created = voteService.getWithRestaurantForToday(UserData.USER_2_ID);
-            assertTrue(created.isPresent(), "Vote should be created");
-            int createdId = created.get().id();
+            Vote created = voteService.findByUserIdForToday(UserData.USER_2_ID);
+            int createdId = created.id();
             Vote newVote = getNew();
             newVote.setId(createdId);
-            MATCHER.assertMatch(created.get(), newVote);
+            MATCHER.assertMatch(created, newVote);
         }
         else {
             assertThrows(VotingProcessException.class, () -> voteService.vote(newVOte, UserData.USER_2_ID));
@@ -86,7 +79,7 @@ public class VoteServiceTest {
         Vote updated = getUpdated(USER1_TODAY_VOTE);
         if (VotingTimeChecker.canUpdateVote(updated)) {
             voteService.vote(updated, UserData.USER_1_ID);
-            Vote actual = voteService.get(USER1_VOTE1_ID, UserData.USER_1_ID);
+            Vote actual = voteService.findByUserIdForToday(UserData.USER_1_ID);
             MATCHER.assertMatch(actual, updated);
         } else {
             assertThrows(VotingProcessException.class, () -> voteService.vote(updated, UserData.USER_1_ID));

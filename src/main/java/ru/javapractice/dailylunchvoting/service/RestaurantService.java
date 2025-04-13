@@ -21,16 +21,12 @@ public class RestaurantService {
         return repository.save(restaurant);
     }
 
-    public void delete(int id) {
-        repository.delete(id);
-    }
-
     public Restaurant get(int id) {
         return checkNotFound(repository.get(id), id);
     }
 
     public Restaurant getWithMenuForToday(int id) {
-        return checkNotFound(repository.getWithMenuForToday(id), id);
+        return checkNotFound(repository.findByIdWithMenuForToday(id), id);
     }
 
     public List<Restaurant> getAll() {
@@ -42,6 +38,6 @@ public class RestaurantService {
     }
 
     public List<Restaurant> getAllWithMenuForToday() {
-        return repository.getAllRestaurantsWithMenuForToday();
+        return repository.getAllWithMenuForToday();
     }
 }

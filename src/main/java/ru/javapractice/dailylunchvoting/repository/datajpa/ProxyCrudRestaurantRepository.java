@@ -13,9 +13,6 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface ProxyCrudRestaurantRepository extends JpaRepository<Restaurant, Integer> {
 
-    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m WHERE m.menuDate=CURRENT_DATE ORDER BY r.name ASC")
-    List<Restaurant> findRestaurantsWithMenuForToday();
-
     @Transactional
     @Modifying
     @Query("DELETE FROM Restaurant r WHERE r.id=:id")
@@ -23,6 +20,9 @@ public interface ProxyCrudRestaurantRepository extends JpaRepository<Restaurant,
         throw new UnsupportedOperationException("Deletion is not allowed. All data is stored in the database as history.");
     }
 
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m WHERE m.menuDate=CURRENT_DATE ORDER BY r.name ASC")
+    List<Restaurant> getAllWithMenuForToday();
+
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m WHERE r.id=:id AND m.menuDate=CURRENT_DATE ORDER BY r.name ASC")
-    Optional<Restaurant> getWithMenu(@Param("id") Integer id);
+    Optional<Restaurant> findByIdWithMenuForToday(@Param("id") Integer id);
 }

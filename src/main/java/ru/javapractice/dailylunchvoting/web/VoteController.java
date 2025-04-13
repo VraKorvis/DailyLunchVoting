@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.javapractice.dailylunchvoting.model.Vote;
 import ru.javapractice.dailylunchvoting.service.VoteService;
+import ru.javapractice.dailylunchvoting.util.SecurityUtil;
 
 import java.util.List;
 
@@ -30,24 +31,18 @@ public class VoteController {
         return service.getAll();
     }
 
-    @GetMapping(value = "/{id}")
-    public Vote get(@PathVariable int id) {
-        log.info("get {}", id);
-        return service.get(id, id);
+    @GetMapping("/today")
+    public Vote getTodayVote() {
+        log.info("getTodayVote");
+        return service.findByUserIdForToday(SecurityUtil.authUserId());
     }
 
-    @PostMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void vote(@RequestBody Vote vote, @PathVariable int id) {
-        assureIdConsistent(vote, id);
-        service.vote(vote, id);
-    }
-
-    @DeleteMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int id) {
-        log.info("delete {}", id);
-        service.delete(id, id);
+    public void vote(@RequestBody Vote vote) {
+        log.info("vote {}", vote);
+        assureIdConsistent(vote, SecurityUtil.authUserId());
+        service.vote(vote, SecurityUtil.authUserId());
     }
 
 }

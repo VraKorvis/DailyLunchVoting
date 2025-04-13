@@ -16,7 +16,6 @@ import ru.javapractice.dailylunchvoting.util.exception.VotingProcessException;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static ru.javapractice.dailylunchvoting.util.ValidationUtil.checkNotFound;
 
@@ -43,24 +42,16 @@ public class VoteService {
         return voteRepository.getAllByUserId(userId);
     }
 
-    public Vote get(int id, int userId) {
-        return checkNotFound(voteRepository.get(id, userId), id);
-    }
-
-    public Vote getWithRestaurant(int id, int userId) {
-        return checkNotFound(voteRepository.getWithRestaurant(id, userId), id);
-    }
-
-    public Optional<Vote> getWithRestaurantForToday(int userId) {
-        return checkNotFound(voteRepository.findByUserIdForToday(userId), userId);
-    }
-
     public List<Vote> getAllWithRestaurantForToday() {
-        return voteRepository.getAllWithRestaurantForToday();
+        return voteRepository.getAllForToday();
     }
 
     public List<Vote> getAllWithRestaurantByUserId(int userId) {
-        return voteRepository.getAllWithRestaurantByUserId(userId);
+        return voteRepository.getAllByUserId(userId);
+    }
+
+    public Vote findByUserIdForToday(int userId) {
+        return checkNotFound(voteRepository.findByUserIdForToday(userId), userId).orElseThrow();
     }
 
     @Transactional
@@ -89,10 +80,4 @@ public class VoteService {
                     return vote;
                 });
     }
-
-    public void delete(int id, int userId) {
-        voteRepository.delete(id, userId);
-    }
-
-
 }

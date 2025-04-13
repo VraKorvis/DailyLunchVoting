@@ -4,6 +4,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import ru.javapractice.dailylunchvoting.model.Restaurant;
 import ru.javapractice.dailylunchvoting.repository.RestaurantRepository;
+import ru.javapractice.dailylunchvoting.util.exception.NotFoundException;
 
 import java.util.List;
 
@@ -18,8 +19,14 @@ public class DataJpaRestaurantRepository implements RestaurantRepository {
     }
 
     @Override
+    public List<Restaurant> getAll() {
+        return proxyCrudRestaurantRepository.findAll(SORT_NAME);
+    }
+
+    @Override
     public Restaurant get(Integer id) {
-        return proxyCrudRestaurantRepository.findById(id).orElse(null);
+        return proxyCrudRestaurantRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Restaurant with id=" + id + " not found"));
     }
 
     @Override
@@ -28,18 +35,14 @@ public class DataJpaRestaurantRepository implements RestaurantRepository {
     }
 
     @Override
-    public Restaurant getWithMenuForToday(Integer id) {
-        return proxyCrudRestaurantRepository.getWithMenu(id).orElse(null);
+    public List<Restaurant> getAllWithMenuForToday() {
+        return proxyCrudRestaurantRepository.getAllWithMenuForToday();
     }
 
     @Override
-    public List<Restaurant> getAll() {
-        return proxyCrudRestaurantRepository.findAll(SORT_NAME);
-    }
-
-    @Override
-    public List<Restaurant> getAllRestaurantsWithMenuForToday() {
-        return proxyCrudRestaurantRepository.findRestaurantsWithMenuForToday();
+    public Restaurant findByIdWithMenuForToday(Integer id) {
+        return proxyCrudRestaurantRepository.findByIdWithMenuForToday(id)
+                .orElseThrow(() -> new NotFoundException("Restaurant with id=" + id + " not found"));
     }
 
     @Override
@@ -47,8 +50,4 @@ public class DataJpaRestaurantRepository implements RestaurantRepository {
         return proxyCrudRestaurantRepository.save(restaurant);
     }
 
-    @Override
-    public boolean delete(Integer id) {
-        return proxyCrudRestaurantRepository.delete(id) != 0;
-    }
 }

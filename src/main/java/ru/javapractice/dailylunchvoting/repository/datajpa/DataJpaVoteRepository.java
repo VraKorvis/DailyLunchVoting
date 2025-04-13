@@ -14,11 +14,9 @@ public class DataJpaVoteRepository implements VoteRepository {
     private static final Sort SORT_NAME = Sort.by(Sort.Direction.DESC, "date", "id");
 
     private final ProxyCrudVoteRepository voteRepository;
-    private final ProxyCrudProfileRepository userRepository;
 
-    public DataJpaVoteRepository(ProxyCrudVoteRepository voteRepository, ProxyCrudProfileRepository userRepository) {
+    public DataJpaVoteRepository(ProxyCrudVoteRepository voteRepository) {
         this.voteRepository = voteRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
@@ -27,37 +25,19 @@ public class DataJpaVoteRepository implements VoteRepository {
     }
 
     @Override
+    public List<Vote> getAllForToday() {
+        return voteRepository.getAllForToday();
+    }
+
+    @Override
     public List<Vote> getAllByUserId(int userId) {
         return voteRepository.getAllByUserId(userId);
     }
 
     @Override
-    public List<Vote> getAllWithRestaurantForToday() {
-        return voteRepository.getAllWithRestaurantForToday();
-    }
-
-    @Override
-    public List<Vote> getAllWithRestaurantByUserId(int userId) {
-        return voteRepository.getAllWithRestaurantByUserId(userId);
-    }
-
-    @Override
-    public Vote get(int id, int userId) {
-        return voteRepository.findById(id)
-                .filter(v -> Objects.equals(v.getUser().getId(), userId))
-                .orElse(null);
-    }
-
-    @Override
-    public Vote getWithRestaurant(int id, int userId) {
-        return voteRepository.getWithRestaurant(id, userId)
-                .filter(v -> Objects.equals(v.getUser().getId(), userId))
-                .orElse(null);
-    }
-
-    @Override
-    public Optional<Vote> findByUserIdForToday(int id){
-        return voteRepository.findByUserIdAndDate(id);
+    public Optional<Vote> findByUserIdForToday(int userId){
+        return voteRepository.findByUserIdForToday(userId)
+                .filter(v -> Objects.equals(v.getUser().getId(), userId));
     }
 
     @Override
@@ -65,8 +45,4 @@ public class DataJpaVoteRepository implements VoteRepository {
         return voteRepository.save(vote);
     }
 
-    @Override
-    public boolean delete(int id, int userId) {
-        return voteRepository.delete(id, userId) != 0;
-    }
 }
