@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import ru.javapractice.dailylunchvoting.model.Restaurant;
 import ru.javapractice.dailylunchvoting.model.User;
 import ru.javapractice.dailylunchvoting.model.Vote;
@@ -12,7 +11,7 @@ import ru.javapractice.dailylunchvoting.repository.ProfileRepository;
 import ru.javapractice.dailylunchvoting.repository.RestaurantRepository;
 import ru.javapractice.dailylunchvoting.repository.VoteRepository;
 import ru.javapractice.dailylunchvoting.util.VotingTimeChecker;
-import ru.javapractice.dailylunchvoting.util.exception.VotingProcessException;
+import ru.javapractice.dailylunchvoting.exception.VotingProcessException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -55,13 +54,12 @@ public class VoteService {
     }
 
     @Transactional
-    public Vote vote(Vote vote, int id) {
-        Assert.notNull(vote, "vote must not be null");
+    public Vote vote(int restaurantId, int userId) {
 
-        User refUser = userRepository.getReferenceById(id);
-        Restaurant refRestaurant = restaurantRepository.getReferenceById(vote.getRestaurant().getId());
+        User refUser = userRepository.getReferenceById(userId);
+        Restaurant refRestaurant = restaurantRepository.getReferenceById(restaurantId);
 
-       return voteRepository.findByUserIdForToday(id)
+       return voteRepository.findByUserIdForToday(userId)
                 .map(existingVote -> {
                     if (!VotingTimeChecker.canUpdateVote(existingVote)) {
                         throw new VotingProcessException("It's too late to change your vote");
@@ -73,10 +71,11 @@ public class VoteService {
                     if (!VotingTimeChecker.canVoteToday()) {
                         throw new VotingProcessException("It's too late to vote");
                     }
+                    Vote vote = new Vote();
                     vote.setUser(refUser);
                     vote.setDate(LocalDate.now());
                     vote.setRestaurant(refRestaurant);
-                    voteRepository.save(vote, refUser.id());
+                    voteRepository.save(vote, userId);
                     return vote;
                 });
     }

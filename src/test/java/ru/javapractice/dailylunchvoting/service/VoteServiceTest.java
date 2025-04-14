@@ -11,12 +11,11 @@ import ru.javapractice.dailylunchvoting.model.Vote;
 import ru.javapractice.dailylunchvoting.testdata.UserData;
 import ru.javapractice.dailylunchvoting.util.TimingExtension;
 import ru.javapractice.dailylunchvoting.util.VotingTimeChecker;
-import ru.javapractice.dailylunchvoting.util.exception.VotingProcessException;
+import ru.javapractice.dailylunchvoting.exception.VotingProcessException;
 
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javapractice.dailylunchvoting.testdata.VoteData.*;
 
@@ -62,7 +61,7 @@ public class VoteServiceTest {
     public void save(){
         Vote newVOte = getNew();
         if (VotingTimeChecker.canVoteToday()){
-            voteService.vote(newVOte, UserData.USER_2_ID);
+            voteService.vote(newVOte.getRestaurant().id(), UserData.USER_2_ID);
             Vote created = voteService.findByUserIdForToday(UserData.USER_2_ID);
             int createdId = created.id();
             Vote newVote = getNew();
@@ -70,7 +69,7 @@ public class VoteServiceTest {
             MATCHER.assertMatch(created, newVote);
         }
         else {
-            assertThrows(VotingProcessException.class, () -> voteService.vote(newVOte, UserData.USER_2_ID));
+            assertThrows(VotingProcessException.class, () -> voteService.vote(newVOte.getRestaurant().id(), UserData.USER_2_ID));
         }
     }
 
@@ -78,11 +77,11 @@ public class VoteServiceTest {
     public void update() {
         Vote updated = getUpdated(USER1_TODAY_VOTE);
         if (VotingTimeChecker.canUpdateVote(updated)) {
-            voteService.vote(updated, UserData.USER_1_ID);
+            voteService.vote(updated.getRestaurant().id(), UserData.USER_1_ID);
             Vote actual = voteService.findByUserIdForToday(UserData.USER_1_ID);
             MATCHER.assertMatch(actual, updated);
         } else {
-            assertThrows(VotingProcessException.class, () -> voteService.vote(updated, UserData.USER_1_ID));
+            assertThrows(VotingProcessException.class, () -> voteService.vote(updated.getRestaurant().id(), UserData.USER_1_ID));
         }
     }
 }

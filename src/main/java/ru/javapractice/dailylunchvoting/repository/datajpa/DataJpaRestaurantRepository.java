@@ -4,7 +4,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import ru.javapractice.dailylunchvoting.model.Restaurant;
 import ru.javapractice.dailylunchvoting.repository.RestaurantRepository;
-import ru.javapractice.dailylunchvoting.util.exception.NotFoundException;
+import ru.javapractice.dailylunchvoting.exception.NotFoundException;
 
 import java.util.List;
 
@@ -37,6 +37,16 @@ public class DataJpaRestaurantRepository implements RestaurantRepository {
     @Override
     public List<Restaurant> getAllWithMenuForToday() {
         return proxyCrudRestaurantRepository.getAllWithMenuForToday();
+    }
+
+    @Override
+    public List<Restaurant> getAllWithoutAssignedMenuForToday() {
+        return proxyCrudRestaurantRepository.getAllWithoutAssignedMenuForToday();
+    }
+
+    @Override
+    public List<Restaurant> getAllWithAssignedMenuForToday() {
+        return proxyCrudRestaurantRepository.getAllWithAssignedMenuForToday();
     }
 
     @Override

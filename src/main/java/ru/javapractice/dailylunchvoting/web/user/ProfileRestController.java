@@ -13,7 +13,7 @@ import static ru.javapractice.dailylunchvoting.util.SecurityUtil.authUserId;
 @RestController
 @RequestMapping(value = ProfileRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProfileRestController extends AbstractUserController {
-    static final String REST_URL = "/rest/profile";
+    static final String REST_URL = "/api/profile";
 
     public ProfileRestController(UserService service) {
         super(service);
@@ -38,11 +38,6 @@ public class ProfileRestController extends AbstractUserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@RequestBody User user) {
         super.update(user, authUserId());
-    }
-
-    @GetMapping("/text")
-    public String testUTF() {
-        return "Русский текст";
     }
 
 }

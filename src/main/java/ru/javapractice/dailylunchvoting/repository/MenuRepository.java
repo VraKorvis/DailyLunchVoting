@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface MenuRepository {
     List<Menu> getAll();
-    Menu get(Integer id);
+    Menu getReferenceById(Integer id);
     Menu save(Menu menuItem);
     boolean delete(Integer id);
 }

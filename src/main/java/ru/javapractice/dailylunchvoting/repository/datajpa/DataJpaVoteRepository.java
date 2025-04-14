@@ -14,9 +14,18 @@ public class DataJpaVoteRepository implements VoteRepository {
     private static final Sort SORT_NAME = Sort.by(Sort.Direction.DESC, "date", "id");
 
     private final ProxyCrudVoteRepository voteRepository;
+    private final ProxyCrudProfileRepository userRepository;
 
-    public DataJpaVoteRepository(ProxyCrudVoteRepository voteRepository) {
+    public DataJpaVoteRepository(ProxyCrudVoteRepository voteRepository, ProxyCrudProfileRepository userRepository) {
         this.voteRepository = voteRepository;
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public Vote get(int id, int userId) {
+        return voteRepository.findById(id)
+                .filter(v -> Objects.equals(v.getUser().getId(), userId))
+                .orElse(null);
     }
 
     @Override
@@ -42,6 +51,10 @@ public class DataJpaVoteRepository implements VoteRepository {
 
     @Override
     public Vote save(Vote vote, int userId){
+        if (!vote.isNew() && get(vote.id(), userId) == null) {
+            return null;
+        }
+        vote.setUser(userRepository.getReferenceById(userId));
         return voteRepository.save(vote);
     }
 

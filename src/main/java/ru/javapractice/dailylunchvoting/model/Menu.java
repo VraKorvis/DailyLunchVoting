@@ -5,8 +5,7 @@ import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name="menu", uniqueConstraints = @UniqueConstraint(columnNames = {"restaurant_id", "menu_date"}, name = "unique_menu_per_day"))
@@ -20,7 +19,7 @@ public class Menu extends AbstractBaseEntity {
             joinColumns = @JoinColumn(name = "menu_id"),
             inverseJoinColumns = @JoinColumn(name = "menuitem_id"))
     @BatchSize(size = 200)
-    private Set<MenuItem> menuItems;
+    private List<MenuItem> menuItems;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
@@ -34,7 +33,7 @@ public class Menu extends AbstractBaseEntity {
     public Menu() {
     }
 
-    public Menu(Integer id, LocalDate menuDate, Restaurant restaurant, Set<MenuItem> menuItems) {
+    public Menu(Integer id, LocalDate menuDate, Restaurant restaurant, List<MenuItem> menuItems) {
         super(id);
         this.menuDate = menuDate;
         this.restaurant = restaurant;
@@ -57,13 +56,15 @@ public class Menu extends AbstractBaseEntity {
         this.restaurant = restaurant;
     }
 
-    public Set<MenuItem> getMenuItems() {
+    public List<MenuItem> getMenuItems() {
         return menuItems;
     }
 
-    public void setMenuItems(HashSet<MenuItem> menuItems) {
+    public void setMenuItems(List<MenuItem> menuItems) {
         this.menuItems = menuItems;
     }
+
+
 
     @Override
     public String toString() {

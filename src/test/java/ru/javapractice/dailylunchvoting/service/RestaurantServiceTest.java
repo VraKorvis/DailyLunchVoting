@@ -5,6 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import ru.javapractice.dailylunchvoting.to.RestaurantWithMenuTo;
+import ru.javapractice.dailylunchvoting.util.RestaurantUtil;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 import static ru.javapractice.dailylunchvoting.testdata.RestaurantData.*;
 
@@ -36,7 +41,7 @@ public class RestaurantServiceTest {
     @Test
     public void getWithMenuForToday() {
         var restaurant = service.getWithMenuForToday(RESTAURANT_A_ID);
-        MATCHER_WITH_MENU.assertMatch(restaurant, RESTAURANT_A);
+        MATCHER_TO_WITH_MENU.assertMatch(restaurant, RestaurantUtil.toTo(RESTAURANT_A));
     }
 
     @Test
@@ -48,7 +53,10 @@ public class RestaurantServiceTest {
     @Test
     public void getAllWithMenuForToday() {
         var restaurants = service.getAllWithMenuForToday();
-        MATCHER_WITH_MENU.assertMatch(restaurants, RESTAURANT_A, RESTAURANT_B, RESTAURANT_C);
+        List<RestaurantWithMenuTo> restaurantWithMenuTos = Stream.of(RESTAURANT_A, RESTAURANT_B, RESTAURANT_C)
+                .map(RestaurantUtil::toTo)
+                .toList();
+        MATCHER_TO_WITH_MENU.assertMatch(restaurants, restaurantWithMenuTos);
     }
 
     @Test

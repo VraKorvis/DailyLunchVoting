@@ -1,7 +1,7 @@
 package ru.javapractice.dailylunchvoting.util;
 
-import ru.javapractice.dailylunchvoting.model.AbstractBaseEntity;
-import ru.javapractice.dailylunchvoting.util.exception.NotFoundException;
+import ru.javapractice.dailylunchvoting.HasId;
+import ru.javapractice.dailylunchvoting.exception.NotFoundException;
 
 public class ValidationUtil {
     public static <T> T checkNotFound(T object, int id) {
@@ -24,13 +24,13 @@ public class ValidationUtil {
         }
     }
 
-    public static void checkIsNew(AbstractBaseEntity entity) {
+    public static void checkIsNew(HasId entity) {
         if (!entity.isNew()) {
             throw new IllegalArgumentException(entity + " must be new (id=null)");
         }
     }
 
-    public static void assureIdConsistent(AbstractBaseEntity entity, int id) {
+    public static void assureIdConsistent(HasId entity, int id) {
         //      conservative when you reply, but accept liberally (http://stackoverflow.com/a/32728226/548473)
         if (entity.isNew()) {
             entity.setId(id);

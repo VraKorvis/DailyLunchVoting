@@ -11,13 +11,11 @@ import ru.javapractice.dailylunchvoting.util.SecurityUtil;
 
 import java.util.List;
 
-import static ru.javapractice.dailylunchvoting.util.ValidationUtil.assureIdConsistent;
-
 @RestController
 @RequestMapping(value = VoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class VoteController {
     protected final Logger log = LoggerFactory.getLogger(VoteController.class);
-    static final String REST_URL = "/rest/votes";
+    static final String REST_URL = "/api/votes";
 
     private final VoteService service;
 
@@ -39,10 +37,9 @@ public class VoteController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void vote(@RequestBody Vote vote) {
-        log.info("vote {}", vote);
-        assureIdConsistent(vote, SecurityUtil.authUserId());
-        service.vote(vote, SecurityUtil.authUserId());
+    public void vote(@RequestParam int restaurantId) {
+        log.info("vote {}", restaurantId);
+        service.vote(restaurantId, SecurityUtil.authUserId());
     }
 
 }

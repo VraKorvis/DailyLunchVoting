@@ -13,4 +13,7 @@ public interface RestaurantRepository {
     Restaurant save(Restaurant restaurant);
 
     Restaurant findByIdWithMenuForToday(Integer id);
+
+    List<Restaurant> getAllWithoutAssignedMenuForToday();
+    List<Restaurant> getAllWithAssignedMenuForToday();
 }

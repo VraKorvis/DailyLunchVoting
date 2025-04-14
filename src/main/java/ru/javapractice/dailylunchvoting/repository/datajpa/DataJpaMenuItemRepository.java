@@ -42,4 +42,12 @@ public class DataJpaMenuItemRepository implements MenuItemRepository {
     public boolean delete(Integer id) {
         return proxyCrudRepository.delete(id) != 0;
     }
+
+    public List<MenuItem> findAllById(Iterable<Integer> ids) {
+        return proxyCrudRepository.findAllById(ids);
+    }
+
+    public List<MenuItem> saveAll(List<MenuItem> list) {
+        return proxyCrudRepository.saveAll(list);
+    }
 }

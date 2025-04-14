@@ -23,6 +23,13 @@ public interface ProxyCrudRestaurantRepository extends JpaRepository<Restaurant,
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m WHERE m.menuDate=CURRENT_DATE ORDER BY r.name ASC")
     List<Restaurant> getAllWithMenuForToday();
 
+    @Query("SELECT r FROM Restaurant r LEFT JOIN Menu m ON r.id = m.restaurant.id AND m.menuDate = CURRENT_DATE WHERE m.id IS NULL")
+    List<Restaurant> getAllWithoutAssignedMenuForToday();
+
+    @Query("SELECT r FROM Restaurant r INNER JOIN Menu m ON r.id = m.restaurant.id AND m.menuDate = CURRENT_DATE")
+    List<Restaurant> getAllWithAssignedMenuForToday();
+
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m WHERE r.id=:id AND m.menuDate=CURRENT_DATE ORDER BY r.name ASC")
     Optional<Restaurant> findByIdWithMenuForToday(@Param("id") Integer id);
+
 }

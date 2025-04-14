@@ -9,6 +9,7 @@ public interface VoteRepository {
 
     Vote save(Vote vote, int userId);
 
+    Vote get(int id, int userId);
     List<Vote> getAll();
 
     List<Vote> getAllForToday();

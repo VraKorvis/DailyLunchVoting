@@ -1,7 +1,7 @@
 package ru.javapractice.dailylunchvoting.model;
 
-import org.springframework.data.domain.Persistable;
 import org.springframework.util.Assert;
+import ru.javapractice.dailylunchvoting.HasId;
 
 import javax.persistence.*;
 
@@ -9,7 +9,7 @@ import static org.hibernate.proxy.HibernateProxyHelper.getClassWithoutInitializi
 
 @MappedSuperclass
 @Access(AccessType.FIELD)
-public abstract class AbstractBaseEntity implements Persistable<Integer> {
+public abstract class AbstractBaseEntity implements HasId {
     public static final int START_SEQ = 100000;
 
     @Id
