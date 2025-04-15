@@ -9,5 +9,6 @@
     <context:component-scan base-package="ru.javapractice.**.service"/>
 
     <context:component-scan base-package="ru.javapractice.**.web"/>
+    <context:component-scan base-package="ru.javapractice.**.exception"/>
 
 </beans>

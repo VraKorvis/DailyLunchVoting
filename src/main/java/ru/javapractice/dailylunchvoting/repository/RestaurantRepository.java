@@ -16,4 +16,7 @@ public interface RestaurantRepository {
 
     List<Restaurant> getAllWithoutAssignedMenuForToday();
     List<Restaurant> getAllWithAssignedMenuForToday();
+
+    boolean existsById(int restaurantId);
+
 }

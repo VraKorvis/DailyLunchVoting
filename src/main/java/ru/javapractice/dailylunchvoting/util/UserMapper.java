@@ -4,7 +4,7 @@ import ru.javapractice.dailylunchvoting.model.Role;
 import ru.javapractice.dailylunchvoting.model.User;
 import ru.javapractice.dailylunchvoting.to.UserTo;
 
-public class UsersUtil {
+public class UserMapper {
 
     public static User createNewFromTo(UserTo userTo) {
         return new User(null, userTo.getName(), userTo.getEmail().toLowerCase(), userTo.getPassword(), Role.USER);

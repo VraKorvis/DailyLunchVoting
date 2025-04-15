@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javapractice.dailylunchvoting.model.MenuItem;
 
 import java.util.List;
+import java.util.Set;
 
 @Transactional(readOnly = true)
 public interface ProxyCrudMenuItemRepository extends JpaRepository<MenuItem, Integer> {
@@ -19,6 +20,8 @@ public interface ProxyCrudMenuItemRepository extends JpaRepository<MenuItem, Int
         throw new UnsupportedOperationException("Deletion is not allowed. All data is stored in the database as history.");
     }
 
-    @Query("SELECT mi FROM Menu m JOIN m.menuItems mi WHERE m.id=:id")
-    List<MenuItem> findAllByMenuId(Integer id);
+    List<MenuItem> findItemsById(Integer id);
+
+    @Query("SELECT m FROM MenuItem m WHERE m.name IN :names")
+    List<MenuItem> findByNames(@Param("names") Set<String> names);
 }

@@ -32,7 +32,7 @@ public class RestaurantRestController {
 
     @GetMapping("/{id}/with-menu")
     public RestaurantWithMenuTo getWithMenuForToday(@PathVariable int id) {
-        log.info("get with menu {}", id);
+        log.info("get restaurant with menu {}", id);
         return service.getWithMenuForToday(id);
     }
 

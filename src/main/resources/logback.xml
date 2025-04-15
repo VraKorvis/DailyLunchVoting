@@ -21,6 +21,8 @@
     </appender>
 
     <logger name="ru.javapractice.dailylunchvoting" level="info"/>
+    <logger name="org.springframework.http.converter" level="DEBUG"/>
+    <logger name="com.fasterxml.jackson" level="DEBUG"/>
 
     <root level="info">
         <appender-ref ref="file"/>

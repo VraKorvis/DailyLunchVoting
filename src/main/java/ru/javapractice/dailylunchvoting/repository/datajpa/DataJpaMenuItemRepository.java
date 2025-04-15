@@ -6,6 +6,7 @@ import ru.javapractice.dailylunchvoting.model.MenuItem;
 import ru.javapractice.dailylunchvoting.repository.MenuItemRepository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class DataJpaMenuItemRepository implements MenuItemRepository {
@@ -25,7 +26,7 @@ public class DataJpaMenuItemRepository implements MenuItemRepository {
 
     @Override
     public List<MenuItem> getAllByMenuId(Integer id) {
-        return proxyCrudRepository.findAllByMenuId(id);
+        return proxyCrudRepository.findItemsById(id);
     }
 
     @Override
@@ -49,5 +50,9 @@ public class DataJpaMenuItemRepository implements MenuItemRepository {
 
     public List<MenuItem> saveAll(List<MenuItem> list) {
         return proxyCrudRepository.saveAll(list);
+    }
+
+    public List<MenuItem> findByNames(Set<String> names) {
+        return proxyCrudRepository.findByNames(names);
     }
 }

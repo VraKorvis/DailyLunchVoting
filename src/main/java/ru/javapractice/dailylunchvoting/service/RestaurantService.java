@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import ru.javapractice.dailylunchvoting.model.Restaurant;
 import ru.javapractice.dailylunchvoting.repository.RestaurantRepository;
 import ru.javapractice.dailylunchvoting.to.RestaurantWithMenuTo;
-import ru.javapractice.dailylunchvoting.util.RestaurantUtil;
+import ru.javapractice.dailylunchvoting.util.RestaurantMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +29,7 @@ public class RestaurantService {
     }
 
     public RestaurantWithMenuTo getWithMenuForToday(int id) {
-        return RestaurantUtil.toTo(checkNotFound(repository.findByIdWithMenuForToday(id), id));
+        return RestaurantMapper.toTo(checkNotFound(repository.findByIdWithMenuForToday(id), id));
     }
 
     public List<Restaurant> getAll() {
@@ -42,16 +42,16 @@ public class RestaurantService {
 
     public List<RestaurantWithMenuTo> getAllWithMenuForToday() {
         return repository.getAllWithMenuForToday().stream()
-                .map(RestaurantUtil::toTo).collect(Collectors.toList());
+                .map(RestaurantMapper::toTo).collect(Collectors.toList());
     }
 
     public List<RestaurantWithMenuTo> getAllWithAssignedMenuForToday() {
         return repository.getAllWithAssignedMenuForToday().stream()
-                .map(RestaurantUtil::toTo).collect(Collectors.toList());
+                .map(RestaurantMapper::toTo).collect(Collectors.toList());
     }
 
     public List<RestaurantWithMenuTo> getAllWithoutAssignedMenuForToday() {
         return repository.getAllWithoutAssignedMenuForToday().stream()
-                .map(RestaurantUtil::toTo).collect(Collectors.toList());
+                .map(RestaurantMapper::toTo).collect(Collectors.toList());
     }
 }

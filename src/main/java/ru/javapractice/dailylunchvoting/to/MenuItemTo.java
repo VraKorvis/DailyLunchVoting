@@ -1,8 +1,11 @@
 package ru.javapractice.dailylunchvoting.to;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.beans.ConstructorProperties;
 import java.util.Objects;
 
+@JsonPropertyOrder({"id", "name", "price"})
 public final class MenuItemTo extends BaseTo {
     private final String name;
     private final float price;

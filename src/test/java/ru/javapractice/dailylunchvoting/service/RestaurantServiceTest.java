@@ -6,12 +6,12 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import ru.javapractice.dailylunchvoting.to.RestaurantWithMenuTo;
-import ru.javapractice.dailylunchvoting.util.RestaurantUtil;
+import ru.javapractice.dailylunchvoting.util.RestaurantMapper;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-import static ru.javapractice.dailylunchvoting.testdata.RestaurantData.*;
+import static ru.javapractice.dailylunchvoting.testdata.RestaurantMenuData.*;
 
 @SpringJUnitConfig(locations = {
         "classpath:spring/spring-app.xml",
@@ -41,7 +41,7 @@ public class RestaurantServiceTest {
     @Test
     public void getWithMenuForToday() {
         var restaurant = service.getWithMenuForToday(RESTAURANT_A_ID);
-        MATCHER_TO_WITH_MENU.assertMatch(restaurant, RestaurantUtil.toTo(RESTAURANT_A));
+        RESTAURANT_TO_MATCHER.assertMatch(restaurant, RestaurantMapper.toTo(RESTAURANT_A));
     }
 
     @Test
@@ -53,10 +53,10 @@ public class RestaurantServiceTest {
     @Test
     public void getAllWithMenuForToday() {
         var restaurants = service.getAllWithMenuForToday();
-        List<RestaurantWithMenuTo> restaurantWithMenuTos = Stream.of(RESTAURANT_A, RESTAURANT_B, RESTAURANT_C)
-                .map(RestaurantUtil::toTo)
+        List<RestaurantWithMenuTo> restaurantWithMenuTos = Stream.of(RESTAURANT_A, RESTAURANT_B)
+                .map(RestaurantMapper::toTo)
                 .toList();
-        MATCHER_TO_WITH_MENU.assertMatch(restaurants, restaurantWithMenuTos);
+        RESTAURANT_TO_MATCHER.assertMatch(restaurants, restaurantWithMenuTos);
     }
 
     @Test

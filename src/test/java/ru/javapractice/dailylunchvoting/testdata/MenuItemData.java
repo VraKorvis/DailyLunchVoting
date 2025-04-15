@@ -25,6 +25,9 @@ public class MenuItemData {
     public static final MenuItem CHICKEN = new MenuItem(BURGER_ID + 8, "Chicken", 400.0f);
     public static final MenuItem COFFEE = new MenuItem(BURGER_ID + 9, "Coffee", 100.0f);
 
+    public static final MenuItem SALMON = new MenuItem(null, "Salmon", 750.0f);
+    public static final MenuItem GRILLED_CHEESE = new MenuItem(null, "Grilled Cheese Sandwich", 149.0f);
+
     private MenuItemData(){}
 
     public static MenuItem getUpdated(MenuItem item) {

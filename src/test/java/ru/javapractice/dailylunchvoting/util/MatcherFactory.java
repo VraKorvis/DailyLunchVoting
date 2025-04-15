@@ -1,4 +1,5 @@
 package ru.javapractice.dailylunchvoting.util;
+import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -15,6 +16,12 @@ public class MatcherFactory {
     private MatcherFactory() {
     }
 
+    private static RecursiveComparisonConfiguration buildDefaultConfig(String... fieldsToIgnore) {
+        return RecursiveComparisonConfiguration.builder()
+                .withIgnoredFields(fieldsToIgnore)
+                .build();
+    }
+
     public static <T> Matcher<T> usingAssertions(Class<T> clazz, BiConsumer<T, T> assertion, BiConsumer<Iterable<T>, Iterable<T>> iterableAssertion) {
         return new Matcher<>(clazz, assertion, iterableAssertion);
     }
@@ -26,10 +33,13 @@ public class MatcherFactory {
     }
 
     public static <T> Matcher<T> usingIgnoringFieldsComparator(Class<T> clazz, String... fieldsToIgnore) {
+        return usingIgnoringFieldsComparator(clazz, buildDefaultConfig(fieldsToIgnore));
+    }
+
+    public static <T> Matcher<T> usingIgnoringFieldsComparator(Class<T> clazz, RecursiveComparisonConfiguration config) {
         return usingAssertions(clazz,
-                (a, e) -> assertThat(a).usingRecursiveComparison()
-                        .ignoringFields(fieldsToIgnore).isEqualTo(e),
-                (a, e) -> assertThat(a).usingRecursiveFieldByFieldElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(e));
+                (a, e) -> assertThat(a).usingRecursiveComparison(config).isEqualTo(e),
+                (a, e) -> assertThat(a).usingRecursiveFieldByFieldElementComparator(config).isEqualTo(e));
     }
 
     public static class Matcher<T> {

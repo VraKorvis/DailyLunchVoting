@@ -3,7 +3,7 @@ package ru.javapractice.dailylunchvoting.web;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.javapractice.dailylunchvoting.util.RestaurantUtil;
+import ru.javapractice.dailylunchvoting.util.RestaurantMapper;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.javapractice.dailylunchvoting.testdata.RestaurantData.*;
+import static ru.javapractice.dailylunchvoting.testdata.RestaurantMenuData.*;
 
 class RestaurantRestControllerTest extends AbstractControllerTest{
 
@@ -23,7 +23,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest{
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MATCHER_TO_WITH_MENU.contentJson(RestaurantUtil.toTo(RESTAURANT_A)));
+                .andExpect(RESTAURANT_TO_MATCHER.contentJson(RestaurantMapper.toTo(RESTAURANT_A)));
     }
 
     @Test
@@ -32,8 +32,8 @@ class RestaurantRestControllerTest extends AbstractControllerTest{
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MATCHER_TO_WITH_MENU.contentJson(Stream.of(RESTAURANT_A, RESTAURANT_B, RESTAURANT_C)
-                        .map(RestaurantUtil::toTo)
+                .andExpect(RESTAURANT_TO_MATCHER.contentJson(Stream.of(RESTAURANT_A, RESTAURANT_B)
+                        .map(RestaurantMapper::toTo)
                         .collect(Collectors.toList()))
                 );
     }

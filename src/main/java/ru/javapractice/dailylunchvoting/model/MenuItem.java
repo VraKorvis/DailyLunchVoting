@@ -10,7 +10,6 @@ import javax.validation.constraints.NotBlank;
 public class MenuItem extends AbstractNamedBaseEntity {
 
     @Column(name = "price", nullable = false)
-    @NotBlank
     @Range(min = 1)
     private Float price;
 

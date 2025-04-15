@@ -5,6 +5,7 @@ import ru.javapractice.dailylunchvoting.model.Menu;
 import ru.javapractice.dailylunchvoting.repository.MenuRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class DataJpaMenuRepository implements MenuRepository {
@@ -23,6 +24,16 @@ public class DataJpaMenuRepository implements MenuRepository {
     @Override
     public Menu getReferenceById(Integer id) {
         return proxyCrudMenuRepository.getReferenceById(id);
+    }
+
+    @Override
+    public Optional<Menu> findByRestaurantIdForToday(Integer id) {
+        return proxyCrudMenuRepository.findByRestaurantIdForToday(id);
+    }
+
+    @Override
+    public Optional<Menu> findById(int id) {
+        return proxyCrudMenuRepository.findById(id);
     }
 
     @Override

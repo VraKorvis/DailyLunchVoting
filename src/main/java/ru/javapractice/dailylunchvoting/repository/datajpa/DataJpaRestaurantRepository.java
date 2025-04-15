@@ -60,4 +60,13 @@ public class DataJpaRestaurantRepository implements RestaurantRepository {
         return proxyCrudRestaurantRepository.save(restaurant);
     }
 
+    public Restaurant findById(int id) {
+        return proxyCrudRestaurantRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Restaurant with id=" + id + " not found"));
+    }
+
+    @Override
+    public boolean existsById(int restaurantId) {
+        return proxyCrudRestaurantRepository.existsById(restaurantId);
+    }
 }

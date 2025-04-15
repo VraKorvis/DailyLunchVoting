@@ -8,7 +8,7 @@ import ru.javapractice.dailylunchvoting.to.RestaurantWithMenuTo;
 import java.time.LocalDate;
 import java.util.Optional;
 
-public class RestaurantUtil {
+public class RestaurantMapper {
 
     public static RestaurantWithMenuTo toTo(Restaurant restaurant) {
 
@@ -19,7 +19,7 @@ public class RestaurantUtil {
         return new RestaurantWithMenuTo(
                 restaurant.getId(),
                 restaurant.getName(),
-                MenuUtil.toTo(todaysMenu)
+                MenuMapper.toTo(todaysMenu)
         );
 
     }
