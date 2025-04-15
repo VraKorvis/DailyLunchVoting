@@ -38,7 +38,7 @@ VALUES ('Burger', 450),
 INSERT INTO menu (menu_date, restaurant_id)
 VALUES (CURRENT_DATE, 100004),
        (CURRENT_DATE, 100005),
-       (CURRENT_DATE, 100006);
+       ('2025-03-20', 100006);
 
 INSERT INTO menu_menuitems_link (menu_id, menuitem_id)
 VALUES (100017, 100007),
