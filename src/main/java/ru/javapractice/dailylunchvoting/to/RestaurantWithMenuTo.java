@@ -2,12 +2,19 @@ package ru.javapractice.dailylunchvoting.to;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.beans.ConstructorProperties;
 import java.util.Objects;
 
 @JsonPropertyOrder({"id", "name", "menu"})
 public class RestaurantWithMenuTo extends BaseTo {
+    @NotBlank
+    @Size(min = 2, max = 100)
     private final String name;
+
+    @NotNull
     private final MenuTo menu;
 
     @ConstructorProperties({"id", "name", "menu"})

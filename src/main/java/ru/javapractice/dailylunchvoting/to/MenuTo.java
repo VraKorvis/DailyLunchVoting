@@ -2,6 +2,8 @@ package ru.javapractice.dailylunchvoting.to;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.beans.ConstructorProperties;
 import java.time.LocalDate;
 import java.util.List;
@@ -9,7 +11,11 @@ import java.util.Objects;
 
 @JsonPropertyOrder({"id", "menuDate", "items"})
 public class MenuTo extends BaseTo {
+
+    @NotNull
     private final LocalDate menuDate;
+
+    @NotEmpty
     private final List<MenuItemTo> items;
 
     @ConstructorProperties({"id", "date", "items"})

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,9 +13,11 @@ import java.util.List;
 @Table(name="menu", uniqueConstraints = @UniqueConstraint(columnNames = {"restaurant_id", "menu_date"}, name = "unique_menu_per_day"))
 public class Menu extends AbstractBaseEntity {
 
+    @NotNull
     @Column(name = "menu_date", nullable = false)
     private LocalDate menuDate;
 
+    @NotEmpty
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "menu_menuitems_link",
             joinColumns = @JoinColumn(name = "menu_id"),
@@ -21,6 +25,7 @@ public class Menu extends AbstractBaseEntity {
     @BatchSize(size = 200)
     private List<MenuItem> items;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @JsonBackReference
@@ -63,8 +68,6 @@ public class Menu extends AbstractBaseEntity {
     public void setItems(List<MenuItem> menuItems) {
         this.items = menuItems;
     }
-
-
 
     @Override
     public String toString() {

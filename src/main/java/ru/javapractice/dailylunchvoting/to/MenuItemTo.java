@@ -2,16 +2,25 @@ package ru.javapractice.dailylunchvoting.to;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import javax.validation.constraints.*;
 import java.beans.ConstructorProperties;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @JsonPropertyOrder({"id", "name", "price"})
 public final class MenuItemTo extends BaseTo {
+
+    @NotBlank
+    @Size(min = 2, max = 100)
     private final String name;
-    private final float price;
+
+    @DecimalMin(value = "0.01", message = "Price must be greater than zero")
+    @DecimalMax(value = "100000", message = "Price cannot be greater than 10000")
+    @Positive(message = "Price must be a positive number")
+    private final BigDecimal price;
 
     @ConstructorProperties({"id", "name", "price"})
-    public MenuItemTo(Integer id, String name, float price) {
+    public MenuItemTo(Integer id, String name, BigDecimal price) {
         super(id);
         this.name = name;
         this.price = price;
@@ -21,7 +30,7 @@ public final class MenuItemTo extends BaseTo {
         return name;
     }
 
-    public float getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
@@ -32,7 +41,7 @@ public final class MenuItemTo extends BaseTo {
 
         MenuItemTo that = (MenuItemTo) o;
         return Objects.equals(id, that.id) &&
-                Float.compare(price, that.price) == 0 &&
+                price.compareTo(that.price) == 0 &&
                 Objects.equals(name, that.name);
     }
 
