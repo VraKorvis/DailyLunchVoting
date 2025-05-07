@@ -3,6 +3,7 @@ package ru.javapractice.dailylunchvoting.web;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.javapractice.dailylunchvoting.restaurant.web.RestaurantRestController;
 import ru.javapractice.dailylunchvoting.util.RestaurantMapper;
 
 import java.util.stream.Collectors;

@@ -18,7 +18,6 @@ import static ru.javapractice.dailylunchvoting.common.validation.ValidationUtil.
 
 @RestController
 @RequestMapping(value = AdminUserController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-// TODO: cache only most requested, seldom changed data!
 public class AdminUserController extends AbstractUserController {
 
     public static final String REST_URL = "/api/admin/users";

@@ -11,8 +11,8 @@ import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
 import ru.javapractice.dailylunchvoting.restaurant.repository.MenuItemRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.MenuRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.RestaurantRepository;
-import ru.javapractice.dailylunchvoting.to.MenuItemTo;
-import ru.javapractice.dailylunchvoting.to.MenuTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.MenuItemTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.MenuTo;
 import ru.javapractice.dailylunchvoting.util.MenuMapper;
 
 import java.time.LocalDate;

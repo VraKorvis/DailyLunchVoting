@@ -4,7 +4,6 @@ import lombok.experimental.UtilityClass;
 import ru.javapractice.dailylunchvoting.common.HasId;
 import ru.javapractice.dailylunchvoting.common.exception.IllegalRequestDataException;
 
-
 @UtilityClass
 public class ValidationUtil {
 

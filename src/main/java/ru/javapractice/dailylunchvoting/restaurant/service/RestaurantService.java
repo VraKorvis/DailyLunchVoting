@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
 import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
 import ru.javapractice.dailylunchvoting.restaurant.repository.RestaurantRepository;
-import ru.javapractice.dailylunchvoting.to.RestaurantWithMenuTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantWithMenuTo;
 import ru.javapractice.dailylunchvoting.util.RestaurantMapper;
 
 import java.util.List;

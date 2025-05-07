@@ -3,7 +3,7 @@ package ru.javapractice.dailylunchvoting.util;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
 import ru.javapractice.dailylunchvoting.restaurant.model.Menu;
 import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
-import ru.javapractice.dailylunchvoting.to.RestaurantWithMenuTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantWithMenuTo;
 
 import java.time.LocalDate;
 import java.util.Optional;

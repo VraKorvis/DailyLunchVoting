@@ -1,4 +1,4 @@
-package ru.javapractice.dailylunchvoting.web;
+package ru.javapractice.dailylunchvoting.restaurant.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.javapractice.dailylunchvoting.restaurant.service.RestaurantService;
-import ru.javapractice.dailylunchvoting.to.RestaurantWithMenuTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantWithMenuTo;
 
 import java.util.List;
 

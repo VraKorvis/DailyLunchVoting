@@ -1,7 +1,7 @@
 package ru.javapractice.dailylunchvoting.util;
 
-import ru.javapractice.dailylunchvoting.to.MenuItemTo;
-import ru.javapractice.dailylunchvoting.to.MenuTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.MenuItemTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.MenuTo;
 
 import java.util.HashMap;
 import java.util.Map;

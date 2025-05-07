@@ -2,8 +2,8 @@ package ru.javapractice.dailylunchvoting.util;
 
 import ru.javapractice.dailylunchvoting.restaurant.model.Menu;
 import ru.javapractice.dailylunchvoting.restaurant.model.MenuItem;
-import ru.javapractice.dailylunchvoting.to.MenuItemTo;
-import ru.javapractice.dailylunchvoting.to.MenuTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.MenuItemTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.MenuTo;
 
 public class MenuMapper {
     public static MenuTo toTo(Menu menu) {

@@ -6,5 +6,4 @@ public class VotingProcessException extends AppException {
     public VotingProcessException(String message) {
         super(message, ErrorType.APP_ERROR);
     }
-
 }

@@ -47,7 +47,6 @@ public class SecurityConfig {
         };
     }
 
-    //https://stackoverflow.com/a/76538979/548473
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/api/**").authorizeHttpRequests(authz ->

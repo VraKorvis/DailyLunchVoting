@@ -1,9 +1,10 @@
-package ru.javapractice.dailylunchvoting.to;
+package ru.javapractice.dailylunchvoting.restaurant.to;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import ru.javapractice.dailylunchvoting.common.to.BaseTo;
 
 import java.beans.ConstructorProperties;
 import java.time.LocalDate;

@@ -19,7 +19,7 @@ public class UserTo extends NamedTo implements HasIdAndEmail {
     String email;
 
     @NotBlank
-    @Size(min = 5, max = 32)
+    @Size(min = 5, max = 32, message = "length must be between 5 and 32 characters")
     String password;
 
     public UserTo(Integer id, String name, String email, String password) {

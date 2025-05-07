@@ -1,4 +1,4 @@
-package ru.javapractice.dailylunchvoting.web;
+package ru.javapractice.dailylunchvoting.restaurant.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
 import ru.javapractice.dailylunchvoting.restaurant.service.RestaurantService;
-import ru.javapractice.dailylunchvoting.to.RestaurantWithMenuTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantWithMenuTo;
 
 import java.net.URI;
 import java.util.List;
 
-import static ru.javapractice.dailylunchvoting.web.AdminRestaurantsRestController.REST_URL;
+import static ru.javapractice.dailylunchvoting.restaurant.web.AdminRestaurantsRestController.REST_URL;
 
 @RestController
 @RequestMapping(value = REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)

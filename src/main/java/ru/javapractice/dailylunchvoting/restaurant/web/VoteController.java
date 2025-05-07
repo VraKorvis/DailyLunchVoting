@@ -1,13 +1,13 @@
-package ru.javapractice.dailylunchvoting.web;
+package ru.javapractice.dailylunchvoting.restaurant.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.javapractice.dailylunchvoting.app.AuthUtil;
 import ru.javapractice.dailylunchvoting.restaurant.model.Vote;
 import ru.javapractice.dailylunchvoting.restaurant.service.VoteService;
-import ru.javapractice.dailylunchvoting.util.SecurityUtil;
 
 import java.util.List;
 
@@ -32,14 +32,14 @@ public class VoteController {
     @GetMapping("/today")
     public Vote getTodayVote() {
         log.info("getTodayVote");
-        return service.findByUserIdForToday(SecurityUtil.authUserId());
+        return service.findByUserIdForToday(AuthUtil.get().id());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void vote(@RequestParam int restaurantId) {
         log.info("vote {}", restaurantId);
-        service.vote(restaurantId, SecurityUtil.authUserId());
+        service.vote(restaurantId, AuthUtil.get().id());
     }
 
 }

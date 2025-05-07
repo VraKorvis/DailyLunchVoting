@@ -4,8 +4,8 @@ import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguratio
 import ru.javapractice.dailylunchvoting.restaurant.model.Menu;
 import ru.javapractice.dailylunchvoting.restaurant.model.MenuItem;
 import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
-import ru.javapractice.dailylunchvoting.to.MenuTo;
-import ru.javapractice.dailylunchvoting.to.RestaurantWithMenuTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.MenuTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantWithMenuTo;
 import ru.javapractice.dailylunchvoting.user.UserData;
 import ru.javapractice.dailylunchvoting.util.MatcherFactory;
 
