@@ -1,7 +1,7 @@
 package ru.javapractice.dailylunchvoting.util;
 
-import ru.javapractice.dailylunchvoting.model.Menu;
-import ru.javapractice.dailylunchvoting.model.MenuItem;
+import ru.javapractice.dailylunchvoting.restaurant.model.Menu;
+import ru.javapractice.dailylunchvoting.restaurant.model.MenuItem;
 import ru.javapractice.dailylunchvoting.to.MenuItemTo;
 import ru.javapractice.dailylunchvoting.to.MenuTo;
 

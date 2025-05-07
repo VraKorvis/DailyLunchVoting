@@ -1,8 +1,8 @@
 package ru.javapractice.dailylunchvoting.util;
 
-import ru.javapractice.dailylunchvoting.model.Role;
-import ru.javapractice.dailylunchvoting.model.User;
 import ru.javapractice.dailylunchvoting.to.UserTo;
+import ru.javapractice.dailylunchvoting.user.model.Role;
+import ru.javapractice.dailylunchvoting.user.model.User;
 
 public class UserMapper {
 

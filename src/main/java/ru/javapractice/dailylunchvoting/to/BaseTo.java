@@ -1,6 +1,6 @@
 package ru.javapractice.dailylunchvoting.to;
 
-import ru.javapractice.dailylunchvoting.HasId;
+import ru.javapractice.dailylunchvoting.common.HasId;
 
 public abstract class BaseTo implements HasId {
     protected Integer id;

@@ -7,21 +7,19 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import ru.javapractice.dailylunchvoting.service.MenuService;
+import ru.javapractice.dailylunchvoting.common.util.JsonUtil;
+import ru.javapractice.dailylunchvoting.restaurant.service.MenuService;
 import ru.javapractice.dailylunchvoting.to.MenuTo;
 import ru.javapractice.dailylunchvoting.util.MenuMapper;
 import ru.javapractice.dailylunchvoting.util.TestUtil;
-import ru.javapractice.dailylunchvoting.web.json.JsonUtil;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ru.javapractice.dailylunchvoting.testdata.RestaurantMenuData.*;
+import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
 
 @Transactional
 class AdminMenuControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL = AdminMenuController.REST_URL + '/';
-
 
     @Autowired
     MenuService menuService;

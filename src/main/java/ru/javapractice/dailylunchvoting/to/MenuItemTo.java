@@ -1,12 +1,14 @@
 package ru.javapractice.dailylunchvoting.to;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import jakarta.validation.constraints.*;
+import lombok.Getter;
 
-import javax.validation.constraints.*;
 import java.beans.ConstructorProperties;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Getter
 @JsonPropertyOrder({"id", "name", "price"})
 public final class MenuItemTo extends BaseTo {
 
@@ -24,14 +26,6 @@ public final class MenuItemTo extends BaseTo {
         super(id);
         this.name = name;
         this.price = price;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
     }
 
     @Override

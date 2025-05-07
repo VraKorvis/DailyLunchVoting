@@ -6,8 +6,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.javapractice.dailylunchvoting.model.Restaurant;
-import ru.javapractice.dailylunchvoting.service.RestaurantService;
+import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
+import ru.javapractice.dailylunchvoting.restaurant.service.RestaurantService;
 import ru.javapractice.dailylunchvoting.to.RestaurantWithMenuTo;
 
 import java.net.URI;

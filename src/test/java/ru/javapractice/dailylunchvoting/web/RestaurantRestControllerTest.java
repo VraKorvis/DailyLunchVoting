@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.javapractice.dailylunchvoting.testdata.RestaurantMenuData.*;
+import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
 
 class RestaurantRestControllerTest extends AbstractControllerTest{
 

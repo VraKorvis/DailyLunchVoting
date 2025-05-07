@@ -1,14 +1,17 @@
 package ru.javapractice.dailylunchvoting.web;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.javapractice.dailylunchvoting.service.MenuService;
+import ru.javapractice.dailylunchvoting.restaurant.service.MenuService;
 import ru.javapractice.dailylunchvoting.to.MenuTo;
 
 import java.net.URI;
+import java.util.stream.Collectors;
 
 import static ru.javapractice.dailylunchvoting.web.AdminMenuController.REST_URL;
 
@@ -23,8 +26,14 @@ public class AdminMenuController {
     }
 
     @PostMapping("/restaurants/{id}/menu")
-    public ResponseEntity<MenuTo> createAndAssignMenuToRestaurant(@PathVariable int id,
-                                                                  @RequestBody MenuTo menuTo) {
+    public ResponseEntity<MenuTo> createAndAssignMenuToRestaurant(@Valid @RequestBody MenuTo menuTo, @PathVariable int id, BindingResult result) {
+        if (result.hasErrors()) {
+            String errorFieldsMsg = result.getFieldErrors().stream()
+                    .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
+                    .collect(Collectors.joining("<br>"));
+            throw new IllegalArgumentException(errorFieldsMsg);
+        }
+
         MenuTo createdTo = menuService.create(menuTo, id);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/restaurants/{id}/menu")

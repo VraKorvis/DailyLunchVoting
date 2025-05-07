@@ -1,14 +1,16 @@
 package ru.javapractice.dailylunchvoting.to;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.beans.ConstructorProperties;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+@Getter
 @JsonPropertyOrder({"id", "menuDate", "items"})
 public class MenuTo extends BaseTo {
 
@@ -23,14 +25,6 @@ public class MenuTo extends BaseTo {
         super(id);
         this.menuDate = menuDate;
         this.items = items;
-    }
-
-    public LocalDate getDate() {
-        return menuDate;
-    }
-
-    public List<MenuItemTo> getItems() {
-        return items;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package ru.javapractice.dailylunchvoting.util;
 
-import ru.javapractice.dailylunchvoting.configuration.ConstConfig;
-import ru.javapractice.dailylunchvoting.model.Vote;
+import ru.javapractice.dailylunchvoting.app.config.ConstConfig;
+import ru.javapractice.dailylunchvoting.restaurant.model.Vote;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

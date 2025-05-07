@@ -1,9 +1,9 @@
 package ru.javapractice.dailylunchvoting.util;
 
-import ru.javapractice.dailylunchvoting.model.AbstractBaseEntity;
+import static ru.javapractice.dailylunchvoting.common.model.BaseEntity.START_SEQ;
 
 public class SecurityUtil {
-    private static int id = AbstractBaseEntity.START_SEQ;
+    private static final int id = START_SEQ;
 
     public static int authUserId() {
         return id;

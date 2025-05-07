@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.javapractice.dailylunchvoting.model.Vote;
-import ru.javapractice.dailylunchvoting.service.VoteService;
+import ru.javapractice.dailylunchvoting.restaurant.model.Vote;
+import ru.javapractice.dailylunchvoting.restaurant.service.VoteService;
 import ru.javapractice.dailylunchvoting.util.SecurityUtil;
 
 import java.util.List;

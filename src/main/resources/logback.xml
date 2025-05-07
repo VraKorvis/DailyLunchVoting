@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration scan="true" scanPeriod="30 seconds">
+<configuration>
 
-    <!-- To enable JMX Management -->
-    <jmxConfigurator/>
+    <springProperty scope="context" name="LOG_FILE" source="logging.file.name" defaultValue="dailylunchvoting.log"/>
 
-    <appender name="file" class="ch.qos.logback.core.FileAppender">
-        <file>${DAILYLUNCHVOTING_ROOT}/log/dailylunchvoting.log</file>
-
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover, keep 30 days -->
+            <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>%date %-5level %logger{50}.%M:%L - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %cyan(%class{50}.%M:%L) - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %cyan(%logger{36}) - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <logger name="ru.javapractice.dailylunchvoting" level="info"/>
+    <logger name="ru.javapractice.dailylunchvoting" level="INFO"/>
     <logger name="org.springframework.http.converter" level="DEBUG"/>
     <logger name="com.fasterxml.jackson" level="DEBUG"/>
 
-    <root level="info">
-        <appender-ref ref="file"/>
-        <appender-ref ref="console"/>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
     </root>
 
 </configuration>

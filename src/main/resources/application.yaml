@@ -1,0 +1,55 @@
+spring:
+  jpa:
+    show-sql: true
+    open-in-view: false
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 20
+        jdbc.batch_size: 20
+  datasource:
+    # ImMemory
+    url: jdbc:h2:mem:dlv
+    #    tcp: jdbc:h2:tcp://localhost:9092/mem:dlv
+    # Absolute path
+    #    url: jdbc:h2:C:/projects/dlv/db/dlv
+    #    tcp: jdbc:h2:tcp://localhost:9092/C:/projects/dlv/db/dlv
+    # Relative path form current dir
+    #    url: jdbc:h2:./db/dlv
+    # Relative path from home
+    #    url: jdbc:h2:~/dlv
+    #    tcp: jdbc:h2:tcp://localhost:9092/~/dlv
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jackson.visibility:
+    field: any
+    getter: none
+    setter: none
+    is-getter: none
+
+  cache:
+    cache-names: users
+    caffeine.spec: maximumSize=5000,expireAfterAccess=60s
+
+logging:
+  level:
+    root: WARN
+    ru.javaops.bootjava: DEBUG
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
+    org.springframework.jdbc.datasource.init.ScriptUtils: DEBUG
+
+server.servlet:
+  encoding:
+    charset: UTF-8
+    enabled: true
+    force: true
+
+springdoc.swagger-ui.path: /

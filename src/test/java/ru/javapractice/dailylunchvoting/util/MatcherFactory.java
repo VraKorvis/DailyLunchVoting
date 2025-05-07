@@ -3,7 +3,7 @@ import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguratio
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
-import ru.javapractice.dailylunchvoting.web.json.JsonUtil;
+import ru.javapractice.dailylunchvoting.common.util.JsonUtil;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
