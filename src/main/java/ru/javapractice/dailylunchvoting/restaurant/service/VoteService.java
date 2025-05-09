@@ -4,15 +4,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javapractice.dailylunchvoting.common.error.ErrorType;
+import ru.javapractice.dailylunchvoting.common.exception.AppException;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
-import ru.javapractice.dailylunchvoting.common.exception.VotingProcessException;
 import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
 import ru.javapractice.dailylunchvoting.restaurant.model.Vote;
 import ru.javapractice.dailylunchvoting.restaurant.repository.RestaurantRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.VoteRepository;
 import ru.javapractice.dailylunchvoting.user.model.User;
 import ru.javapractice.dailylunchvoting.user.repository.UserRepository;
-import ru.javapractice.dailylunchvoting.util.VotingTimeChecker;
+import ru.javapractice.dailylunchvoting.util.OperationTimeChecker;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -61,21 +62,20 @@ public class VoteService {
 
        return voteRepository.findByUserIdForToday(userId)
                 .map(existingVote -> {
-                    if (!VotingTimeChecker.canUpdateVote(existingVote)) {
-                        throw new VotingProcessException("It's too late to change your vote");
+                    if (!OperationTimeChecker.canUpdate(existingVote)) {
+                        throw new AppException("It's too late to change your vote", ErrorType.APP_ERROR);
                     }
                     existingVote.setRestaurant(refRestaurant);
                     return existingVote;
                 })
                 .orElseGet(() -> {
-                    if (!VotingTimeChecker.canVoteToday()) {
-                        throw new VotingProcessException("It's too late to vote");
+                    if (!OperationTimeChecker.canVote()) {
+                        throw new AppException("It's too late to vote", ErrorType.APP_ERROR);
                     }
                     Vote vote = new Vote();
                     vote.setUser(refUser);
                     vote.setDate(LocalDate.now());
                     vote.setRestaurant(refRestaurant);
-                    //TODO check vote belonging user
                     voteRepository.save(vote);
                     return vote;
                 });

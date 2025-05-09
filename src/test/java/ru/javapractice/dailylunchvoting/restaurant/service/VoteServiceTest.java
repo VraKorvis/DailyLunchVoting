@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
-import ru.javapractice.dailylunchvoting.common.exception.VotingProcessException;
+import ru.javapractice.dailylunchvoting.common.exception.AppException;
 import ru.javapractice.dailylunchvoting.restaurant.model.Vote;
 import ru.javapractice.dailylunchvoting.user.UserData;
 import ru.javapractice.dailylunchvoting.util.TimingExtension;
-import ru.javapractice.dailylunchvoting.util.VotingTimeChecker;
+import ru.javapractice.dailylunchvoting.util.OperationTimeChecker;
 
 import java.util.Arrays;
 
@@ -57,7 +57,7 @@ public class VoteServiceTest {
     @Test
     public void save(){
         Vote newVOte = getNew();
-        if (VotingTimeChecker.canVoteToday()){
+        if (OperationTimeChecker.canVote()){
             voteService.vote(newVOte.getRestaurant().id(), UserData.USER_2_ID);
             Vote created = voteService.findByUserIdForToday(UserData.USER_2_ID);
             int createdId = created.id();
@@ -66,19 +66,19 @@ public class VoteServiceTest {
             MATCHER.assertMatch(created, newVote);
         }
         else {
-            assertThrows(VotingProcessException.class, () -> voteService.vote(newVOte.getRestaurant().id(), UserData.USER_2_ID));
+            assertThrows(AppException.class, () -> voteService.vote(newVOte.getRestaurant().id(), UserData.USER_2_ID));
         }
     }
 
     @Test
     public void update() {
         Vote updated = getUpdated(USER1_TODAY_VOTE);
-        if (VotingTimeChecker.canUpdateVote(updated)) {
+        if (OperationTimeChecker.canUpdate(updated)) {
             voteService.vote(updated.getRestaurant().id(), UserData.USER_1_ID);
             Vote actual = voteService.findByUserIdForToday(UserData.USER_1_ID);
             MATCHER.assertMatch(actual, updated);
         } else {
-            assertThrows(VotingProcessException.class, () -> voteService.vote(updated.getRestaurant().id(), UserData.USER_1_ID));
+            assertThrows(AppException.class, () -> voteService.vote(updated.getRestaurant().id(), UserData.USER_1_ID));
         }
     }
 }
