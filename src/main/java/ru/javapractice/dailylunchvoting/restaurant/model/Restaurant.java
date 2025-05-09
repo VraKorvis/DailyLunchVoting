@@ -1,19 +1,26 @@
 package ru.javapractice.dailylunchvoting.restaurant.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.javapractice.dailylunchvoting.common.model.NamedEntity;
 
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "restaurant")
+@NamedEntityGraph(
+        name = Restaurant.WITH_MENUS,
+        attributeNodes = @NamedAttributeNode("menus")
+)
+@NoArgsConstructor
 public class Restaurant extends NamedEntity {
 
-    public Restaurant() {}
+    public static final String WITH_MENUS = "Restaurant.withMenus";
 
     @SuppressWarnings("CopyConstructorMissesField")
     public Restaurant(Restaurant r) {
@@ -32,19 +39,4 @@ public class Restaurant extends NamedEntity {
     @JsonManagedReference
     public List<Menu> menus = List.of();
 
-    public List<Menu> getMenus() {
-        return menus;
-    }
-
-    public void setMenus(List<Menu> menus) {
-        this.menus = menus;
-    }
-
-    @Override
-    public String toString() {
-        return "Restaurant{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

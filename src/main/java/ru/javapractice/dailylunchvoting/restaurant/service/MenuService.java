@@ -1,19 +1,23 @@
 package ru.javapractice.dailylunchvoting.restaurant.service;
 
+import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import ru.javapractice.dailylunchvoting.common.error.ErrorType;
+import ru.javapractice.dailylunchvoting.common.exception.AppException;
 import ru.javapractice.dailylunchvoting.common.exception.ConflictException;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
-import ru.javapractice.dailylunchvoting.restaurant.model.Menu;
-import ru.javapractice.dailylunchvoting.restaurant.model.MenuItem;
-import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
+import ru.javapractice.dailylunchvoting.restaurant.model.*;
+import ru.javapractice.dailylunchvoting.restaurant.repository.MenuHistoryRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.MenuItemRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.MenuRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.RestaurantRepository;
 import ru.javapractice.dailylunchvoting.restaurant.to.MenuItemTo;
 import ru.javapractice.dailylunchvoting.restaurant.to.MenuTo;
-import ru.javapractice.dailylunchvoting.util.MenuMapper;
+import ru.javapractice.dailylunchvoting.util.OperationTimeChecker;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -21,11 +25,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class MenuService {
+
+    private static final Logger log = LoggerFactory.getLogger(MenuService.class);
 
     MenuRepository menuRepository;
     RestaurantRepository restaurantRepository;
     MenuItemRepository menuItemRepository;
+    MenuHistoryRepository menuHistoryRepository;
 
     public Menu get(int id) {
         return menuRepository.getReferenceById(id);
@@ -35,120 +43,108 @@ public class MenuService {
         return menuRepository.findAll();
     }
 
-    public MenuTo create(MenuTo menuTo, int restaurantId) {
+    @Transactional
+    public Menu create(MenuTo menuTo, int restaurantId) {
         Assert.notNull(menuTo, "menu must not be null");
 
-        if (!restaurantRepository.existsById(restaurantId)) {
-            throw new NotFoundException("Can't assign menu. Restaurant with id=" + restaurantId + " not found");
+        validateMenuAssignmentTimeWindow();
+        Restaurant restaurant = findRestaurantById(restaurantId);
+
+        if (isMenuAssignedForToday(restaurantId)) {
+            throw new ConflictException("Menu for restaurant with id=" + restaurantId + " for today already exists");
         }
 
-        Optional<Menu> menuTodays = menuRepository.findByRestaurantIdForToday(restaurantId);
-        if (menuTodays.isPresent()) {
-            throw new ConflictException("Can't assign menu. Menu for restaurant with id=" + restaurantId + " for today already exists");
-        }
+        Menu newMenu = new Menu(null, LocalDate.now(), restaurant, new ArrayList<>());
+        List<MenuItemAssignment> assignments = resolveMenuItemAssignmentsStrict(newMenu, menuTo.getItems());
 
-        Restaurant restaurant = restaurantRepository.getReferenceById(restaurantId);
-
-        List<MenuItem> resolveMenuItems = resolveMenuItems(menuTo.getItems());
-        Menu newMenu = new Menu(null, LocalDate.now(), restaurant, resolveMenuItems);
-
-        return MenuMapper.toTo(menuRepository.save(newMenu));
+        newMenu.setMenuItemAssignments(assignments);
+        Menu savedMenu = menuRepository.save(newMenu);
+        savePriceHistoryForMenuItems(assignments);
+        return savedMenu;
     }
 
     @Transactional
-    public void update(MenuTo menuTo, int restaurantId) {
+    public void update(MenuTo menuTo, int restaurantId, int menuId) {
         Assert.notNull(menuTo, "menuTo must not be null");
 
-        if (!restaurantRepository.existsById(restaurantId)) {
-            throw new NotFoundException("Can't update assigned menu. Restaurant with id=" + restaurantId + " not found");
-        }
+        validateMenuAssignmentTimeWindow();
+        Menu assignedMenu = findMenuOfRestaurantByIds(menuId, restaurantId);
+        List<MenuItemAssignment> assignments = resolveMenuItemAssignmentsStrict(assignedMenu, menuTo.getItems());
 
-        Menu menu = menuRepository.findById(menuTo.getId())
-                .orElseThrow(() -> new NotFoundException("Can't update assigned menu. Menu with id=" + menuTo.id() + " not found"));
-
-        menu.getItems().clear();
-        menu.setItems(resolveMenuItems(menuTo.getItems()));
+        updateAssignments(assignedMenu, assignments);
+        menuRepository.save(assignedMenu);
+        savePriceHistoryForMenuItems(assignments);
     }
 
-    private List<MenuItem> resolveMenuItems(List<MenuItemTo> itemTos) {
-
-        validateNoDuplicateNames(itemTos);
-
-        List<MenuItem> result = new ArrayList<>();
-        List<MenuItem> newItemsToSave = new ArrayList<>();
-
-        Map<Integer, MenuItem> itemsById = fetchExistingItemsById(itemTos);
-        Map<String, List<MenuItem>> itemsByName = fetchExistingItemsByName(itemTos);
-
-        for (MenuItemTo to : itemTos) {
-            MenuItem existing = null;
-            if (to.getId() != null && !itemsById.containsKey(to.getId())) {
-                throw new NotFoundException("MenuItem with id=" + to.getId() + " not found");
-            }
-            if (to.getId() != null) {
-                existing = itemsById.get(to.getId());
-                if (existing != null) {
-                    if (!existing.getName().equals(to.getName())) {
-                        throw new ConflictException("Item with id=" + to.getId() +
-                                " exists, but with different name='" + existing.getName() + "', got='" + to.getName() + "'");
-                    }
-                    if (!existing.getPrice().equals(to.getPrice())) {
-                        MenuItem newItem = new MenuItem(to.getName(), to.getPrice());
-                        newItemsToSave.add(newItem);
-                        result.add(newItem);
-                    } else {
-                        result.add(existing);
-                    }
-                    continue;
-                }
-            }
-
-            List<MenuItem> sameNameItems = itemsByName.getOrDefault(to.getName(), List.of());
-            Optional<MenuItem> matchByNameAndPrice = sameNameItems.stream()
-                    .filter(i -> i.getPrice().equals(to.getPrice()))
-                    .findFirst();
-
-            if (matchByNameAndPrice.isPresent()) {
-                result.add(matchByNameAndPrice.get());
-            } else {
-                MenuItem newItem = new MenuItem(to.getName(), to.getPrice());
-                newItemsToSave.add(newItem);
-                result.add(newItem);
-            }
-        }
-
-        if (!newItemsToSave.isEmpty()) {
-            menuItemRepository.saveAll(newItemsToSave);
-        }
-
-        return result;
+    private void updateAssignments(Menu assignedMenu, List<MenuItemAssignment> assignments) {
+        List<MenuItemAssignment> currentAssignments = assignedMenu.getMenuItemAssignments();
+        currentAssignments.clear();
+        currentAssignments.addAll(assignments);
     }
 
-    private void validateNoDuplicateNames(List<MenuItemTo> itemTos) {
-        Set<String> uniqueNames = new HashSet<>();
-        for (MenuItemTo to : itemTos) {
-            if (!uniqueNames.add(to.getName())) {
-                throw new IllegalArgumentException("Duplicate menu item in request: " + to.getName());
-            }
+    private void validateMenuAssignmentTimeWindow() {
+        if (!OperationTimeChecker.canAssignMenu()) {
+            throw new AppException("Can't assign/edit menu. Time to vote for restaurant", ErrorType.APP_ERROR);
         }
     }
 
-    private Map<Integer, MenuItem> fetchExistingItemsById(List<MenuItemTo> itemTos) {
+    private Restaurant findRestaurantById(int restaurantId) {
+        return restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new NotFoundException("Restaurant with id=" + restaurantId + " not found"));
+    }
+
+    private boolean isMenuAssignedForToday(int restaurantId) {
+        return menuRepository.findByRestaurantIdForToday(restaurantId).isPresent();
+    }
+
+    private Menu findMenuOfRestaurantByIds(int menuId, int restaurantId) {
+        Optional<List<Menu>> menusOptional = menuRepository.findMenusByRestaurantId(restaurantId);
+
+        List<Menu> menus = menusOptional
+                .orElseThrow(() -> new NotFoundException("No menus found for restaurant with id=" + restaurantId));
+
+        return menus.stream()
+                .filter(menu -> menu.getId().equals(menuId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Menu with id=" + menuId + " not found in restaurant with id=" + restaurantId));
+    }
+
+    private List<MenuItemAssignment> resolveMenuItemAssignmentsStrict(Menu menu, List<MenuItemTo> itemTos) {
         List<Integer> ids = itemTos.stream()
                 .map(MenuItemTo::getId)
-                .filter(Objects::nonNull)
                 .toList();
 
-        return menuItemRepository.findAllById(ids).stream()
+        List<MenuItem> dbItems = menuItemRepository.findAllById(ids);
+
+        if (dbItems.size() != ids.size()) {
+            Set<Integer> foundIds = dbItems.stream()
+                    .map(MenuItem::getId)
+                    .collect(Collectors.toSet());
+            List<Integer> notFoundIds = ids.stream()
+                    .filter(id -> !foundIds.contains(id))
+                    .toList();
+            throw new NotFoundException("MenuItems not found for IDs: " + notFoundIds);
+        }
+
+        Map<Integer, MenuItem> dbItemsById = dbItems.stream()
                 .collect(Collectors.toMap(MenuItem::getId, Function.identity()));
+
+        return itemTos.stream()
+                .map(dto -> {
+                    MenuItem menuItem = dbItemsById.get(dto.getId());
+                    return new MenuItemAssignment(menu, menuItem, dto.getPrice());
+                })
+                .toList();
     }
 
-    private Map<String, List<MenuItem>> fetchExistingItemsByName(List<MenuItemTo> itemTos) {
-        Set<String> names = itemTos.stream().map(MenuItemTo::getName).collect(Collectors.toSet());
-
-        return menuItemRepository.findByNames(names).stream()
-                .collect(Collectors.groupingBy(MenuItem::getName));
+    @Transactional
+    public void savePriceHistoryForMenuItems(List<MenuItemAssignment> assignments) {
+        for (MenuItemAssignment assignment : assignments) {
+            Optional.ofNullable(assignment.getPrice())
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Price must not be null (menuItem id=" + assignment.getMenuItem().getId() + ")"
+                    ));
+            menuHistoryRepository.save(assignment);
+        }
     }
-
-
 }

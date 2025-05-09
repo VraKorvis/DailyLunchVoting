@@ -1,4 +1,4 @@
-package ru.javapractice.dailylunchvoting.web;
+package ru.javapractice.dailylunchvoting;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;

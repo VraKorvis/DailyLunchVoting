@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javapractice.dailylunchvoting.common.BaseRepository;
 import ru.javapractice.dailylunchvoting.restaurant.model.Menu;
 
+import java.util.List;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
@@ -22,4 +23,8 @@ public interface MenuRepository extends BaseRepository<Menu> {
 
     @Query("SELECT m FROM Menu m WHERE m.restaurant.id = :restaurantId AND m.menuDate = CURRENT_DATE")
     Optional<Menu> findByRestaurantIdForToday(@Param("restaurantId") Integer restaurantId);
+
+    @Query("SELECT r.menus FROM Restaurant r WHERE r.id = :restaurantId")
+    Optional<List<Menu>> findMenusByRestaurantId(@Param("restaurantId") Integer restaurantId);
+
 }

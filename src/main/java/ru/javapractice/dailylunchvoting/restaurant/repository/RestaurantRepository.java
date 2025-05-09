@@ -1,5 +1,6 @@
 package ru.javapractice.dailylunchvoting.restaurant.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,14 +21,12 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
         throw new UnsupportedOperationException("Deletion is not allowed. All data is stored in the database as history.");
     }
 
+    @EntityGraph(attributePaths = {"menus"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m WHERE m.menuDate=CURRENT_DATE ORDER BY r.name ASC")
-    List<Restaurant> getAllWithMenuForToday();
+    List<Restaurant> getAllWithAssignedMenuForToday();
 
     @Query("SELECT r FROM Restaurant r LEFT JOIN Menu m ON r.id = m.restaurant.id AND m.menuDate = CURRENT_DATE WHERE m.id IS NULL")
     List<Restaurant> getAllWithoutAssignedMenuForToday();
-
-    @Query("SELECT r FROM Restaurant r INNER JOIN Menu m ON r.id = m.restaurant.id AND m.menuDate = CURRENT_DATE")
-    List<Restaurant> getAllWithAssignedMenuForToday();
 
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m WHERE r.id=:id AND m.menuDate=CURRENT_DATE ORDER BY r.name ASC")
     Optional<Restaurant> findByIdWithMenuForToday(@Param("id") Integer id);
