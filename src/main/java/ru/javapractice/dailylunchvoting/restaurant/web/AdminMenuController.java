@@ -1,51 +1,48 @@
 package ru.javapractice.dailylunchvoting.restaurant.web;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.javapractice.dailylunchvoting.mapper.MenuMapper;
+import ru.javapractice.dailylunchvoting.restaurant.model.Menu;
 import ru.javapractice.dailylunchvoting.restaurant.service.MenuService;
 import ru.javapractice.dailylunchvoting.restaurant.to.MenuTo;
 
 import java.net.URI;
-import java.util.stream.Collectors;
 
 import static ru.javapractice.dailylunchvoting.restaurant.web.AdminMenuController.REST_URL;
 
 @RestController
+@AllArgsConstructor
+@Slf4j
 @RequestMapping(value = REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminMenuController {
     public static final String REST_URL = "/api/admin";
+
+    private final MenuMapper menuMapper;
     private final MenuService menuService;
 
-    public AdminMenuController(MenuService menuService) {
-        this.menuService = menuService;
-    }
-
     @PostMapping("/restaurants/{id}/menu")
-    public ResponseEntity<MenuTo> createAndAssignMenuToRestaurant(@Valid @RequestBody MenuTo menuTo, @PathVariable int id, BindingResult result) {
-        if (result.hasErrors()) {
-            String errorFieldsMsg = result.getFieldErrors().stream()
-                    .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
-                    .collect(Collectors.joining("<br>"));
-            throw new IllegalArgumentException(errorFieldsMsg);
-        }
+    public ResponseEntity<MenuTo> createAndAssignMenuToRestaurant(@Valid @RequestBody MenuTo menuTo, @PathVariable int id) {
 
-        MenuTo createdTo = menuService.create(menuTo, id);
+        Menu createdMenu = menuService.create(menuTo, id);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/restaurants/{id}/menu")
                 .buildAndExpand(id)
                 .toUri();
-        return ResponseEntity.created(uriOfNewResource).body(createdTo);
+
+        return ResponseEntity.created(uriOfNewResource).body(menuMapper.toTo(createdMenu));
     }
 
-    @PutMapping("/restaurants/{id}/menu")
+    @PutMapping("/restaurants/{id}/menus/{menuId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateAssignedMenu(@PathVariable int id,
+    public void updateAssignedMenu(@PathVariable int id, @PathVariable int menuId,
                                    @RequestBody MenuTo menuTo) {
-        menuService.update(menuTo, id);
+        menuService.update(menuTo, id, menuId);
     }
 }

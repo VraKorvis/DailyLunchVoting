@@ -3,8 +3,7 @@ package ru.javapractice.dailylunchvoting.user.to;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.*;
 import ru.javapractice.dailylunchvoting.common.HasIdAndEmail;
 import ru.javapractice.dailylunchvoting.common.to.NamedTo;
 import ru.javapractice.dailylunchvoting.common.validation.NoHtml;
@@ -28,8 +27,4 @@ public class UserTo extends NamedTo implements HasIdAndEmail {
         this.password = password;
     }
 
-    @Override
-    public String toString() {
-        return "UserTo:" + id + '[' + email + ']';
-    }
 }

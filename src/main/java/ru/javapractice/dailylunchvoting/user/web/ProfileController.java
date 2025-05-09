@@ -39,10 +39,10 @@ public class ProfileController extends AbstractUserController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<User> register(@Valid @RequestBody UserTo userTo) {
-        log.info("register {}", userTo);
-        checkIsNew(userTo);
-        User created = repository.prepareAndSave(UsersUtil.createNewFromTo(userTo));
+    public ResponseEntity<User> register(@Valid @RequestBody UserTo userDto) {
+        log.info("register {}", userDto);
+        checkIsNew(userDto);
+        User created = repository.prepareAndSave(UsersUtil.createNewFromTo(userDto));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
@@ -51,10 +51,10 @@ public class ProfileController extends AbstractUserController {
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void update(@RequestBody @Valid UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
-        log.info("update {} with id={}", userTo, authUser.id());
-        assureIdConsistent(userTo, authUser.id());
+    public void update(@RequestBody @Valid UserTo userDto, @AuthenticationPrincipal AuthUser authUser) {
+        log.info("update {} with id={}", userDto, authUser.id());
+        assureIdConsistent(userDto, authUser.id());
         User user = authUser.getUser();
-        repository.prepareAndSave(UsersUtil.updateFromTo(user, userTo));
+        repository.prepareAndSave(UsersUtil.updateFromTo(user, userDto));
     }
 }
