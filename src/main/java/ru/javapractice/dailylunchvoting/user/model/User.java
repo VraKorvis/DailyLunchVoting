@@ -21,7 +21,7 @@ import java.util.*;
 @Table(name = "users")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class User extends NamedEntity implements HasIdAndEmail {
 
     @Column(name = "email", nullable = false, unique = true)
@@ -34,7 +34,6 @@ public class User extends NamedEntity implements HasIdAndEmail {
     @Column(name = "password", nullable = false)
     @NotBlank
     @Size(max = 128)
-    // https://stackoverflow.com/a/12505165/548473
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
@@ -54,6 +53,7 @@ public class User extends NamedEntity implements HasIdAndEmail {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles = EnumSet.noneOf(Role.class);
 
+    @SuppressWarnings("CopyConstructorMissesField")
     public User(User u) {
         this(u.id, u.name, u.email, u.password, u.enabled, u.registered, u.roles);
     }

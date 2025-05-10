@@ -45,7 +45,7 @@ public class AdminRestaurantsRestController {
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
-        return ResponseEntity.created(uriOfNewResource).body(restaurantMapper.toDto(created));
+        return ResponseEntity.created(uriOfNewResource).body(restaurantMapper.toRestaurantTo(created));
     }
 
 }

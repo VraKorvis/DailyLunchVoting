@@ -11,11 +11,11 @@ public abstract class RestaurantMapper {
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
-    public abstract RestaurantTo toDto(Restaurant restaurant);
+    public abstract RestaurantTo toRestaurantTo(Restaurant restaurant);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
-    public abstract Restaurant fromDto(RestaurantTo restaurantTo);
+    public abstract Restaurant toRestaurant(RestaurantTo restaurantTo);
 
 }
 

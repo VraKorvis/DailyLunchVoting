@@ -2,12 +2,13 @@ package ru.javapractice.dailylunchvoting.restaurant.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+
 import ru.javapractice.dailylunchvoting.common.model.NamedEntity;
 
 @Entity
-@ToString
+@Getter
 @NoArgsConstructor
 @Table(name="menu_item")
 public class MenuItem extends NamedEntity {

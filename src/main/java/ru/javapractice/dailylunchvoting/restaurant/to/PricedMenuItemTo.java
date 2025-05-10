@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @JsonPropertyOrder({"id", "name", "price"})
-public class MenuItemTo extends BaseTo {
+public class PricedMenuItemTo extends BaseTo {
 
     @NotBlank
     @Size(min = 2, max = 100)
@@ -36,7 +36,7 @@ public class MenuItemTo extends BaseTo {
     BigDecimal price;
 
     @ConstructorProperties({"id", "name", "price"})
-    public MenuItemTo(Integer id, String name, BigDecimal price) {
+    public PricedMenuItemTo(Integer id, String name, BigDecimal price) {
         super(id);
         this.name = name;
         this.price = price;

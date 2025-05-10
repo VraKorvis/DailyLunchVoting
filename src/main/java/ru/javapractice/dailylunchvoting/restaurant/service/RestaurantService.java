@@ -12,8 +12,8 @@ import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantWithAssignedMenu
 
 import java.util.List;
 
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class RestaurantService {
 
     private static final Sort SORT_NAME = Sort.by(Sort.Direction.ASC, "name");

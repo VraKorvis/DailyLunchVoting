@@ -21,13 +21,13 @@ public class MenuTo extends BaseTo {
 
     @NotEmpty
     @NotNull
-    List<MenuItemTo> items;
+    List<PricedMenuItemTo> pricedMenuItemTos;
 
     @ConstructorProperties({"id", "menuDate", "items"})
-    public MenuTo(Integer id, LocalDate menuDate, List<MenuItemTo> items) {
+    public MenuTo(Integer id, LocalDate menuDate, List<PricedMenuItemTo> pricedMenuItemTos) {
         super(id);
         this.menuDate = menuDate;
-        this.items = items;
+        this.pricedMenuItemTos = pricedMenuItemTos;
     }
 
 }

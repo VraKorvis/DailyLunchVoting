@@ -3,13 +3,19 @@ package ru.javapractice.dailylunchvoting.restaurant.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.javapractice.dailylunchvoting.common.model.BaseEntity;
 import ru.javapractice.dailylunchvoting.user.model.User;
 
 import java.time.LocalDate;
 
 @Entity
+@Getter
+@Setter
 @Table(name="vote")
+@NoArgsConstructor
 @NamedEntityGraph(
         name = Vote.WITH_RESTAURANT,
         attributeNodes = @NamedAttributeNode("restaurant")
@@ -32,9 +38,6 @@ public class Vote extends BaseEntity {
     @NotNull
     private Restaurant restaurant;
 
-    public Vote() {
-    }
-
     @SuppressWarnings("CopyConstructorMissesField")
     public Vote(Vote v) {
         this(v.id, v.date, v.restaurant);
@@ -44,30 +47,6 @@ public class Vote extends BaseEntity {
         super(id);
         this.date = date;
         this.restaurant = restaurant;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Restaurant getRestaurant() {
-        return restaurant;
-    }
-
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
     }
 
     @Override

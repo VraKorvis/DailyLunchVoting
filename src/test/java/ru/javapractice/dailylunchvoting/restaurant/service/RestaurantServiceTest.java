@@ -5,8 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
-import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantWithMenuTo;
-import ru.javapractice.dailylunchvoting.util.RestaurantMapper;
+import ru.javapractice.dailylunchvoting.mapper.RestaurantMapperService;
+import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantWithAssignedMenuTo;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -18,11 +19,14 @@ import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
 public class RestaurantServiceTest {
 
     @Autowired
+    private RestaurantMapperService restaurantMapperService;
+
+    @Autowired
     private RestaurantService service;
 
     @Test
     public void create() {
-        var created = service.create(getNew());
+        var created = service.create(new RestaurantTo(null, getNew().getName()));
         int newId = created.id();
         var newRestaurant = getNew();
         newRestaurant.setId(newId);
@@ -38,7 +42,7 @@ public class RestaurantServiceTest {
     @Test
     public void getWithMenuForToday() {
         var restaurant = service.getWithMenuForToday(RESTAURANT_A_ID);
-        RESTAURANT_TO_MATCHER.assertMatch(restaurant, RestaurantMapper.toTo(RESTAURANT_A));
+        RESTAURANT_TO_MATCHER.assertMatch(restaurant, restaurantMapperService.toWithMenuTo(RESTAURANT_A));
     }
 
     @Test
@@ -48,10 +52,10 @@ public class RestaurantServiceTest {
     }
 
     @Test
-    public void getAllWithMenuForToday() {
-        var restaurants = service.getAllWithMenuForToday();
-        List<RestaurantWithMenuTo> restaurantWithMenuTos = Stream.of(RESTAURANT_A, RESTAURANT_B)
-                .map(RestaurantMapper::toTo)
+    public void getAllWithAssignedMenuForToday() {
+        var restaurants = service.getAllWithAssignedMenuForToday();
+        List<RestaurantWithAssignedMenuTo> restaurantWithMenuTos = Stream.of(RESTAURANT_A, RESTAURANT_B)
+                .map((r) -> restaurantMapperService.toWithMenuTo(r) )
                 .toList();
         RESTAURANT_TO_MATCHER.assertMatch(restaurants, restaurantWithMenuTos);
     }

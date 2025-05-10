@@ -43,7 +43,7 @@ CREATE TABLE vote
     user_id       INTEGER                      NOT NULL,
     restaurant_id INTEGER                      NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (restaurant_id) REFERENCES restaurant (id) ON DELETE CASCADE
+    FOREIGN KEY (restaurant_id) REFERENCES restaurant (id)
 );
 CREATE UNIQUE INDEX vote_unique_date_user_idx ON vote (vote_date, user_id);
 
@@ -52,7 +52,7 @@ CREATE TABLE menu
     id            INTEGER DEFAULT NEXT VALUE FOR global_seq PRIMARY KEY,
     menu_date     DATE    DEFAULT CURRENT_DATE NOT NULL,
     restaurant_id INTEGER                      NOT NULL,
-    FOREIGN KEY (restaurant_id) REFERENCES restaurant (id) ON DELETE CASCADE,
+    FOREIGN KEY (restaurant_id) REFERENCES restaurant (id),
     CONSTRAINT unique_menu_per_day UNIQUE (restaurant_id, menu_date)
 );
 
@@ -65,11 +65,11 @@ CREATE TABLE menu_item
 
 CREATE TABLE menu_item_assignment
 (
-    menu_id     INTEGER        NOT NULL,
-    menuitem_id INTEGER        NOT NULL,
-    price       DECIMAL(10, 2) NOT NULL,
     menu_date   DATE           NOT NULL,
-    PRIMARY KEY (menu_id, menuitem_id, menu_date),
+    menu_id     INTEGER        NOT NULL,
+    menu_item_id INTEGER        NOT NULL,
+    price       DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (menu_id, menu_item_id, menu_date),
     FOREIGN KEY (menu_id) REFERENCES menu (id),
-    FOREIGN KEY (menuitem_id) REFERENCES menu_item (id)
+    FOREIGN KEY (menu_item_id) REFERENCES menu_item (id)
 );

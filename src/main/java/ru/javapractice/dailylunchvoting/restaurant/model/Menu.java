@@ -27,7 +27,7 @@ public class Menu extends BaseEntity {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     @BatchSize(size = 20)
     @JsonManagedReference
-    private List<MenuItemAssignment> menuItemAssignments;
+    private List<AssignedMenuItem> assignedMenuItems;
 
 
     @NotNull
@@ -36,15 +36,15 @@ public class Menu extends BaseEntity {
     @JsonBackReference
     private Restaurant restaurant;
 
-    public Menu(Integer id, LocalDate menuDate, Restaurant restaurant, List<MenuItemAssignment> menuItemAssignments) {
+    public Menu(Integer id, LocalDate menuDate, Restaurant restaurant, List<AssignedMenuItem> assignedMenuItems) {
         super(id);
         this.menuDate = menuDate;
         this.restaurant = restaurant;
-        this.menuItemAssignments = menuItemAssignments;
+        this.assignedMenuItems = assignedMenuItems;
     }
 
     @Override
     public String toString() {
-        return "Menu{id=" + id + ", menuDate=" + menuDate;
+        return "Menu{id=" + id + ", menuDate=" + menuDate + "}";
     }
 }

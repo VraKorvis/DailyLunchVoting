@@ -39,10 +39,9 @@ public class AdminMenuController {
         return ResponseEntity.created(uriOfNewResource).body(menuMapper.toTo(createdMenu));
     }
 
-    @PutMapping("/restaurants/{id}/menus/{menuId}")
+    @PutMapping("/restaurants/{id}/menu")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateAssignedMenu(@PathVariable int id, @PathVariable int menuId,
-                                   @RequestBody MenuTo menuTo) {
-        menuService.update(menuTo, id, menuId);
+    public void updateAssignedMenu(@PathVariable int id, @RequestBody MenuTo menuTo) {
+        menuService.update(menuTo, id);
     }
 }

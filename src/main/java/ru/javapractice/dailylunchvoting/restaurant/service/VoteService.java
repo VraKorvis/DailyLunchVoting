@@ -1,5 +1,6 @@
 package ru.javapractice.dailylunchvoting.restaurant.service;
 
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class VoteService {
 
     private final Logger log = LoggerFactory.getLogger(VoteService.class);
@@ -26,12 +28,6 @@ public class VoteService {
     private final VoteRepository voteRepository;
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
-
-    public VoteService(VoteRepository voteRepository, UserRepository userRepository, RestaurantRepository restaurantRepository) {
-        this.voteRepository = voteRepository;
-        this.userRepository = userRepository;
-        this.restaurantRepository = restaurantRepository;
-    }
 
     public List<Vote> getAll() {
         return voteRepository.findAll();

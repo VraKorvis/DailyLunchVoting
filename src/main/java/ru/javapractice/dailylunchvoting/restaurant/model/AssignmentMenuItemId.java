@@ -15,17 +15,20 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Embeddable
-public class MenuItemAssignmentId implements Serializable {
+public class AssignmentMenuItemId implements Serializable {
 
+    @Column(name = "menu_id")
     private Integer menuId;
+
+    @Column(name = "menu_item_id")
     private Integer menuItemId;
 
     @Column(name = "menu_date")
     private LocalDate menuDate;
 
-    public MenuItemAssignmentId(Integer id, Integer id1, LocalDate menuDate) {
-        this.menuId = id;
-        this.menuItemId = id1;
+    public AssignmentMenuItemId(Integer menuId, Integer menuItemId, LocalDate menuDate) {
+        this.menuId = menuId;
+        this.menuItemId = menuItemId;
         this.menuDate = menuDate;
     }
 }

@@ -15,10 +15,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Entity
 @Table(name = "menu_item_assignment")
-public class MenuItemAssignment {
+public class AssignedMenuItem {
 
     @EmbeddedId
-    private MenuItemAssignmentId id;
+    private AssignmentMenuItemId id;
 
     @ManyToOne
     @MapsId("menuId")
@@ -36,14 +36,14 @@ public class MenuItemAssignment {
     @Positive(message = "Price must be a positive number")
     private BigDecimal price;
 
-    public MenuItemAssignment(Menu menu, MenuItem menuItem, BigDecimal price) {
+    public AssignedMenuItem(Menu menu, MenuItem menuItem, BigDecimal price) {
         this.menu = menu;
         this.menuItem = menuItem;
         this.price = price;
-        this.id = createMenuItemAssignmentId(menu, menuItem);
+        this.id = createAssignedMenuItemId(menu, menuItem);
     }
 
-    private MenuItemAssignmentId createMenuItemAssignmentId(Menu menu, MenuItem menuItem) {
-        return new MenuItemAssignmentId(menu.getId(), menuItem.getId(), menu.getMenuDate());
+    private AssignmentMenuItemId createAssignedMenuItemId(Menu menu, MenuItem menuItem) {
+        return new AssignmentMenuItemId(menu.getId(), menuItem.getId(), menu.getMenuDate());
     }
 }

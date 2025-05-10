@@ -40,7 +40,7 @@ VALUES (CURRENT_DATE, 100004),
        (CURRENT_DATE, 100005),
        ('2025-03-20', 100006);
 
-INSERT INTO menu_item_assignment (menu_id, menuitem_id, menu_date, price)
+INSERT INTO menu_item_assignment (menu_id, menu_item_id, menu_date, price)
 VALUES (100017, 100007, CURRENT_DATE, 450),
        (100017, 100008, CURRENT_DATE, 800),
        (100017, 100009, CURRENT_DATE, 250),
