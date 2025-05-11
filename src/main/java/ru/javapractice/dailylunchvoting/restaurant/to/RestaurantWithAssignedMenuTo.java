@@ -19,10 +19,10 @@ public class RestaurantWithAssignedMenuTo extends BaseTo {
     String name;
 
     @NotNull
-    MenuTo menu;
+    AssignedMenuTo menu;
 
     @ConstructorProperties({"id", "name", "menu"})
-    public RestaurantWithAssignedMenuTo(Integer id, String name, MenuTo menu) {
+    public RestaurantWithAssignedMenuTo(Integer id, String name, AssignedMenuTo menu) {
         super(id);
         this.name = name;
         this.menu = menu;

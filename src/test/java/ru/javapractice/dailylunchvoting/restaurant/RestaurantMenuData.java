@@ -5,7 +5,7 @@ import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguratio
 import ru.javapractice.dailylunchvoting.restaurant.model.Menu;
 import ru.javapractice.dailylunchvoting.restaurant.model.AssignedMenuItem;
 import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
-import ru.javapractice.dailylunchvoting.restaurant.to.MenuTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.AssignedMenuTo;
 import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantWithAssignedMenuTo;
 import ru.javapractice.dailylunchvoting.util.MatcherFactory;
 
@@ -25,7 +25,7 @@ public class RestaurantMenuData {
 
     public static final MatcherFactory.Matcher<Restaurant> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "menus");
     public static final MatcherFactory.Matcher<RestaurantWithAssignedMenuTo> RESTAURANT_TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(RestaurantWithAssignedMenuTo.class);
-    public static final MatcherFactory.Matcher<MenuTo> MENU_TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(MenuTo.class, buildConfig);
+    public static final MatcherFactory.Matcher<AssignedMenuTo> MENU_TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(AssignedMenuTo.class, buildConfig);
 
     public static final int RESTAURANT_A_ID = START_SEQ + 4;
 

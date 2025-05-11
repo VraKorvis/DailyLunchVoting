@@ -14,8 +14,8 @@ import ru.javapractice.dailylunchvoting.restaurant.repository.AssignedMenuItemRe
 import ru.javapractice.dailylunchvoting.restaurant.repository.MenuItemRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.MenuRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.RestaurantRepository;
+import ru.javapractice.dailylunchvoting.restaurant.to.AssignedMenuTo;
 import ru.javapractice.dailylunchvoting.restaurant.to.PricedMenuItemTo;
-import ru.javapractice.dailylunchvoting.restaurant.to.MenuTo;
 import ru.javapractice.dailylunchvoting.util.OperationTimeChecker;
 
 import java.time.LocalDate;
@@ -42,7 +42,7 @@ public class MenuService {
     }
 
     @Transactional
-    public Menu create(MenuTo menuTo, int restaurantId) {
+    public Menu create(AssignedMenuTo menuTo, int restaurantId) {
         Assert.notNull(menuTo, "menu must not be null");
 
         ensureMenuEditingPeriod();
@@ -53,7 +53,7 @@ public class MenuService {
         }
 
         Menu newMenu = new Menu(null, LocalDate.now(), restaurant, new ArrayList<>());
-        List<AssignedMenuItem> assignments = prepareAssignmentsFromDto(newMenu, menuTo.getPricedMenuItemTos());
+        List<AssignedMenuItem> assignments = prepareAssignmentsFromTo(newMenu, menuTo);
 
         newMenu.setAssignedMenuItems(assignments);
         Menu savedMenu = menuRepository.save(newMenu);
@@ -62,12 +62,12 @@ public class MenuService {
     }
 
     @Transactional
-    public void update(MenuTo menuTo, int restaurantId) {
+    public void update(AssignedMenuTo menuTo, int restaurantId) {
         Assert.notNull(menuTo, "menuTo must not be null");
 
         ensureMenuEditingPeriod();
         Menu assignedMenu = getTodayMenuForRestaurantOrThrow(restaurantId);
-        List<AssignedMenuItem> assignments = prepareAssignmentsFromDto(assignedMenu, menuTo.getPricedMenuItemTos());
+        List<AssignedMenuItem> assignments = prepareAssignmentsFromTo(assignedMenu, menuTo);
 
         replaceAssignments(assignedMenu, assignments);
         menuRepository.save(assignedMenu);
@@ -95,13 +95,14 @@ public class MenuService {
         return menuRepository.findByRestaurantIdForToday(restaurantId).isPresent();
     }
 
-    private Menu getTodayMenuForRestaurantOrThrow(int restaurantId) {
+    public Menu getTodayMenuForRestaurantOrThrow(int restaurantId) {
         return menuRepository.findByRestaurantIdForToday(restaurantId)
                 .orElseThrow(() -> new NotFoundException(
                         "Menu for restaurant with id=" + restaurantId + " for today has not been assigned yet"));
     }
 
-    private List<AssignedMenuItem> prepareAssignmentsFromDto(Menu menu, List<PricedMenuItemTo> itemTos) {
+    private List<AssignedMenuItem> prepareAssignmentsFromTo(Menu menu, AssignedMenuTo assignedMenuTo) {
+        List<PricedMenuItemTo> itemTos = assignedMenuTo.getPricedMenuItemTos();
         List<Integer> ids = itemTos.stream()
                 .map(PricedMenuItemTo::getId)
                 .toList();

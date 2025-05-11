@@ -28,7 +28,7 @@ public class AssignedMenuItem {
 
     @ManyToOne
     @MapsId("menuItemId")
-    @JoinColumn(name = "menuitem_id")
+    @JoinColumn(name = "menu_item_id")
     private MenuItem menuItem;
 
     @DecimalMin(value = "0.01", message = "Price must be greater than zero")

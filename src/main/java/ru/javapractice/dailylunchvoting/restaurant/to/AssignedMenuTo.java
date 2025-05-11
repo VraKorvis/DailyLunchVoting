@@ -3,18 +3,19 @@ package ru.javapractice.dailylunchvoting.restaurant.to;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.*;
 import ru.javapractice.dailylunchvoting.common.to.BaseTo;
 
 import java.beans.ConstructorProperties;
 import java.time.LocalDate;
 import java.util.List;
 
-@Value
+@NoArgsConstructor
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
-@JsonPropertyOrder({"id", "menuDate", "items"})
-public class MenuTo extends BaseTo {
+@JsonPropertyOrder({"id", "menuDate", "pricedMenuItemTos"})
+public class AssignedMenuTo extends BaseTo {
 
     @NotNull
     LocalDate menuDate;
@@ -24,7 +25,7 @@ public class MenuTo extends BaseTo {
     List<PricedMenuItemTo> pricedMenuItemTos;
 
     @ConstructorProperties({"id", "menuDate", "items"})
-    public MenuTo(Integer id, LocalDate menuDate, List<PricedMenuItemTo> pricedMenuItemTos) {
+    public AssignedMenuTo(Integer id, LocalDate menuDate, List<PricedMenuItemTo> pricedMenuItemTos) {
         super(id);
         this.menuDate = menuDate;
         this.pricedMenuItemTos = pricedMenuItemTos;

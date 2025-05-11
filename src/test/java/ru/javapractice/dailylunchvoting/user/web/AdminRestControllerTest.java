@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javapractice.dailylunchvoting.common.util.JsonUtil;
 import ru.javapractice.dailylunchvoting.user.model.User;
 import ru.javapractice.dailylunchvoting.user.repository.UserRepository;
-import ru.javapractice.dailylunchvoting.web.AbstractControllerTest;
+import ru.javapractice.dailylunchvoting.AbstractControllerTest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +31,6 @@ class AdminRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + ADMIN_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
-                // https://jira.spring.io/browse/SPR-14472
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(USER_MATCHER.contentJson(ADMIN));
     }

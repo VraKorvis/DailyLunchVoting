@@ -41,6 +41,5 @@ public class PricedMenuItemTo extends BaseTo {
         this.name = name;
         this.price = price;
     }
-
 }
 

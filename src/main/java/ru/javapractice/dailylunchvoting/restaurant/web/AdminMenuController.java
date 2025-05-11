@@ -8,10 +8,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.javapractice.dailylunchvoting.mapper.MenuMapper;
+import ru.javapractice.dailylunchvoting.mapper.MenuMapperService;
 import ru.javapractice.dailylunchvoting.restaurant.model.Menu;
 import ru.javapractice.dailylunchvoting.restaurant.service.MenuService;
-import ru.javapractice.dailylunchvoting.restaurant.to.MenuTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.AssignedMenuTo;
 
 import java.net.URI;
 
@@ -24,11 +24,11 @@ import static ru.javapractice.dailylunchvoting.restaurant.web.AdminMenuControlle
 public class AdminMenuController {
     public static final String REST_URL = "/api/admin";
 
-    private final MenuMapper menuMapper;
+    private final MenuMapperService menuMapper;
     private final MenuService menuService;
 
     @PostMapping("/restaurants/{id}/menu")
-    public ResponseEntity<MenuTo> createAndAssignMenuToRestaurant(@Valid @RequestBody MenuTo menuTo, @PathVariable int id) {
+    public ResponseEntity<AssignedMenuTo> createAndAssignMenuToRestaurant(@Valid @RequestBody AssignedMenuTo menuTo, @PathVariable int id) {
 
         Menu createdMenu = menuService.create(menuTo, id);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -36,12 +36,12 @@ public class AdminMenuController {
                 .buildAndExpand(id)
                 .toUri();
 
-        return ResponseEntity.created(uriOfNewResource).body(menuMapper.toTo(createdMenu));
+        return ResponseEntity.created(uriOfNewResource).body(menuMapper.toAssignedMenuTo(createdMenu));
     }
 
     @PutMapping("/restaurants/{id}/menu")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateAssignedMenu(@PathVariable int id, @RequestBody MenuTo menuTo) {
+    public void updateAssignedMenu(@PathVariable int id, @RequestBody AssignedMenuTo menuTo) {
         menuService.update(menuTo, id);
     }
 }

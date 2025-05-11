@@ -42,7 +42,7 @@ public class RestaurantServiceTest {
     @Test
     public void getWithMenuForToday() {
         var restaurant = service.getWithMenuForToday(RESTAURANT_A_ID);
-        RESTAURANT_TO_MATCHER.assertMatch(restaurant, restaurantMapperService.toWithMenuTo(RESTAURANT_A));
+        RESTAURANT_TO_MATCHER.assertMatch(restaurant, restaurantMapperService.toWithAssignedMenuTo(RESTAURANT_A));
     }
 
     @Test
@@ -55,7 +55,7 @@ public class RestaurantServiceTest {
     public void getAllWithAssignedMenuForToday() {
         var restaurants = service.getAllWithAssignedMenuForToday();
         List<RestaurantWithAssignedMenuTo> restaurantWithMenuTos = Stream.of(RESTAURANT_A, RESTAURANT_B)
-                .map((r) -> restaurantMapperService.toWithMenuTo(r) )
+                .map((r) -> restaurantMapperService.toWithAssignedMenuTo(r) )
                 .toList();
         RESTAURANT_TO_MATCHER.assertMatch(restaurants, restaurantWithMenuTos);
     }

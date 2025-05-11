@@ -18,7 +18,6 @@ import java.util.List;
 
 import static ru.javapractice.dailylunchvoting.restaurant.web.AdminRestaurantsRestController.REST_URL;
 
-@RequiredArgsConstructor
 @RestController
 @Slf4j
 @AllArgsConstructor

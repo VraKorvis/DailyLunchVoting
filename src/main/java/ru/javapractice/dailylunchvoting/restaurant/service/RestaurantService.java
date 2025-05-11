@@ -40,17 +40,15 @@ public class RestaurantService {
     public RestaurantWithAssignedMenuTo getWithMenuForToday(int id) {
         Restaurant restaurant = repository.findByIdWithMenuForToday(id)
                 .orElseThrow(() -> new NotFoundException("Restaurant with id=" + id + " not found"));
-        return mapperService.toWithMenuTo(restaurant);
+        return mapperService.toWithAssignedMenuTo(restaurant);
     }
 
     public List<RestaurantWithAssignedMenuTo> getAllWithAssignedMenuForToday() {
-        List<Restaurant> allWithAssignedMenuForToday = repository.getAllWithAssignedMenuForToday();
-        return mapperService.toWithMenuToList(allWithAssignedMenuForToday);
+        return mapperService.toWithAssignedMenuTos(repository.findAllWithAssignedMenuForToday());
     }
 
     public List<RestaurantWithAssignedMenuTo> getAllWithoutAssignedMenuForToday() {
-        List<Restaurant> allWithoutAssignedMenuForToday = repository.getAllWithoutAssignedMenuForToday();
-        return mapperService.toWithMenuToList(allWithoutAssignedMenuForToday);
+        return mapperService.toWithAssignedMenuTos(repository.findAllWithoutAssignedMenuForToday());
     }
 
 }

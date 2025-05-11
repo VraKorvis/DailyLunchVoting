@@ -29,7 +29,6 @@ public class Menu extends BaseEntity {
     @JsonManagedReference
     private List<AssignedMenuItem> assignedMenuItems;
 
-
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)

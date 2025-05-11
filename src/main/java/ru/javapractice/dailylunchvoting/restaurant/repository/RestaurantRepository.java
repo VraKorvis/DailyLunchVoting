@@ -23,10 +23,10 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
 
     @EntityGraph(attributePaths = {"menus"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m WHERE m.menuDate=CURRENT_DATE ORDER BY r.name ASC")
-    List<Restaurant> getAllWithAssignedMenuForToday();
+    List<Restaurant> findAllWithAssignedMenuForToday();
 
     @Query("SELECT r FROM Restaurant r LEFT JOIN Menu m ON r.id = m.restaurant.id AND m.menuDate = CURRENT_DATE WHERE m.id IS NULL")
-    List<Restaurant> getAllWithoutAssignedMenuForToday();
+    List<Restaurant> findAllWithoutAssignedMenuForToday();
 
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m WHERE r.id=:id AND m.menuDate=CURRENT_DATE ORDER BY r.name ASC")
     Optional<Restaurant> findByIdWithMenuForToday(@Param("id") Integer id);
