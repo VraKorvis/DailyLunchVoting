@@ -6,6 +6,8 @@ import org.mapstruct.Mapping;
 import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
 import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantTo;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface RestaurantMapper {
 
@@ -17,5 +19,6 @@ public interface RestaurantMapper {
     @Mapping(source = "name", target = "name")
     Restaurant toRestaurant(RestaurantTo restaurantTo);
 
+    List<RestaurantTo> toRestaurantTos(List<Restaurant> restaurants);
 }
 

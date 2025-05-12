@@ -6,6 +6,7 @@ import ru.javapractice.dailylunchvoting.restaurant.model.Menu;
 import ru.javapractice.dailylunchvoting.restaurant.model.AssignedMenuItem;
 import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
 import ru.javapractice.dailylunchvoting.restaurant.to.AssignedMenuTo;
+import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantTo;
 import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantWithAssignedMenuTo;
 import ru.javapractice.dailylunchvoting.util.MatcherFactory;
 
@@ -24,6 +25,7 @@ public class RestaurantMenuData {
             .build();
 
     public static final MatcherFactory.Matcher<Restaurant> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "menus");
+    public static final MatcherFactory.Matcher<RestaurantTo> MATCHER_TO = MatcherFactory.usingIgnoringFieldsComparator(RestaurantTo.class, "menus");
     public static final MatcherFactory.Matcher<RestaurantWithAssignedMenuTo> RESTAURANT_TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(RestaurantWithAssignedMenuTo.class);
     public static final MatcherFactory.Matcher<AssignedMenuTo> MENU_TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(AssignedMenuTo.class, buildConfig);
 

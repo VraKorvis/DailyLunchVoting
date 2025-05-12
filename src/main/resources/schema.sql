@@ -39,13 +39,13 @@ CREATE TABLE restaurant
 CREATE TABLE vote
 (
     id            INTEGER DEFAULT NEXT VALUE FOR global_seq PRIMARY KEY,
-    vote_date     DATE    DEFAULT CURRENT_DATE NOT NULL,
+    voted_at     DATE    DEFAULT CURRENT_DATE NOT NULL,
     user_id       INTEGER                      NOT NULL,
     restaurant_id INTEGER                      NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (restaurant_id) REFERENCES restaurant (id)
 );
-CREATE UNIQUE INDEX vote_unique_date_user_idx ON vote (vote_date, user_id);
+CREATE UNIQUE INDEX vote_unique_date_user_idx ON vote (voted_at, user_id);
 
 CREATE TABLE menu
 (

@@ -1,16 +1,19 @@
 package ru.javapractice.dailylunchvoting.restaurant.to;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Value;
 import ru.javapractice.dailylunchvoting.common.to.BaseTo;
 
 import java.beans.ConstructorProperties;
 
 @Value
+@Getter
 @EqualsAndHashCode(callSuper = true)
 @JsonPropertyOrder({"id", "name", "menu"})
 public class RestaurantWithAssignedMenuTo extends BaseTo {
@@ -19,6 +22,7 @@ public class RestaurantWithAssignedMenuTo extends BaseTo {
     String name;
 
     @NotNull
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     AssignedMenuTo menu;
 
     @ConstructorProperties({"id", "name", "menu"})

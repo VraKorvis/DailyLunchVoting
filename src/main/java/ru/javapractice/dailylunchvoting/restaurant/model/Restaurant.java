@@ -1,5 +1,6 @@
 package ru.javapractice.dailylunchvoting.restaurant.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;

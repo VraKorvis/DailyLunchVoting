@@ -2,7 +2,7 @@ package ru.javapractice.dailylunchvoting.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.javapractice.dailylunchvoting.restaurant.model.Vote;
+import ru.javapractice.dailylunchvoting.vote.model.Vote;
 import ru.javapractice.dailylunchvoting.restaurant.to.VoteTo;
 
 import java.util.List;
@@ -11,10 +11,12 @@ import java.util.List;
 public interface VoteMapper {
 
     @Mapping(source = "id", target = "id")
+    @Mapping(source = "votedAt", target = "votedAt")
     @Mapping(source = "restaurant", target = "restaurantTo")
     VoteTo toVoteTo(Vote vote);
 
     @Mapping(source = "id", target = "id")
+    @Mapping(source = "votedAt", target = "votedAt")
     @Mapping(source = "restaurantTo", target = "restaurant")
     Vote toVote(VoteTo vote);
 

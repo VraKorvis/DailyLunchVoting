@@ -53,7 +53,7 @@ VALUES (100017, 100007),
        (100019, 100016),
        (100019, 100012);
 
-INSERT INTO vote (vote_date, user_id, restaurant_id)
+INSERT INTO vote (voted_at, user_id, restaurant_id)
 VALUES (CURRENT_DATE, '100000', '100006'),
        (CURRENT_DATE, '100002', '100004'),
        ('2025-03-20', '100000', '100004'),

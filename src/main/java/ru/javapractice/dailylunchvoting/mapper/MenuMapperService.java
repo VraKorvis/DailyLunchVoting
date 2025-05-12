@@ -1,6 +1,7 @@
 package ru.javapractice.dailylunchvoting.mapper;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.javapractice.dailylunchvoting.restaurant.model.AssignedMenuItem;
 import ru.javapractice.dailylunchvoting.restaurant.model.Menu;
@@ -12,9 +13,9 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class MenuMapperService {
     public AssignedMenuTo toAssignedMenuTo(@NonNull Menu menu) {
-
         List<PricedMenuItemTo> items = menu.getAssignedMenuItems().stream()
                         .map(this::toPricedMenuItemTo)
                         .toList();

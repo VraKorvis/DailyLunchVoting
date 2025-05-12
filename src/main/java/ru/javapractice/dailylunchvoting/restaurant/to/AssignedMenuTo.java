@@ -24,7 +24,7 @@ public class AssignedMenuTo extends BaseTo {
     @NotNull
     List<PricedMenuItemTo> pricedMenuItemTos;
 
-    @ConstructorProperties({"id", "menuDate", "items"})
+    @ConstructorProperties({"id", "menuDate", "pricedMenuItemTos"})
     public AssignedMenuTo(Integer id, LocalDate menuDate, List<PricedMenuItemTo> pricedMenuItemTos) {
         super(id);
         this.menuDate = menuDate;

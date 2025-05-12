@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class VoteTo extends BaseTo {
 
     @NotNull
-    LocalDate date;
+    LocalDate votedAt;
 
     @NotNull
     RestaurantTo restaurantTo;

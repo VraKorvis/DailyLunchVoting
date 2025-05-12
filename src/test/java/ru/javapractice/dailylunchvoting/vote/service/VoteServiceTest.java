@@ -1,4 +1,4 @@
-package ru.javapractice.dailylunchvoting.restaurant.service;
+package ru.javapractice.dailylunchvoting.vote.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,7 +9,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import ru.javapractice.dailylunchvoting.common.exception.AppException;
 import ru.javapractice.dailylunchvoting.mapper.VoteMapper;
-import ru.javapractice.dailylunchvoting.restaurant.model.Vote;
+import ru.javapractice.dailylunchvoting.vote.model.Vote;
 import ru.javapractice.dailylunchvoting.restaurant.to.VoteTo;
 import ru.javapractice.dailylunchvoting.user.UserData;
 import ru.javapractice.dailylunchvoting.util.TimingExtension;
@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.slf4j.LoggerFactory.getLogger;
-import static ru.javapractice.dailylunchvoting.restaurant.VoteData.*;
+import static ru.javapractice.dailylunchvoting.vote.VoteData.*;
 
 @SpringBootTest
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
@@ -73,7 +73,7 @@ public class VoteServiceTest {
     @Test
     public void update() {
         Vote updated = getUpdated(USER1_TODAY_VOTE);
-        if (OperationTimeChecker.canUpdate(updated)) {
+        if (OperationTimeChecker.canUpdateVote(updated.getVotedAt())) {
             voteService.vote(updated.getRestaurant().id(), UserData.USER_1_ID);
             VoteTo actual = voteService.findByUserIdForToday(UserData.USER_1_ID);
             MATCHER_TO.assertMatch(actual, voteMapper.toVoteTo(updated));

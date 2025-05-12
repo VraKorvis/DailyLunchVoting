@@ -1,18 +1,15 @@
-package ru.javapractice.dailylunchvoting.restaurant.service;
+package ru.javapractice.dailylunchvoting.vote.service;
 
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.javapractice.dailylunchvoting.common.error.ErrorType;
-import ru.javapractice.dailylunchvoting.common.exception.AppException;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
 import ru.javapractice.dailylunchvoting.mapper.VoteMapper;
-import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
-import ru.javapractice.dailylunchvoting.restaurant.model.Vote;
+import ru.javapractice.dailylunchvoting.vote.model.Vote;
 import ru.javapractice.dailylunchvoting.restaurant.repository.RestaurantRepository;
-import ru.javapractice.dailylunchvoting.restaurant.repository.VoteRepository;
+import ru.javapractice.dailylunchvoting.vote.model.VoteResult;
+import ru.javapractice.dailylunchvoting.vote.repository.VoteRepository;
 import ru.javapractice.dailylunchvoting.restaurant.to.VoteTo;
 import ru.javapractice.dailylunchvoting.user.model.User;
 import ru.javapractice.dailylunchvoting.user.repository.UserRepository;
@@ -23,9 +20,8 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class VoteService {
-
-    private final Logger log = LoggerFactory.getLogger(VoteService.class);
 
     private final VoteRepository voteRepository;
     private final UserRepository userRepository;
@@ -45,40 +41,41 @@ public class VoteService {
     }
 
     public VoteTo findByUserIdForToday(int userId) {
-        Vote vote = voteRepository.findByUserIdForToday(userId)
+        var vote = voteRepository.findByUserIdForToday(userId)
                 .orElseThrow(() -> new NotFoundException("Vote not found for user id=" + userId + " on today's date"));
         return voteMapper.toVoteTo(vote);
     }
 
     @Transactional
-    public Vote vote(int restaurantId, int userId) {
+    public VoteResult vote(int restaurantId, int userId) {
 
-        User refUser = userRepository.getReferenceById(userId);
-        Restaurant refRestaurant = restaurantRepository.getReferenceById(restaurantId);
+        var refRestaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new NotFoundException("Restaurant with id=" + restaurantId + " not found"));
 
-        var restaurantOpt = restaurantRepository.findByIdWithMenuForToday(restaurantId);
-        if (restaurantOpt.isEmpty()) {
-            throw new NotFoundException(String.format("Cannot vote for restaurant (id=%d) because it has no menu assigned for today", restaurantId));
-        }
+        var refUser = userRepository.getReferenceById(userId);
 
         return voteRepository.findByUserIdForToday(userId)
                 .map(existingVote -> {
-                    if (!OperationTimeChecker.canUpdate(existingVote)) {
-                        throw new AppException("It's too late to change your vote", ErrorType.APP_ERROR);
+                    if (!OperationTimeChecker.canUpdateVote(existingVote.getVotedAt())) {
+                        return createVoteResult(false, "Voting period has ended, you can no longer change your vote", restaurantId);
                     }
                     existingVote.setRestaurant(refRestaurant);
-                    return existingVote;
+                    return new VoteResult(true, "Your vote has been successfully updated", restaurantId);
                 })
                 .orElseGet(() -> {
                     if (!OperationTimeChecker.canVote()) {
-                        throw new AppException("It's too late to vote", ErrorType.APP_ERROR);
+                        return createVoteResult(false, "Voting period has ended, you can no longer vote", restaurantId);
                     }
-                    Vote vote = new Vote();
+                    var vote = new Vote();
                     vote.setUser(refUser);
-                    vote.setDate(LocalDate.now());
+                    vote.setVotedAt(LocalDate.now());
                     vote.setRestaurant(refRestaurant);
-
-                    return voteRepository.save(vote);
+                    voteRepository.save(vote);
+                    return createVoteResult(true, "Your vote has been successfully accepted", restaurantId);
                 });
+    }
+
+    private VoteResult createVoteResult(boolean success, String message, int restaurantId) {
+        return new VoteResult(success, message, restaurantId);
     }
 }

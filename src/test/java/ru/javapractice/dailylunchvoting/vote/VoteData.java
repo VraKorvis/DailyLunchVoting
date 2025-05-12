@@ -1,7 +1,8 @@
-package ru.javapractice.dailylunchvoting.restaurant;
+package ru.javapractice.dailylunchvoting.vote;
 
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
-import ru.javapractice.dailylunchvoting.restaurant.model.Vote;
+import ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData;
+import ru.javapractice.dailylunchvoting.vote.model.Vote;
 import ru.javapractice.dailylunchvoting.restaurant.to.VoteTo;
 import ru.javapractice.dailylunchvoting.util.MatcherFactory;
 
@@ -38,7 +39,7 @@ public class VoteData {
 
     public static List<Vote> getAllTestVotes() {
         return Stream.of(USER1_TODAY_VOTE, USER1_VOTE2, USER2_VOTE1, USER2_VOTE2, USER1_VOTE3, ADMIN_TODAY_VOTE_1)
-                .sorted(Comparator.comparing(Vote::getDate)
+                .sorted(Comparator.comparing(Vote::getVotedAt)
                         .reversed()
                         .thenComparing(Vote::id, Comparator.reverseOrder()))
                 .collect(Collectors.toList());

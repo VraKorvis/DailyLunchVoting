@@ -1,12 +1,12 @@
-package ru.javapractice.dailylunchvoting.restaurant.model;
+package ru.javapractice.dailylunchvoting.vote.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.javapractice.dailylunchvoting.common.model.BaseEntity;
+import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
 import ru.javapractice.dailylunchvoting.user.model.User;
 
 import java.time.LocalDate;
@@ -24,9 +24,9 @@ public class Vote extends BaseEntity {
 
     public static final String WITH_RESTAURANT = "Vote.withRestaurant";
 
-    @Column(name = "vote_date", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
+    @Column(name = "voted_at", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
-    private LocalDate date;
+    private LocalDate votedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -40,20 +40,20 @@ public class Vote extends BaseEntity {
 
     @SuppressWarnings("CopyConstructorMissesField")
     public Vote(Vote v) {
-        this(v.id, v.date, v.restaurant);
+        this(v.id, v.votedAt, v.restaurant);
     }
 
-    public Vote(Integer id, LocalDate date, Restaurant restaurant) {
+    public Vote(Integer id, LocalDate votedAt, Restaurant restaurant) {
         super(id);
-        this.date = date;
+        this.votedAt = votedAt;
         this.restaurant = restaurant;
     }
 
     @Override
     public String toString() {
         return "Vote{" +
-                "id=" + id +
-                ", voteDate=" + date +
-                '}';
+               "id=" + id +
+               ", voteDate=" + votedAt +
+               '}';
     }
 }
