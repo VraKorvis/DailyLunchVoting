@@ -8,10 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javapractice.dailylunchvoting.common.error.ErrorType;
 import ru.javapractice.dailylunchvoting.common.exception.AppException;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
+import ru.javapractice.dailylunchvoting.mapper.VoteMapper;
 import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
 import ru.javapractice.dailylunchvoting.restaurant.model.Vote;
 import ru.javapractice.dailylunchvoting.restaurant.repository.RestaurantRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.VoteRepository;
+import ru.javapractice.dailylunchvoting.restaurant.to.VoteTo;
 import ru.javapractice.dailylunchvoting.user.model.User;
 import ru.javapractice.dailylunchvoting.user.repository.UserRepository;
 import ru.javapractice.dailylunchvoting.util.OperationTimeChecker;
@@ -28,26 +30,24 @@ public class VoteService {
     private final VoteRepository voteRepository;
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
-
-    public List<Vote> getAll() {
-        return voteRepository.findAll();
-    }
+    private final VoteMapper voteMapper;
 
     public List<Vote> getAllByUserId(int userId) {
-        return voteRepository.getAllByUserId(userId);
+        return voteRepository.findAllByUserId(userId);
     }
 
-    public List<Vote> getAllWithRestaurantForToday() {
-        return voteRepository.getAllForToday();
+    public List<VoteTo> getAllForToday() {
+        return voteMapper.toVoteTos(voteRepository.findAllForToday());
     }
 
     public List<Vote> getAllWithRestaurantByUserId(int userId) {
-        return voteRepository.getAllByUserId(userId);
+        return voteRepository.findAllByUserId(userId);
     }
 
-    public Vote findByUserIdForToday(int userId) {
-        return voteRepository.findByUserIdForToday(userId)
+    public VoteTo findByUserIdForToday(int userId) {
+        Vote vote = voteRepository.findByUserIdForToday(userId)
                 .orElseThrow(() -> new NotFoundException("Vote not found for user id=" + userId + " on today's date"));
+        return voteMapper.toVoteTo(vote);
     }
 
     @Transactional
@@ -56,7 +56,12 @@ public class VoteService {
         User refUser = userRepository.getReferenceById(userId);
         Restaurant refRestaurant = restaurantRepository.getReferenceById(restaurantId);
 
-       return voteRepository.findByUserIdForToday(userId)
+        var restaurantOpt = restaurantRepository.findByIdWithMenuForToday(restaurantId);
+        if (restaurantOpt.isEmpty()) {
+            throw new NotFoundException(String.format("Cannot vote for restaurant (id=%d) because it has no menu assigned for today", restaurantId));
+        }
+
+        return voteRepository.findByUserIdForToday(userId)
                 .map(existingVote -> {
                     if (!OperationTimeChecker.canUpdate(existingVote)) {
                         throw new AppException("It's too late to change your vote", ErrorType.APP_ERROR);
@@ -72,8 +77,8 @@ public class VoteService {
                     vote.setUser(refUser);
                     vote.setDate(LocalDate.now());
                     vote.setRestaurant(refRestaurant);
-                    voteRepository.save(vote);
-                    return vote;
+
+                    return voteRepository.save(vote);
                 });
     }
 }

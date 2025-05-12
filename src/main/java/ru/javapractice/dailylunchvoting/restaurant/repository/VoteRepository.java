@@ -23,11 +23,11 @@ public interface VoteRepository extends BaseRepository<Vote> {
 
     @EntityGraph(attributePaths = {"restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT v FROM Vote v WHERE v.date = CURRENT_DATE ORDER BY v.date DESC, v.id DESC")
-    List<Vote> getAllForToday();
+    List<Vote> findAllForToday();
 
     @EntityGraph(attributePaths = {"restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT v FROM Vote v WHERE v.user.id=:userId ORDER BY v.date DESC, v.id DESC")
-    List<Vote> getAllByUserId(@Param("userId") int userId);
+    List<Vote> findAllByUserId(@Param("userId") int userId);
 
     @EntityGraph(attributePaths = {"restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT v FROM Vote v WHERE v.user.id = :userId and v.date = CURRENT_DATE")
