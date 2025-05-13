@@ -35,6 +35,10 @@ public class Menu extends BaseEntity {
     @JsonBackReference
     private Restaurant restaurant;
 
+    public Menu(@NotNull Menu menu) {
+        this(menu.getId(), menu.menuDate, menu.restaurant, menu.assignedMenuItems);
+    }
+
     public Menu(Integer id, LocalDate menuDate, Restaurant restaurant, List<AssignedMenuItem> assignedMenuItems) {
         super(id);
         this.menuDate = menuDate;

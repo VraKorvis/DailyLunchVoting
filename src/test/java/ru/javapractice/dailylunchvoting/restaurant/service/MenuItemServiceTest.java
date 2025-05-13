@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javapractice.dailylunchvoting.restaurant.model.MenuItem;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 import static ru.javapractice.dailylunchvoting.restaurant.MenuItemData.*;
 
 @SpringBootTest
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
+@Transactional
 public class MenuItemServiceTest {
 
     @Autowired

@@ -1,4 +1,4 @@
-package ru.javapractice.dailylunchvoting.restaurant.web;
+package ru.javapractice.dailylunchvoting.vote.web;
 
 import org.junit.jupiter.api.Test;
 

@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javapractice.dailylunchvoting.mapper.RestaurantMapper;
-import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
 import ru.javapractice.dailylunchvoting.restaurant.service.RestaurantService;
 import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantTo;
 import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantWithAssignedMenuTo;
@@ -44,7 +43,7 @@ public class AdminRestaurantRestController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestaurantTo> createWithLocation(@RequestBody RestaurantTo restaurant) {
-        Restaurant created = service.create(restaurant);
+        var created = service.create(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();

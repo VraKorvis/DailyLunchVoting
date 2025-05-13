@@ -5,8 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import ru.javapractice.dailylunchvoting.common.error.ErrorType;
-import ru.javapractice.dailylunchvoting.common.exception.AppException;
+import ru.javapractice.dailylunchvoting.app.config.ConstConfig;
 import ru.javapractice.dailylunchvoting.common.exception.ConflictException;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
 import ru.javapractice.dailylunchvoting.restaurant.model.*;
@@ -34,7 +33,7 @@ public class MenuService {
     private final AssignedMenuItemRepository assignedMenuItemRepository;
 
     public Menu get(int id) {
-        return menuRepository.getReferenceById(id);
+        return menuRepository.getExisted(id);
     }
 
     public List<Menu> getAll() {
@@ -45,19 +44,21 @@ public class MenuService {
     public Menu create(AssignedMenuTo menuTo, int restaurantId) {
         Assert.notNull(menuTo, "menu must not be null");
 
-        ensureMenuEditingPeriod();
+        LocalDate targetDate = menuTo.getMenuDate();
+        ensureMenuEditingPeriod(targetDate);
         Restaurant restaurant = findRestaurantById(restaurantId);
 
         if (isMenuAssignedForToday(restaurantId)) {
             throw new ConflictException("Menu for restaurant with id=" + restaurantId + " for today already exists");
         }
 
-        Menu newMenu = new Menu(null, LocalDate.now(), restaurant, new ArrayList<>());
+        Menu newMenu = new Menu(null, targetDate, restaurant, new ArrayList<>());
         List<AssignedMenuItem> assignments = prepareAssignmentsFromTo(newMenu, menuTo);
 
         newMenu.setAssignedMenuItems(assignments);
         Menu savedMenu = menuRepository.save(newMenu);
         saveAssignedMenuItems(assignments);
+        log.info("Menu {} for restaurant {} assigned for {}", savedMenu.id(), restaurantId, targetDate);
         return savedMenu;
     }
 
@@ -65,7 +66,8 @@ public class MenuService {
     public void update(AssignedMenuTo menuTo, int restaurantId) {
         Assert.notNull(menuTo, "menuTo must not be null");
 
-        ensureMenuEditingPeriod();
+        LocalDate targetDate = menuTo.getMenuDate();
+        ensureMenuEditingPeriod(targetDate);
         Menu assignedMenu = getTodayMenuForRestaurantOrThrow(restaurantId);
         List<AssignedMenuItem> assignments = prepareAssignmentsFromTo(assignedMenu, menuTo);
 
@@ -80,9 +82,18 @@ public class MenuService {
         currentAssignments.addAll(assignments);
     }
 
-    private void ensureMenuEditingPeriod() {
-        if (!OperationTimeChecker.canAssignMenu()) {
-            throw new AppException("Can't assign/edit menu. Time to vote for restaurant", ErrorType.APP_ERROR);
+    private void ensureMenuEditingPeriod(LocalDate menuDate) {
+        if (OperationTimeChecker.isFutureDate(menuDate)) {
+            return;
+        }
+        if (OperationTimeChecker.isPastDate(menuDate)) {
+            throw new ConflictException("Cannot create/edit menu for past date " + menuDate);
+        }
+        if (OperationTimeChecker.hasVotingStarted(menuDate)) {
+            throw new ConflictException(
+                    "Cannot edit today's menu after voting has started at "
+                    + ConstConfig.VOTING_START_TIME
+            );
         }
     }
 

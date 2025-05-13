@@ -14,7 +14,7 @@ public interface BaseRepository<T> extends JpaRepository<T, Integer> {
     @Modifying
     @Query("DELETE FROM #{#entityName} e WHERE e.id=:id")
     default int delete(int id) {
-        throw new UnsupportedOperationException("Deletion is not allowed. All data is stored in the database as history.");
+        throw new UnsupportedOperationException("Operation not supported. Deletion is not allowed. All data is stored in the database as history.");
     }
 
     @SuppressWarnings("all")

@@ -1,5 +1,6 @@
 package ru.javapractice.dailylunchvoting.user;
 
+import ru.javapractice.dailylunchvoting.common.util.JsonUtil;
 import ru.javapractice.dailylunchvoting.user.model.Role;
 import ru.javapractice.dailylunchvoting.user.model.User;
 import ru.javapractice.dailylunchvoting.util.MatcherFactory;
@@ -11,7 +12,7 @@ import java.util.Set;
 import static ru.javapractice.dailylunchvoting.common.model.BaseEntity.START_SEQ;
 
 public class UserData {
-    public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class,"registered", "roles");
+    public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "registered", "password");
 
     public static final int USER_1_ID = START_SEQ;
     public static final int USER_2_ID = START_SEQ + 1;
@@ -19,8 +20,13 @@ public class UserData {
     public static final int GUEST_ID = START_SEQ + 3;
     public static final int NOT_FOUND = 10;
 
-    public static final User USER_1 = new User(USER_1_ID, "User1", "user1@yandex.ru", "password", Role.USER);
-    public static final User USER_2 = new User(USER_2_ID, "User2", "user2@yandex.ru", "password", Role.USER);
+    public static final String USER_1_MAIL = "user1@gmail.com";
+    public static final String USER_2_MAIL = "user2@gmail.com";
+    public static final String ADMIN_MAIL = "admin@gmail.com";
+    public static final String GUEST_MAIL = "guest@gmail.com";
+
+    public static final User USER_1 = new User(USER_1_ID, "User1", "user1@gmail.com", "password", Role.USER);
+    public static final User USER_2 = new User(USER_2_ID, "User2", "user2@gmail.com", "password", Role.USER);
     public static final User ADMIN = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", Role.ADMIN);
     public static final User GUEST = new User(GUEST_ID, "Guest", "guest@gmail.com", "guest");
     public static final String USER_1_EMAIL = "user1@yandex.ru";
@@ -33,12 +39,16 @@ public class UserData {
     }
 
     public static User getUpdated(User u) {
-        User updated = new User(u);
+        var updated = new User(u);
         updated.setEmail("update@gmail.com");
         updated.setName("UpdatedName");
         updated.setPassword("newPass");
         updated.setEnabled(false);
         updated.setRoles(Set.of(Role.ADMIN));
         return updated;
+    }
+
+    public static String jsonWithPassword(User user, String passw) {
+        return JsonUtil.writeAdditionProps(user, "password", passw);
     }
 }

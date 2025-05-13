@@ -100,6 +100,10 @@ public class RestaurantMenuData {
         return new Restaurant("Restaurant D");
     }
 
+    public static Menu getNewMenu() {
+        return new Menu(NEW_MENU);
+    }
+
     public static Restaurant getUpdated(Restaurant restaurant) {
         var newR = new Restaurant(restaurant);
         newR.setName("Restaurant updated name");

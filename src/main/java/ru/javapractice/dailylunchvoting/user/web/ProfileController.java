@@ -46,7 +46,7 @@ public class ProfileController extends AbstractUserController {
     public ResponseEntity<User> register(@Valid @RequestBody UserTo userTo) {
         log.info("register {}", userTo);
         checkIsNew(userTo);
-        User created = repository.prepareAndSave(userMapper.createNewFromTo(userTo));
+        var created = repository.prepareAndSave(userMapper.createNewFromTo(userTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
@@ -58,7 +58,7 @@ public class ProfileController extends AbstractUserController {
     public void update(@RequestBody @Valid UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
         log.info("update {} with id={}", userTo, authUser.id());
         assureIdConsistent(userTo, authUser.id());
-        User user = authUser.getUser();
+        var user = authUser.getUser();
         userMapper.updateFromTo(user, userTo);
         repository.prepareAndSave(user);
     }

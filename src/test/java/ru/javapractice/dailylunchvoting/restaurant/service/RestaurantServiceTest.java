@@ -3,8 +3,7 @@ package ru.javapractice.dailylunchvoting.restaurant.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
+import ru.javapractice.dailylunchvoting.mapper.RestaurantMapper;
 import ru.javapractice.dailylunchvoting.mapper.RestaurantMapperService;
 import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantTo;
 import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantWithAssignedMenuTo;
@@ -15,11 +14,12 @@ import java.util.stream.Stream;
 import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
 
 @SpringBootTest
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class RestaurantServiceTest {
 
     @Autowired
     private RestaurantMapperService restaurantMapperService;
+    @Autowired
+    private RestaurantMapper restaurantMapper;
 
     @Autowired
     private RestaurantService service;
@@ -36,19 +36,14 @@ public class RestaurantServiceTest {
     @Test
     public void get() {
         var restaurant = service.get(RESTAURANT_A_ID);
-        MATCHER.assertMatch(restaurant, RESTAURANT_A);
-    }
-
-    @Test
-    public void getWithMenuForToday() {
-        var restaurant = service.getWithMenuForToday(RESTAURANT_A_ID);
-        RESTAURANT_TO_MATCHER.assertMatch(restaurant, restaurantMapperService.toWithAssignedMenuTo(RESTAURANT_A));
+        MATCHER_TO.assertMatch(restaurant, restaurantMapper.toRestaurantTo(RESTAURANT_A));
     }
 
     @Test
     public void getAll() {
         var restaurants = service.getAll();
-        MATCHER.assertMatch(restaurants, RESTAURANT_A, RESTAURANT_B, RESTAURANT_C);
+        var rTos = restaurantMapper.toRestaurantTos(List.of(RESTAURANT_A, RESTAURANT_B, RESTAURANT_C));
+        MATCHER_TO.assertMatch(restaurants, rTos);
     }
 
     @Test
@@ -64,6 +59,6 @@ public class RestaurantServiceTest {
     public void update() {
         var updated = getUpdated(RESTAURANT_A);
         service.update(updated);
-        MATCHER.assertMatch(service.get(RESTAURANT_A_ID), updated);
+        MATCHER_TO.assertMatch(service.get(RESTAURANT_A_ID), restaurantMapper.toRestaurantTo(updated));
     }
 }

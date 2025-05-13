@@ -60,8 +60,16 @@ public class RestExceptionHandler {
             put(ServletRequestBindingException.class, BAD_REQUEST);
             put(RequestRejectedException.class, BAD_REQUEST);
             put(AccessDeniedException.class, FORBIDDEN);
+            put(AppException.class, DATA_CONFLICT);
         }
     };
+
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ProblemDetail handleUnsupportedOperationException(UnsupportedOperationException ex, HttpServletRequest request) {
+        String path = request.getRequestURI();
+        log.warn(RestExceptionHandler.ERR_PFX + "UnsupportedOperationException at request {}", path);
+        return createProblemDetail(ex, path, ErrorType.DATA_CONFLICT, ex.getMessage(), Map.of());
+    }
 
     @ExceptionHandler(BindException.class)
     ProblemDetail bindException(BindException ex, HttpServletRequest request) {

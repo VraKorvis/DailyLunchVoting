@@ -28,7 +28,7 @@ public class VoteController {
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<VoteResult> vote(@RequestParam int restaurantId) {
-        VoteResult result = service.vote(restaurantId, AuthUtil.get().id());
+        var result = service.vote(restaurantId, AuthUtil.get().id());
         if (result.isSuccess()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         }
