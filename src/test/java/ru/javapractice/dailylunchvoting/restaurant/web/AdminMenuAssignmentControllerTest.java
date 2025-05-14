@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javapractice.dailylunchvoting.AbstractControllerTest;
@@ -29,7 +28,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
-import static ru.javapractice.dailylunchvoting.user.UserData.ADMIN_MAIL;
 
 @WebMvcTest(AdminMenuAssignmentController.class)
 @Import({
@@ -60,7 +58,7 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
     MenuService menuService;
 
     @Test
-    @WithMockUser(username = ADMIN_MAIL, roles = "ADMIN")
+    @WithMockUser
     @DisplayName("create(): succeeds when creating and assigning menu to restaurant")
     void createAndAssignMenuToRestaurant() throws Exception {
 
@@ -93,7 +91,7 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithMockUser
     @DisplayName("create(): fails when creating menu for non-existing restaurant")
     void createMenuForNonExistingRestaurant() throws Exception {
 
@@ -109,7 +107,7 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithMockUser(username = ADMIN_MAIL, roles = "ADMIN")
+    @WithMockUser
     @DisplayName("update(): succeeds when updating assigned menu for a restaurant")
     void updateAssignedMenu() throws Exception {
 
