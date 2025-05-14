@@ -19,11 +19,10 @@ public class VoteData {
 
     private final static RecursiveComparisonConfiguration CONFIG = builder()
             .withIgnoreAllOverriddenEquals(true)
-            .withIgnoredFields("restaurant.menus", "user")
             .build();
 
     public static final MatcherFactory.Matcher<Vote> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Vote.class, "restaurant.menus", "user");
-    public static final MatcherFactory.Matcher<VoteTo> MATCHER_TO = MatcherFactory.usingIgnoringFieldsComparator(VoteTo.class, "restaurant.menus", "user");
+    public static final MatcherFactory.Matcher<VoteTo> MATCHER_TO = MatcherFactory.usingIgnoringFieldsComparator(VoteTo.class);
 
     public static final int USER1_VOTE1_ID = START_SEQ + 20;
     public static final int NOT_FOUND_ID = 10;
@@ -32,7 +31,7 @@ public class VoteData {
     public static final Vote USER2_VOTE1 = new Vote(USER1_VOTE1_ID + 3, LocalDate.of(2025, 3, 20), RestaurantMenuData.RESTAURANT_B);
     public static final Vote USER2_VOTE2 = new Vote(USER1_VOTE1_ID + 4, LocalDate.of(2025, 3, 20), RestaurantMenuData.RESTAURANT_C);
     public static final Vote USER1_VOTE3 = new Vote(USER1_VOTE1_ID + 5, LocalDate.of(2025, 3, 21), RestaurantMenuData.RESTAURANT_B);
-    public static final Vote ADMIN_TODAY_VOTE_1 = new Vote(USER1_VOTE1_ID + 6, LocalDate.of(2025, 3, 21), RestaurantMenuData.RESTAURANT_A);
+    public static final Vote ADMIN_TODAY_VOTE_1 = new Vote(USER1_VOTE1_ID + 1, LocalDate.now(), RestaurantMenuData.RESTAURANT_A);
 
     private VoteData() {
     }

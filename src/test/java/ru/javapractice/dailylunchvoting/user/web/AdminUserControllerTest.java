@@ -2,10 +2,12 @@ package ru.javapractice.dailylunchvoting.user.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javapractice.dailylunchvoting.user.model.Role;
 import ru.javapractice.dailylunchvoting.user.model.User;
 import ru.javapractice.dailylunchvoting.user.repository.UserRepository;
@@ -20,6 +22,8 @@ import static ru.javapractice.dailylunchvoting.user.UserData.*;
 import static ru.javapractice.dailylunchvoting.user.web.AdminUserController.REST_URL;
 import static ru.javapractice.dailylunchvoting.user.web.UniqueMailValidator.EXCEPTION_DUPLICATE_EMAIL;
 
+@SpringBootTest
+@Transactional
 class AdminUserControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL_SLASH = REST_URL + '/';
@@ -111,7 +115,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .andExpect(status().isCreated());
 
         var created = USER_MATCHER.readFromJson(action);
-        int newId = created.id();
+        var newId = created.id();
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
         USER_MATCHER.assertMatch(repository.getExisted(newId), newUser);
@@ -141,7 +145,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
-        User invalid = new User(null, null, "", "newPass", Role.USER, Role.ADMIN);
+        var invalid = new User(null, null, "", "newPass", Role.USER, Role.ADMIN);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(invalid, "newPass")))

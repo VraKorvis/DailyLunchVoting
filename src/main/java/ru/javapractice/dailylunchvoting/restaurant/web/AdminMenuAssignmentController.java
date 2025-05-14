@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javapractice.dailylunchvoting.mapper.MenuMapperService;
-import ru.javapractice.dailylunchvoting.restaurant.model.Menu;
 import ru.javapractice.dailylunchvoting.restaurant.service.MenuService;
 import ru.javapractice.dailylunchvoting.restaurant.to.AssignedMenuTo;
 
@@ -43,7 +42,7 @@ public class AdminMenuAssignmentController {
 
         var createdMenu = menuService.create(menuTo, id);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/restaurants/{id}/menu")
+                .path(REST_URL + "/{id}/menu")
                 .buildAndExpand(id)
                 .toUri();
 

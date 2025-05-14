@@ -2,10 +2,12 @@ package ru.javapractice.dailylunchvoting.user.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javapractice.dailylunchvoting.common.util.JsonUtil;
 import ru.javapractice.dailylunchvoting.mapper.UserMapper;
 import ru.javapractice.dailylunchvoting.user.model.User;
@@ -21,6 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javapractice.dailylunchvoting.user.UserData.*;
 import static ru.javapractice.dailylunchvoting.user.web.ProfileController.REST_URL;
 
+@SpringBootTest
+@Transactional
 class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Autowired

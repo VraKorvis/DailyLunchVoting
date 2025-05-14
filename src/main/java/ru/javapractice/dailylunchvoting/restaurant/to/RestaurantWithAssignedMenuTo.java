@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.Value;
 import ru.javapractice.dailylunchvoting.common.to.BaseTo;
 
@@ -15,6 +16,7 @@ import java.beans.ConstructorProperties;
 @Value
 @Getter
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @JsonPropertyOrder({"id", "name", "menu"})
 public class RestaurantWithAssignedMenuTo extends BaseTo {
     @NotBlank

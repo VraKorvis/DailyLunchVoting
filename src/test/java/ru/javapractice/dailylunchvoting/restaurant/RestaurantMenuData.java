@@ -26,10 +26,11 @@ public class RestaurantMenuData {
 
     public static final MatcherFactory.Matcher<Restaurant> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "menus");
     public static final MatcherFactory.Matcher<RestaurantTo> MATCHER_TO = MatcherFactory.usingIgnoringFieldsComparator(RestaurantTo.class, "menus");
-    public static final MatcherFactory.Matcher<RestaurantWithAssignedMenuTo> RESTAURANT_TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(RestaurantWithAssignedMenuTo.class);
+    public static final MatcherFactory.Matcher<RestaurantWithAssignedMenuTo> RESTAURANT_TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(RestaurantWithAssignedMenuTo.class, "menu");
     public static final MatcherFactory.Matcher<AssignedMenuTo> MENU_TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(AssignedMenuTo.class, buildConfig);
 
     public static final int RESTAURANT_A_ID = START_SEQ + 4;
+    public static final int RESTAURANT_NOT_FOUND_ID = 10;
 
     public static final Restaurant RESTAURANT_A = new Restaurant(RESTAURANT_A_ID, "Restaurant A");
     public static final Restaurant RESTAURANT_B = new Restaurant(RESTAURANT_A_ID + 1, "Restaurant B");

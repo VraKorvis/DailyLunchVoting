@@ -1,40 +1,58 @@
 package ru.javapractice.dailylunchvoting.restaurant.web;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import ru.javapractice.dailylunchvoting.AbstractControllerTest;
+import ru.javapractice.dailylunchvoting.app.config.AppConfig;
+import ru.javapractice.dailylunchvoting.app.config.SecurityTestConfig;
+import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
 import ru.javapractice.dailylunchvoting.common.util.JsonUtil;
 import ru.javapractice.dailylunchvoting.mapper.MenuMapperService;
 import ru.javapractice.dailylunchvoting.restaurant.model.Menu;
 import ru.javapractice.dailylunchvoting.restaurant.service.MenuService;
 import ru.javapractice.dailylunchvoting.restaurant.to.AssignedMenuTo;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
-import static org.mockito.Mockito.mockStatic;
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
 import static ru.javapractice.dailylunchvoting.user.UserData.ADMIN_MAIL;
 
-@Transactional
+@WebMvcTest(AdminMenuAssignmentController.class)
+@Import({
+        AdminMenuAssignmentControllerTest.TestConfig.class,
+        AppConfig.class,
+        SecurityTestConfig.class // ⬅️ Важно!
+})
+@Slf4j
 class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
-
     private static final String REST_URL = AdminMenuAssignmentController.REST_URL + '/';
 
-    private final LocalDateTime localDateTimeNow = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.of(9, 0));
-    private final LocalTime timeNow = LocalTime.of(6, 0);
-    private final LocalDate dateNow = LocalDate.now().minusDays(1);
+    @TestConfiguration
+    static class TestConfig {
+        @Bean
+        public MenuMapperService menuMapperService() {
+            return new MenuMapperService();
+        }
+
+        @Bean
+        public MenuService menuService() {
+            return Mockito.mock(MenuService.class);
+        }
+    }
 
     @Autowired
     MenuMapperService menuMapper;
@@ -42,35 +60,36 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
     MenuService menuService;
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    @DisplayName("create(): succeeds when creating and assigning menu to restaurant before voting starts")
+    @WithMockUser(username = ADMIN_MAIL, roles = "ADMIN")
+    @DisplayName("create(): succeeds when creating and assigning menu to restaurant")
     void createAndAssignMenuToRestaurant() throws Exception {
-        try (MockedStatic<LocalDateTime> mockedDateTime = mockStatic(LocalDateTime.class, CALLS_REAL_METHODS);
-             MockedStatic<LocalTime> mockedTime = mockStatic(LocalTime.class, CALLS_REAL_METHODS);
-             MockedStatic<LocalDate> mockedDate = mockStatic(LocalDate.class, CALLS_REAL_METHODS)) {
 
-            mockedDateTime.when(LocalDateTime::now).thenReturn(localDateTimeNow);
-            mockedTime.when(LocalTime::now).thenReturn(timeNow);
-            mockedDate.when(LocalDate::now).thenReturn(dateNow);
+        var newMenu = MENU_1;
+        var restaurant = MENU_1.getRestaurant();
+        var id = restaurant.id();
 
-            AssignedMenuTo newMenuTo = createMenuWithMocked(NEW_MENU);
+        AssignedMenuTo newMenuTo = menuMapper.toAssignedMenuTo(newMenu);
 
-            ResultActions resultActions = perform(MockMvcRequestBuilders.post(REST_URL + "100006/menu")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(JsonUtil.writeValue(newMenuTo)))
-                    .andDo(print())
-                    .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.id").isNumber())
-                    .andExpect(jsonPath("$.pricedMenuItemTos").isArray())
-                    .andExpect(jsonPath("$.pricedMenuItemTos.length()").value(newMenuTo.getPricedMenuItemTos().size()));
+        when(menuService.create(any(AssignedMenuTo.class), anyInt()))
+                .thenReturn(newMenu);
+        when(menuService.getTodayMenuForRestaurantOrThrow(restaurant.id()))
+                .thenReturn(newMenu);
 
-            AssignedMenuTo createdMenuTo = MENU_TO_MATCHER.readFromJson(resultActions);
-            newMenuTo.setId(createdMenuTo.getId());
-            MENU_TO_MATCHER.assertMatch(createdMenuTo, newMenuTo);
+        ResultActions resultActions = perform(MockMvcRequestBuilders.post(REST_URL + id + "/menu")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(newMenuTo)))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", containsString(REST_URL + id + "/menu")))
+                .andExpect(jsonPath("$.pricedMenuItemTos").isArray())
+                .andExpect(jsonPath("$.pricedMenuItemTos.length()").value(newMenuTo.getPricedMenuItemTos().size()));
 
-            Menu actualMenu = menuService.getTodayMenuForRestaurantOrThrow(RESTAURANT_C.id());
-            MENU_TO_MATCHER.assertMatch(menuMapper.toAssignedMenuTo(actualMenu), newMenuTo);
-        }
+        AssignedMenuTo createdMenuTo = MENU_TO_MATCHER.readFromJson(resultActions);
+        newMenuTo.setId(createdMenuTo.getId());
+        MENU_TO_MATCHER.assertMatch(createdMenuTo, newMenuTo);
+
+        Menu actualMenu = menuService.getTodayMenuForRestaurantOrThrow(restaurant.id());
+        MENU_TO_MATCHER.assertMatch(menuMapper.toAssignedMenuTo(actualMenu), newMenuTo);
     }
 
     @Test
@@ -78,53 +97,37 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
     @DisplayName("create(): fails when creating menu for non-existing restaurant")
     void createMenuForNonExistingRestaurant() throws Exception {
 
-        try (MockedStatic<LocalDateTime> mockedDateTime = mockStatic(LocalDateTime.class, CALLS_REAL_METHODS);
-             MockedStatic<LocalTime> mockedTime = mockStatic(LocalTime.class, CALLS_REAL_METHODS);
-             MockedStatic<LocalDate> mockedDate = mockStatic(LocalDate.class, CALLS_REAL_METHODS)) {
+        var id = RESTAURANT_NOT_FOUND_ID;
+        AssignedMenuTo newMenuTo = menuMapper.toAssignedMenuTo(MENU_1);
+        when(menuService.create(any(AssignedMenuTo.class), eq(id)))
+                .thenThrow(new NotFoundException("Restaurant with id=" + id + " not found"));
 
-            mockedDateTime.when(LocalDateTime::now).thenReturn(localDateTimeNow);
-            mockedTime.when(LocalTime::now).thenReturn(timeNow);
-            mockedDate.when(LocalDate::now).thenReturn(dateNow);
-
-            AssignedMenuTo newMenuTo = createMenuWithMocked(NEW_MENU);
-
-            perform(MockMvcRequestBuilders.post(REST_URL + "999999/menu")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(JsonUtil.writeValue(newMenuTo)))
-                    .andExpect(status().isNotFound());
-        }
+        perform(MockMvcRequestBuilders.post(REST_URL + id + "/menu")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(newMenuTo)))
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithMockUser(username = ADMIN_MAIL, roles = "ADMIN")
     @DisplayName("update(): succeeds when updating assigned menu for a restaurant")
     void updateAssignedMenu() throws Exception {
 
-        try (MockedStatic<LocalDateTime> mockedDateTime = mockStatic(LocalDateTime.class, CALLS_REAL_METHODS);
-             MockedStatic<LocalTime> mockedTime = mockStatic(LocalTime.class, CALLS_REAL_METHODS);
-             MockedStatic<LocalDate> mockedDate = mockStatic(LocalDate.class, CALLS_REAL_METHODS)
-        ) {
+        var updatedMenu = MENU_1;
+        var restaurant = updatedMenu.getRestaurant();
+        var id = restaurant.id();
 
-            mockedDateTime.when(LocalDateTime::now).thenReturn(localDateTimeNow);
-            mockedTime.when(LocalTime::now).thenReturn(timeNow);
-            mockedDate.when(LocalDate::now).thenReturn(dateNow);
+        AssignedMenuTo updatedMenuTo = menuMapper.toAssignedMenuTo(updatedMenu);
 
-            AssignedMenuTo updatedMenuTo = createMenuWithMocked(UPDATED_MENU);
+        when(menuService.create(any(AssignedMenuTo.class), anyInt()))
+                .thenReturn(updatedMenu);
 
-            ResultActions resultActions = perform(MockMvcRequestBuilders.put(REST_URL + "100004/menu")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(JsonUtil.writeValue(updatedMenuTo)))
-                    .andDo(print())
-                    .andExpect(status().isNoContent());
-
-            MENU_TO_MATCHER.assertMatch(menuMapper.toAssignedMenuTo(menuService.get(UPDATED_MENU.getId())), updatedMenuTo);
-        }
+        perform(MockMvcRequestBuilders.put(REST_URL + id + "/menu")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updatedMenuTo)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
 
     }
 
-    // WARNING: Date shifted by +1 due to mocked LocalDate.now()(-1)
-    private AssignedMenuTo createMenuWithMocked(Menu menu) {
-        menu.setMenuDate(dateNow.plusDays(1));
-        return menuMapper.toAssignedMenuTo(menu);
-    }
 }

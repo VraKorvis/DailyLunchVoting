@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
 import ru.javapractice.dailylunchvoting.mapper.VoteMapper;
+import ru.javapractice.dailylunchvoting.util.TimeProvider;
 import ru.javapractice.dailylunchvoting.vote.model.Vote;
 import ru.javapractice.dailylunchvoting.restaurant.repository.RestaurantRepository;
 import ru.javapractice.dailylunchvoting.vote.model.VoteResult;
@@ -27,6 +28,7 @@ public class VoteService {
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
     private final VoteMapper voteMapper;
+    private final TimeProvider timeProvider;
 
     public List<Vote> getAllByUserId(int userId) {
         return voteRepository.findAllByUserId(userId);
@@ -56,14 +58,14 @@ public class VoteService {
 
         return voteRepository.findByUserIdForToday(userId)
                 .map(existingVote -> {
-                    if (!OperationTimeChecker.canUpdateVote(existingVote.getVotedAt())) {
+                    if (!OperationTimeChecker.canUpdateVote(existingVote.getVotedAt(), timeProvider)) {
                         return createVoteResult(false, "Voting period has ended, you can no longer change your vote", restaurantId);
                     }
                     existingVote.setRestaurant(refRestaurant);
                     return new VoteResult(true, "Your vote has been successfully updated", restaurantId);
                 })
                 .orElseGet(() -> {
-                    if (!OperationTimeChecker.canVote()) {
+                    if (!OperationTimeChecker.canVote(timeProvider)) {
                         return createVoteResult(false, "Voting period has ended, you can no longer vote", restaurantId);
                     }
                     var vote = new Vote();

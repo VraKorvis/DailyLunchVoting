@@ -16,6 +16,7 @@ import ru.javapractice.dailylunchvoting.restaurant.repository.RestaurantReposito
 import ru.javapractice.dailylunchvoting.restaurant.to.AssignedMenuTo;
 import ru.javapractice.dailylunchvoting.restaurant.to.PricedMenuItemTo;
 import ru.javapractice.dailylunchvoting.util.OperationTimeChecker;
+import ru.javapractice.dailylunchvoting.util.TimeProvider;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -31,6 +32,7 @@ public class MenuService {
     private final RestaurantRepository restaurantRepository;
     private final MenuItemRepository menuItemRepository;
     private final AssignedMenuItemRepository assignedMenuItemRepository;
+    private final TimeProvider timeProvider;
 
     public Menu get(int id) {
         return menuRepository.getExisted(id);
@@ -66,10 +68,10 @@ public class MenuService {
     public void update(AssignedMenuTo menuTo, int restaurantId) {
         Assert.notNull(menuTo, "menuTo must not be null");
 
-        LocalDate targetDate = menuTo.getMenuDate();
+        var targetDate = menuTo.getMenuDate();
         ensureMenuEditingPeriod(targetDate);
-        Menu assignedMenu = getTodayMenuForRestaurantOrThrow(restaurantId);
-        List<AssignedMenuItem> assignments = prepareAssignmentsFromTo(assignedMenu, menuTo);
+        var assignedMenu = getTodayMenuForRestaurantOrThrow(restaurantId);
+        var assignments = prepareAssignmentsFromTo(assignedMenu, menuTo);
 
         replaceAssignments(assignedMenu, assignments);
         menuRepository.save(assignedMenu);
@@ -77,22 +79,21 @@ public class MenuService {
     }
 
     private void replaceAssignments(Menu assignedMenu, List<AssignedMenuItem> assignments) {
-        List<AssignedMenuItem> currentAssignments = assignedMenu.getAssignedMenuItems();
+        var currentAssignments = assignedMenu.getAssignedMenuItems();
         currentAssignments.clear();
         currentAssignments.addAll(assignments);
     }
 
     private void ensureMenuEditingPeriod(LocalDate menuDate) {
-        if (OperationTimeChecker.isFutureDate(menuDate)) {
-            return;
-        }
-        if (OperationTimeChecker.isPastDate(menuDate)) {
+        if (OperationTimeChecker.isPastDate(menuDate, timeProvider)) {
             throw new ConflictException("Cannot create/edit menu for past date " + menuDate);
         }
-        if (OperationTimeChecker.hasVotingStarted(menuDate)) {
+        if (OperationTimeChecker.isFutureDate(menuDate, timeProvider)) {
+            return;
+        }
+        if (OperationTimeChecker.hasVotingStarted(menuDate, timeProvider)) {
             throw new ConflictException(
-                    "Cannot edit today's menu after voting has started at "
-                    + ConstConfig.VOTING_START_TIME
+                    "Cannot edit today's menu after voting has started at " + ConstConfig.VOTING_START_TIME
             );
         }
     }
@@ -113,18 +114,18 @@ public class MenuService {
     }
 
     private List<AssignedMenuItem> prepareAssignmentsFromTo(Menu menu, AssignedMenuTo assignedMenuTo) {
-        List<PricedMenuItemTo> itemTos = assignedMenuTo.getPricedMenuItemTos();
-        List<Integer> ids = itemTos.stream()
+        var itemTos = assignedMenuTo.getPricedMenuItemTos();
+        var ids = itemTos.stream()
                 .map(PricedMenuItemTo::getId)
                 .toList();
 
-        List<MenuItem> dbItems = menuItemRepository.findAllById(ids);
+        var dbItems = menuItemRepository.findAllById(ids);
 
         if (dbItems.size() != ids.size()) {
-            Set<Integer> foundIds = dbItems.stream()
+            var foundIds = dbItems.stream()
                     .map(MenuItem::getId)
                     .collect(Collectors.toSet());
-            List<Integer> notFoundIds = ids.stream()
+            var notFoundIds = ids.stream()
                     .filter(id -> !foundIds.contains(id))
                     .toList();
             throw new NotFoundException("MenuItems not found for IDs: " + notFoundIds);

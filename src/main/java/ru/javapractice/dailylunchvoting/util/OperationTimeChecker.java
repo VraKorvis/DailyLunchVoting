@@ -10,29 +10,29 @@ import static ru.javapractice.dailylunchvoting.app.config.ConstConfig.*;
 @UtilityClass
 public class OperationTimeChecker {
 
-    public static boolean canVote() {
-        LocalTime now = LocalTime.now();
-        return !now.isBefore(VOTING_START_TIME) && now.isBefore(VOTING_END_TIME);
+    public static boolean canVote(TimeProvider timeProvider) {
+        LocalTime now = timeProvider.nowTime();
+        return now.isAfter(VOTING_START_TIME) && now.isBefore(VOTING_END_TIME);
     }
 
-    public static boolean canUpdateVote(LocalDate voteDate) {
-        return isToday(voteDate) && canVote();
+    public static boolean canUpdateVote(LocalDate voteDate, TimeProvider timeProvider) {
+        return isToday(voteDate, timeProvider) && canVote(timeProvider);
     }
 
-    public static boolean isPastDate(LocalDate date) {
-        return date.isBefore(LocalDate.now());
+    public static boolean isPastDate(LocalDate date, TimeProvider timeProvider) {
+        return date.isBefore(timeProvider.nowDate());
     }
 
-    public static boolean isFutureDate(LocalDate menuDate) {
-        return menuDate.isAfter(LocalDate.now());
+    public static boolean isFutureDate(LocalDate menuDate, TimeProvider timeProvider) {
+        return menuDate.isAfter(timeProvider.nowDate());
     }
 
-    public static boolean hasVotingStarted(LocalDate date) {
-        return date.equals(LocalDate.now()) && LocalTime.now().isAfter(VOTING_START_TIME);
+    public static boolean hasVotingStarted(LocalDate date, TimeProvider timeProvider) {
+        return date.equals(timeProvider.nowDate()) && timeProvider.nowTime().isAfter(VOTING_START_TIME);
     }
 
-    private static boolean isToday(LocalDate date) {
-        return LocalDate.now().equals(date);
+    private static boolean isToday(LocalDate date, TimeProvider timeProvider) {
+        return timeProvider.nowDate().equals(date);
     }
 
 

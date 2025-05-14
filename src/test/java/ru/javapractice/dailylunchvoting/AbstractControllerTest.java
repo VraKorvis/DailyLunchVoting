@@ -9,8 +9,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Transactional
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public abstract class AbstractControllerTest {

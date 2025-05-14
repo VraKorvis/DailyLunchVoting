@@ -1,14 +1,13 @@
 package ru.javapractice.dailylunchvoting.vote.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-import ru.javapractice.dailylunchvoting.common.exception.AppException;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javapractice.dailylunchvoting.mapper.VoteMapper;
+import ru.javapractice.dailylunchvoting.util.TimeProvider;
 import ru.javapractice.dailylunchvoting.vote.model.Vote;
 import ru.javapractice.dailylunchvoting.restaurant.to.VoteTo;
 import ru.javapractice.dailylunchvoting.user.UserData;
@@ -17,22 +16,21 @@ import ru.javapractice.dailylunchvoting.util.OperationTimeChecker;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.slf4j.LoggerFactory.getLogger;
+import static org.junit.jupiter.api.Assertions.*;
 import static ru.javapractice.dailylunchvoting.vote.VoteData.*;
 
 @SpringBootTest
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @ExtendWith(TimingExtension.class)
+@Slf4j(topic = "result")
+@Transactional
 public class VoteServiceTest {
-
-    private static final Logger log = getLogger("result");
 
     @Autowired
     private VoteService voteService;
-
     @Autowired
     private VoteMapper voteMapper;
+    @Autowired
+    private TimeProvider timeProvider;
 
     @Test
     public void getAllByUserId() {
@@ -55,30 +53,34 @@ public class VoteServiceTest {
     }
 
     @Test
-    public void save(){
-        Vote newVOte = getNew();
-        if (OperationTimeChecker.canVote()){
-            voteService.vote(newVOte.getRestaurant().id(), UserData.USER_2_ID);
-            VoteTo created = voteService.findByUserIdForToday(UserData.USER_2_ID);
-            int createdId = created.id();
-            Vote newVote = getNew();
+    public void save() {
+        var createdVote = getNew();
+        var result = voteService.vote(createdVote.getRestaurant().id(), UserData.USER_2_ID);
+        if (OperationTimeChecker.canVote(timeProvider)) {
+            voteService.vote(createdVote.getRestaurant().id(), UserData.USER_2_ID);
+            var createdTo = voteService.findByUserIdForToday(UserData.USER_2_ID);
+            int createdId = createdTo.id();
+            var newVote = getNew();
             newVote.setId(createdId);
-            MATCHER_TO.assertMatch(created, voteMapper.toVoteTo(newVote));
-        }
-        else {
-            assertThrows(AppException.class, () -> voteService.vote(newVOte.getRestaurant().id(), UserData.USER_2_ID));
+            MATCHER_TO.assertMatch(createdTo, voteMapper.toVoteTo(newVote));
+            assertTrue(result.isSuccess(), "Expected the vote to be accepted during the voting period");
+        } else {
+            assertFalse(result.isSuccess(), "Expected the vote to be rejected after the voting deadline");
+            assertNotNull(result.getMessage(), "An error message should be returned when voting is not allowed");
         }
     }
 
     @Test
     public void update() {
         Vote updated = getUpdated(USER1_TODAY_VOTE);
-        if (OperationTimeChecker.canUpdateVote(updated.getVotedAt())) {
+        var result = voteService.vote(updated.getRestaurant().id(), UserData.USER_2_ID);
+        if (OperationTimeChecker.canUpdateVote(updated.getVotedAt(), timeProvider)) {
             voteService.vote(updated.getRestaurant().id(), UserData.USER_1_ID);
             VoteTo actual = voteService.findByUserIdForToday(UserData.USER_1_ID);
             MATCHER_TO.assertMatch(actual, voteMapper.toVoteTo(updated));
+            assertTrue(result.isSuccess(), "Expected the vote to be accepted during the voting period");
         } else {
-            assertThrows(AppException.class, () -> voteService.vote(updated.getRestaurant().id(), UserData.USER_1_ID));
-        }
+            assertFalse(result.isSuccess(), "Expected the vote to be rejected after the voting deadline");
+            assertNotNull(result.getMessage(), "An error message should be returned when voting is not allowed");        }
     }
 }
