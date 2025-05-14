@@ -35,7 +35,7 @@ import static ru.javapractice.dailylunchvoting.user.UserData.ADMIN_MAIL;
 @Import({
         AdminMenuAssignmentControllerTest.TestConfig.class,
         AppConfig.class,
-        SecurityTestConfig.class // ⬅️ Важно!
+        SecurityTestConfig.class
 })
 @Slf4j
 class AdminMenuAssignmentControllerTest extends AbstractControllerTest {

@@ -5,6 +5,7 @@ import ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData;
 import ru.javapractice.dailylunchvoting.vote.model.Vote;
 import ru.javapractice.dailylunchvoting.restaurant.to.VoteTo;
 import ru.javapractice.dailylunchvoting.util.MatcherFactory;
+import ru.javapractice.dailylunchvoting.vote.model.VoteResult;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -23,6 +24,7 @@ public class VoteData {
 
     public static final MatcherFactory.Matcher<Vote> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Vote.class, "restaurant.menus", "user");
     public static final MatcherFactory.Matcher<VoteTo> MATCHER_TO = MatcherFactory.usingIgnoringFieldsComparator(VoteTo.class);
+    public static final MatcherFactory.Matcher<VoteResult> MATCHER_VOTE_RESULT = MatcherFactory.usingIgnoringFieldsComparator(VoteResult.class);
 
     public static final int USER1_VOTE1_ID = START_SEQ + 20;
     public static final int NOT_FOUND_ID = 10;

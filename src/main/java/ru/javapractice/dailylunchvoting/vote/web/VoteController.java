@@ -21,6 +21,7 @@ public class VoteController {
     private final VoteService service;
 
     @GetMapping("/for-today/me")
+    @ResponseBody
     public VoteTo getTodayVote() {
         return service.findByUserIdForToday(AuthUtil.get().id());
     }

@@ -25,10 +25,11 @@ public class UserData {
     public static final String ADMIN_MAIL = "admin@gmail.com";
     public static final String GUEST_MAIL = "guest@gmail.com";
 
-    public static final String ADMIN_PASS = "admin";
+    public static final String USER_PASS = "{noop}user";
+    public static final String ADMIN_PASS = "{noop}admin";
 
-    public static final User USER_1 = new User(USER_1_ID, "User1", USER_1_MAIL, "password", Role.USER);
-    public static final User USER_2 = new User(USER_2_ID, "User2", USER_2_MAIL, "password", Role.USER);
+    public static final User USER_1 = new User(USER_1_ID, "User1", USER_1_MAIL, USER_PASS, Role.USER);
+    public static final User USER_2 = new User(USER_2_ID, "User2", USER_2_MAIL, ADMIN_PASS, Role.USER);
     public static final User ADMIN = new User(ADMIN_ID, "Admin", ADMIN_MAIL, "admin", Role.ADMIN);
     public static final User GUEST = new User(GUEST_ID, "Guest", GUEST_MAIL, "guest");
     public static final String USER_1_EMAIL = "user1@yandex.ru";
