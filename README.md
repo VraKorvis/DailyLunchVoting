@@ -1,4 +1,7 @@
 # DailyLunchVoting
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/09573131ed9e41938475f64e72025a42)](https://app.codacy.com/gh/VraKorvis/DailyLunchVoting?utm_source=github.com&utm_medium=referral&utm_content=VraKorvis/DailyLunchVoting&utm_campaign=Badge_Grade)
+
 Design and implement a REST API using Spring-Boot/Spring Data JPA **without frontend**.
 
 The task is:
