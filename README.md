@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/09573131ed9e41938475f64e72025a42)](https://app.codacy.com/gh/VraKorvis/DailyLunchVoting?utm_source=github.com&utm_medium=referral&utm_content=VraKorvis/DailyLunchVoting&utm_campaign=Badge_Grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/e273c144ac1e46378d1974361397501d)](https://app.codacy.com/gh/VraKorvis/DailyLunchVoting/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 # DailyLunchVoting
