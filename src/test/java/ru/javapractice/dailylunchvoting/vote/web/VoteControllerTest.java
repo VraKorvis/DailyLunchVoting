@@ -1,6 +1,5 @@
 package ru.javapractice.dailylunchvoting.vote.web;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
@@ -37,6 +36,11 @@ import static ru.javapractice.dailylunchvoting.vote.VoteData.USER1_TODAY_VOTE;
 })
 class VoteControllerTest extends AbstractControllerTest {
 
+    @Autowired
+    VoteMapper voteMapper;
+    @Autowired
+    private VoteService voteService;
+
     @TestConfiguration
     static class TestConfig {
         @Bean
@@ -48,11 +52,6 @@ class VoteControllerTest extends AbstractControllerTest {
             return Mappers.getMapper(VoteMapper.class);
         }
     }
-
-    @Autowired
-    VoteMapper voteMapper;
-    @Autowired
-    private VoteService voteService;
 
     @Test
     @WithMockUser(value = USER_1_MAIL)

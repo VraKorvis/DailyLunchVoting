@@ -24,12 +24,6 @@ public class PricedMenuItemTo extends BaseTo {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     String name;
 
-    @Schema(description = "ID of the menu item")
-    @Override
-    public Integer getId() {
-        return super.getId();
-    }
-
     @DecimalMin(value = "0.01", message = "Price must be greater than zero")
     @DecimalMax(value = "100000", message = "Price cannot be greater than 10000")
     @Positive(message = "Price must be a positive number")
@@ -40,6 +34,12 @@ public class PricedMenuItemTo extends BaseTo {
         super(id);
         this.name = name;
         this.price = price;
+    }
+
+    @Schema(description = "ID of the menu item")
+    @Override
+    public Integer getId() {
+        return super.getId();
     }
 }
 

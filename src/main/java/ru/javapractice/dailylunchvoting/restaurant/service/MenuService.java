@@ -65,7 +65,6 @@ public class MenuService {
         newMenu.setAssignedMenuItems(assignments);
         Menu savedMenu = menuRepository.save(newMenu);
         saveAssignedMenuItems(assignments);
-        log.info("Menu {} for restaurant {} assigned for {}", savedMenu.id(), restaurantId, targetDate);
         return savedMenu;
     }
 

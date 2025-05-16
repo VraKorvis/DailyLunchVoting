@@ -230,7 +230,7 @@ public class MenuServiceTest {
         MenuItem menuItem = new MenuItem();
         menuItem.setId(itemId);
 
-        PricedMenuItemTo dto = new PricedMenuItemTo(itemId, "null", BigDecimal.valueOf(100.00));
+        PricedMenuItemTo dto = new PricedMenuItemTo(itemId, "null", null);
         AssignedMenuTo menuTo = new AssignedMenuTo(null, LocalDate.now(), List.of(dto));
 
         try (MockedStatic<OperationTimeChecker> mockedOp = Mockito.mockStatic(OperationTimeChecker.class)) {
@@ -246,8 +246,6 @@ public class MenuServiceTest {
             when(menuItemRepository.findAllById(List.of(itemId)))
                     .thenReturn(List.of(menuItem));
             when(menuRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
-            when(assignedMenuItemRepository.save(any(AssignedMenuItem.class)))
-                    .thenAnswer(inv -> inv.getArgument(0));
 
             assertThrows(IllegalArgumentException.class, () ->
                     menuService.create(menuTo, restaurantId));

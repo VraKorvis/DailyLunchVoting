@@ -1,11 +1,8 @@
 package ru.javapractice.dailylunchvoting.user.web;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -43,40 +40,33 @@ import static ru.javapractice.dailylunchvoting.user.UserData.*;
 public class AdminUserControllerCacheTest extends AbstractControllerTest {
 
     public static final String REST_URL = AdminUserController.REST_URL;
-
-    @TestConfiguration
-    static class TestConfig {
-        @Bean
-        public UserRepository repository() {
-            return Mockito.mock(UserRepository.class);
-        }
-
-        @Bean
-        public UniqueMailValidator validator() {
-            UniqueMailValidator mockValidator = Mockito.mock(UniqueMailValidator.class);
-            Mockito.doAnswer(invocation -> null).when(mockValidator).validate(any(), any());
-            return mockValidator;
-        }
-    }
-
     @Autowired
     private CacheManager cacheManager;
 
     @Autowired
     private UserRepository repository;
     @Autowired
-    UniqueMailValidator validator;
+    private UniqueMailValidator validator;
 
-    @AfterEach
-    void clear() {
-        clearCache();
+    @TestConfiguration
+    static class TestConfig {
+        @Bean
+        public UserRepository repository() {
+            return mock(UserRepository.class);
+        }
+
+        @Bean
+        public UniqueMailValidator validator() {
+            UniqueMailValidator mockValidator = mock(UniqueMailValidator.class);
+            doAnswer(invocation -> null).when(mockValidator).validate(any(), any());
+            return mockValidator;
+        }
     }
 
     @BeforeEach
     void setupValidator() {
         clearCache();
-        Mockito.clearInvocations(repository);
-
+        clearInvocations(repository);
         doAnswer(invocation -> null).when(validator).validate(any(), any());
         when(validator.supports(any())).thenReturn(true);
     }
@@ -111,7 +101,7 @@ public class AdminUserControllerCacheTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
         verify(repository, atLeastOnce()).getExisted(user_1_Id);
 
-        Mockito.clearInvocations(repository);
+        clearInvocations(repository);
 
         perform(MockMvcRequestBuilders.get(REST_URL + "/{id}", user_1_Id)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -167,7 +157,6 @@ public class AdminUserControllerCacheTest extends AbstractControllerTest {
     }
 
     private void clearCache() {
-        log.warn(StringUtils.repeat('*', 100) + "Clear cache{}", cacheManager.getCache(CacheNames.USER_CACHE));
         cacheManager.getCacheNames().forEach(name -> {
             Cache cache = cacheManager.getCache(name);
             if (cache != null) {

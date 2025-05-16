@@ -1,6 +1,5 @@
 package ru.javapractice.dailylunchvoting.restaurant.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,6 +22,10 @@ public class Restaurant extends NamedEntity {
 
     public static final String WITH_MENUS = "Restaurant.withMenus";
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
+    @JsonManagedReference
+    public List<Menu> menus = List.of();
+
     @SuppressWarnings("CopyConstructorMissesField")
     public Restaurant(Restaurant r) {
         this(r.id, r.name);
@@ -36,8 +39,6 @@ public class Restaurant extends NamedEntity {
         super(id, name);
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
-    @JsonManagedReference
-    public List<Menu> menus = List.of();
+
 
 }

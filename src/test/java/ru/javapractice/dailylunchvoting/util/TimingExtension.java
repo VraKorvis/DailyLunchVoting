@@ -1,14 +1,12 @@
 package ru.javapractice.dailylunchvoting.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
 
+@Slf4j(topic = "result")
 public class TimingExtension implements
         BeforeTestExecutionCallback, AfterTestExecutionCallback, BeforeAllCallback, AfterAllCallback {
-
-    private static final Logger log = LoggerFactory.getLogger("result");
 
     private StopWatch stopWatch;
 
@@ -20,7 +18,7 @@ public class TimingExtension implements
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) {
         String testName = extensionContext.getDisplayName();
-        log.info("\nStart " + testName);
+        log.info("\nStart {}", testName);
         stopWatch.start(testName);
     }
 
@@ -31,6 +29,9 @@ public class TimingExtension implements
 
     @Override
     public void afterAll(ExtensionContext extensionContext) {
-        log.info('\n' + stopWatch.prettyPrint() + '\n');
+        log.info("""
+                
+                {}
+                """, stopWatch.prettyPrint());
     }
 }

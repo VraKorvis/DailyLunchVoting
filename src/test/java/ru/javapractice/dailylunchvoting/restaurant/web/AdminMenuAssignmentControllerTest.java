@@ -41,6 +41,11 @@ import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
 class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
     private static final String REST_URL = AdminMenuAssignmentController.REST_URL + '/';
 
+    @Autowired
+    MenuMapperService menuMapper;
+    @Autowired
+    MenuService menuService;
+
     @TestConfiguration
     static class TestConfig {
         @Bean
@@ -54,11 +59,6 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
         }
     }
 
-    @Autowired
-    MenuMapperService menuMapper;
-    @Autowired
-    MenuService menuService;
-
     @Test
     @WithMockUser
     @DisplayName("create(): succeeds when creating and assigning menu to restaurant")
@@ -68,7 +68,8 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
         var restaurant = MENU_1.getRestaurant();
         var id = restaurant.id();
 
-        AssignedMenuTo newMenuTo = menuMapper.toAssignedMenuTo(newMenu);
+        AssignedMenuTo newMenuTo = createNewMenuTo(newMenu);
+        newMenuTo.setId(null);
 
         when(menuService.create(any(AssignedMenuTo.class), anyInt()))
                 .thenReturn(newMenu);
@@ -89,7 +90,11 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
         MENU_TO_MATCHER.assertMatch(createdMenuTo, newMenuTo);
 
         Menu actualMenu = menuService.getTodayMenuForRestaurantOrThrow(restaurant.id());
-        MENU_TO_MATCHER.assertMatch(menuMapper.toAssignedMenuTo(actualMenu), newMenuTo);
+        MENU_TO_MATCHER.assertMatch(createNewMenuTo(actualMenu), newMenuTo);
+    }
+
+    private AssignedMenuTo createNewMenuTo(Menu newMenu) {
+        return menuMapper.toAssignedMenuTo(newMenu);
     }
 
     @Test
@@ -98,7 +103,9 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
     void createMenuForNonExistingRestaurant() throws Exception {
 
         var id = RESTAURANT_NOT_FOUND_ID;
-        AssignedMenuTo newMenuTo = menuMapper.toAssignedMenuTo(MENU_1);
+        AssignedMenuTo newMenuTo = createNewMenuTo(MENU_1);
+        newMenuTo.setId(null);
+
         when(menuService.create(any(AssignedMenuTo.class), eq(id)))
                 .thenThrow(new NotFoundException("Restaurant with id=" + id + " not found"));
 
@@ -117,7 +124,7 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
         var restaurant = updatedMenu.getRestaurant();
         var id = restaurant.id();
 
-        AssignedMenuTo updatedMenuTo = menuMapper.toAssignedMenuTo(updatedMenu);
+        AssignedMenuTo updatedMenuTo = createNewMenuTo(updatedMenu);
 
         when(menuService.create(any(AssignedMenuTo.class), anyInt()))
                 .thenReturn(updatedMenu);
@@ -128,5 +135,4 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
     }
-
 }

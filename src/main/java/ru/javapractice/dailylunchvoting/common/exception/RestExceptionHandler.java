@@ -5,7 +5,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -42,7 +41,6 @@ import static ru.javapractice.dailylunchvoting.common.error.ErrorType.*;
 public class RestExceptionHandler {
     public static final String ERR_PFX = "ERR# ";
 
-    @Getter
     private final MessageSource messageSource;
 
     static final Map<Class<? extends Throwable>, ErrorType> HTTP_STATUS_MAP = new LinkedHashMap<>() {
@@ -68,7 +66,7 @@ public class RestExceptionHandler {
     public ProblemDetail handleUnsupportedOperationException(UnsupportedOperationException ex, HttpServletRequest request) {
         String path = request.getRequestURI();
         log.warn(RestExceptionHandler.ERR_PFX + "UnsupportedOperationException at request {}", path);
-        return createProblemDetail(ex, path, ErrorType.DATA_CONFLICT, ex.getMessage(), Map.of());
+        return createProblemDetail(ex, path, DATA_CONFLICT, ex.getMessage(), Map.of());
     }
 
     @ExceptionHandler(BindException.class)
@@ -101,22 +99,23 @@ public class RestExceptionHandler {
     }
 
     ProblemDetail processException(@NonNull Throwable ex, HttpServletRequest request, Map<String, Object> additionalParams) {
-        Optional<ErrorType> optType = findErrorType(ex);
+        Throwable currentEx = ex;
+        Optional<ErrorType> optType = findErrorType(currentEx);
         if (optType.isEmpty()) {
-            Throwable root = getRootCause(ex);
-            if (root != ex) {
+            Throwable root = getRootCause(currentEx);
+            if (root != currentEx) {
                 optType = findErrorType(root);
-                ex = root;
+                currentEx = root;
             }
         }
         String path = request.getRequestURI();
         if (optType.isPresent()) {
-            log.error(ERR_PFX + "Exception {} at request {}", ex, path);
-            return createProblemDetail(ex, path, optType.get(), ex.getMessage(), additionalParams);
+            log.error(ERR_PFX + "Exception {} at request {}", currentEx, path);
+            return createProblemDetail(currentEx, path, optType.get(), currentEx.getMessage(), additionalParams);
         } else {
-            Throwable root = getRootCause(ex);
-            log.error(ERR_PFX + "Exception " + root + " at request " + path, root);
-            return createProblemDetail(ex, path, APP_ERROR, "Exception " + root.getClass().getSimpleName(), additionalParams);
+            Throwable root = getRootCause(currentEx);
+            log.error(ERR_PFX + "Exception {} at request {}", root, path, root);
+            return createProblemDetail(currentEx, path, APP_ERROR, "Exception " + root.getClass().getSimpleName(), additionalParams);
         }
     }
 

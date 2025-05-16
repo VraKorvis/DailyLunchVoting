@@ -1,7 +1,6 @@
 package ru.javapractice.dailylunchvoting.user.web;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +39,13 @@ import static ru.javapractice.dailylunchvoting.user.web.ProfileController.REST_U
 class ProfileRestControllerTest extends AbstractControllerTest {
     @Autowired
     private CacheManager cacheManager;
+    @Autowired
+    private UserRepository repository;
+    @Autowired
+    private UserMapper userMapper;
 
     @BeforeEach
     public void clearCache() {
-        log.warn(StringUtils.repeat('*', 100) + "Clear cache{}", cacheManager);
         cacheManager.getCacheNames().forEach(name -> {
             Cache cache = cacheManager.getCache(name);
             if (cache != null) {
@@ -51,12 +53,6 @@ class ProfileRestControllerTest extends AbstractControllerTest {
             }
         });
     }
-
-    @Autowired
-    private UserRepository repository;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @Test
     @WithUserDetails(value = USER_1_MAIL)
