@@ -3,13 +3,13 @@ package ru.javapractice.dailylunchvoting.vote.web;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javapractice.dailylunchvoting.AbstractControllerTest;
@@ -31,7 +31,7 @@ import static ru.javapractice.dailylunchvoting.vote.VoteData.USER1_TODAY_VOTE;
 @Import({
         VoteControllerTest.TestConfig.class,
         AppConfig.class,
-        SecurityTestConfig.class
+        SecurityTestConfig.class,
 })
 class VoteControllerTest extends AbstractControllerTest {
 
@@ -53,7 +53,8 @@ class VoteControllerTest extends AbstractControllerTest {
     private VoteService voteService;
 
     @Test
-    @WithUserDetails(value = USER_1_MAIL)
+//    @WithUserDetails(value = USER_1_MAIL)
+    @WithMockUser
     void getTodayVote() throws Exception {
 
         VoteTo voteTo = voteMapper.toVoteTo(USER1_TODAY_VOTE);

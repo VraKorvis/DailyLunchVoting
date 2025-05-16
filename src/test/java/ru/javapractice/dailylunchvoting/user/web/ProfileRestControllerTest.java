@@ -1,20 +1,27 @@
 package ru.javapractice.dailylunchvoting.user.web;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javapractice.dailylunchvoting.app.config.TestCacheConfig;
 import ru.javapractice.dailylunchvoting.common.util.JsonUtil;
 import ru.javapractice.dailylunchvoting.mapper.UserMapper;
 import ru.javapractice.dailylunchvoting.user.model.User;
 import ru.javapractice.dailylunchvoting.user.repository.UserRepository;
 import ru.javapractice.dailylunchvoting.AbstractControllerTest;
 import ru.javapractice.dailylunchvoting.user.to.UserTo;
-
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -25,7 +32,23 @@ import static ru.javapractice.dailylunchvoting.user.web.ProfileController.REST_U
 
 @SpringBootTest
 @Transactional
+@Import(TestCacheConfig.class)
+@Slf4j
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class ProfileRestControllerTest extends AbstractControllerTest {
+    @Autowired
+    private CacheManager cacheManager;
+
+    @BeforeEach
+    public void clearCache() {
+        log.warn(StringUtils.repeat('*', 100) + "Clear cache{}", cacheManager);
+        cacheManager.getCacheNames().forEach(name -> {
+            Cache cache = cacheManager.getCache(name);
+            if (cache != null) {
+                cache.clear();
+            }
+        });
+    }
 
     @Autowired
     private UserRepository repository;

@@ -2,9 +2,12 @@ package ru.javapractice.dailylunchvoting.restaurant.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import ru.javapractice.dailylunchvoting.app.config.CacheNames;
 import ru.javapractice.dailylunchvoting.app.config.ConstConfig;
 import ru.javapractice.dailylunchvoting.common.exception.ConflictException;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
@@ -34,6 +37,7 @@ public class MenuService {
     private final AssignedMenuItemRepository assignedMenuItemRepository;
     private final TimeProvider timeProvider;
 
+    @Cacheable("todayMenus")
     public Menu get(int id) {
         return menuRepository.getExisted(id);
     }
@@ -43,6 +47,7 @@ public class MenuService {
     }
 
     @Transactional
+    @CacheEvict(value = {CacheNames.RESTAURANTS_WITH_TODAY_MENU, CacheNames.RESTAURANT}, allEntries = true)
     public Menu create(AssignedMenuTo menuTo, int restaurantId) {
         Assert.notNull(menuTo, "menu must not be null");
 
@@ -65,6 +70,7 @@ public class MenuService {
     }
 
     @Transactional
+    @CacheEvict(value = {CacheNames.RESTAURANTS_WITH_TODAY_MENU, CacheNames.RESTAURANT}, beforeInvocation = true, allEntries = true)
     public void update(AssignedMenuTo menuTo, int restaurantId) {
         Assert.notNull(menuTo, "menuTo must not be null");
 
@@ -76,6 +82,12 @@ public class MenuService {
         replaceAssignments(assignedMenu, assignments);
         menuRepository.save(assignedMenu);
         saveAssignedMenuItems(assignments);
+    }
+
+    public Menu getTodayMenuForRestaurantOrThrow(int restaurantId) {
+        return menuRepository.findByRestaurantIdForToday(restaurantId)
+                .orElseThrow(() -> new NotFoundException(
+                        "Menu for restaurant with id=" + restaurantId + " for today has not been assigned yet"));
     }
 
     private void replaceAssignments(Menu assignedMenu, List<AssignedMenuItem> assignments) {
@@ -105,12 +117,6 @@ public class MenuService {
 
     private boolean isMenuAssignedForToday(int restaurantId) {
         return menuRepository.findByRestaurantIdForToday(restaurantId).isPresent();
-    }
-
-    public Menu getTodayMenuForRestaurantOrThrow(int restaurantId) {
-        return menuRepository.findByRestaurantIdForToday(restaurantId)
-                .orElseThrow(() -> new NotFoundException(
-                        "Menu for restaurant with id=" + restaurantId + " for today has not been assigned yet"));
     }
 
     private List<AssignedMenuItem> prepareAssignmentsFromTo(Menu menu, AssignedMenuTo assignedMenuTo) {

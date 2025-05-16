@@ -22,15 +22,13 @@ import static ru.javapractice.dailylunchvoting.user.UserData.USER_1_MAIL;
 @Transactional
 class RestaurantRestControllerTest extends AbstractControllerTest {
 
-    private final String REST_URL = RestaurantRestController.REST_URL + "/";
-
     @Autowired
     private RestaurantMapperService restaurantMapperService;
 
     @Test
     @WithUserDetails(value = USER_1_MAIL)
     void getAllWithMenuForToday() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "/with-assigned-menu"))
+        perform(MockMvcRequestBuilders.get(RestaurantRestController.REST_URL + "/with-assigned-menu"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

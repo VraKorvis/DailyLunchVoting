@@ -3,6 +3,7 @@ package ru.javapractice.dailylunchvoting.restaurant.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javapractice.dailylunchvoting.mapper.RestaurantMapper;
 import ru.javapractice.dailylunchvoting.mapper.RestaurantMapperService;
@@ -15,6 +16,7 @@ import java.util.stream.Stream;
 import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
 
 @SpringBootTest
+@ActiveProfiles("test")
 @Transactional
 public class RestaurantServiceTest {
 

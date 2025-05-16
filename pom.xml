@@ -6,13 +6,13 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.4.5</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>ru.dlv</groupId>
     <artifactId>dailylunchvoting</artifactId>
     <version>1.0</version>
     <name>Daily Lunch Voting Management</name>
-    <description>Spring Boot 3.x HATEOAS application (BootJava)</description>
+    <description>Spring Boot 3.x application </description>
     <url>https://</url>
 
     <properties>
@@ -99,6 +99,7 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--tests-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -136,7 +137,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <!--https://junit.org/junit5/docs/current/user-guide/#running-tests-build-maven -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>

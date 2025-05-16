@@ -33,7 +33,7 @@ import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
 @Import({
         AdminMenuAssignmentControllerTest.TestConfig.class,
         AppConfig.class,
-        SecurityTestConfig.class
+        SecurityTestConfig.class,
 })
 @Slf4j
 class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
@@ -125,7 +125,6 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updatedMenuTo)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-
     }
 
 }
