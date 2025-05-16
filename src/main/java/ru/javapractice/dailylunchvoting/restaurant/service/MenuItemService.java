@@ -44,6 +44,7 @@ public class MenuItemService {
 
     @Cacheable(value = CacheNames.MENU_ITEMS_PAGE, key = CacheKeys.PAGEABLE)
     public Page<MenuItem> findAll(Pageable pageable) {
+        log.debug("[CACHE] ENTER Service.findAll, pageable = {}", pageable);
         return repository.findAll(pageable);
     }
 

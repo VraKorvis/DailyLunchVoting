@@ -15,6 +15,6 @@ public class CacheNames {
     public static final String TODAY_MENUS = "todayMenus";
 
     public static final String MENU_ITEMS_LIST = "menuItemsList";
-    public static final String MENU_ITEMS_PAGE = "usersPage";
+    public static final String MENU_ITEMS_PAGE = "menuItemsPage";
     public static final String MENU_ITEM = "menuItem";
 }

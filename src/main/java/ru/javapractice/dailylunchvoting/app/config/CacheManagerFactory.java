@@ -2,16 +2,19 @@ package ru.javapractice.dailylunchvoting.app.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import static ru.javapractice.dailylunchvoting.app.config.CacheNames.*;
 import static ru.javapractice.dailylunchvoting.app.config.CacheNames.TODAY_MENUS;
 
 @UtilityClass
+@Slf4j
 public class CacheManagerFactory {
 
     public static CacheManager createDefault() {
@@ -52,6 +55,7 @@ public class CacheManagerFactory {
         cacheManager.registerCustomCache(MENU_ITEMS_PAGE, menuItemCacheBuilder.build());
         cacheManager.registerCustomCache(MENU_ITEM, menuItemCacheBuilder.build());
 
+        log.info("[CACHE] >>> Available cache names: {}", Arrays.toString(cacheManager.getCacheNames().toArray()));
         return cacheManager;
     }
 
