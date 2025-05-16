@@ -6,7 +6,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
-import ru.javapractice.dailylunchvoting.app.AuthUtil;
+import ru.javapractice.dailylunchvoting.app.AuthUserProvider;
 import ru.javapractice.dailylunchvoting.common.HasIdAndEmail;
 import ru.javapractice.dailylunchvoting.user.repository.UserRepository;
 
@@ -17,6 +17,7 @@ public class UniqueMailValidator implements org.springframework.validation.Valid
 
     private final UserRepository repository;
     private final HttpServletRequest request;
+    private final AuthUserProvider authUtil;
 
     @Override
     public boolean supports(@NonNull Class<?> clazz) {
@@ -35,7 +36,7 @@ public class UniqueMailValidator implements org.springframework.validation.Valid
                             if (user.getId() != null && dbId == user.id()) return;
 
                             String requestURI = request.getRequestURI();
-                            if (requestURI.endsWith("/" + dbId) || (dbId == AuthUtil.get().id() && requestURI.contains("/profile")))
+                            if (requestURI.endsWith("/" + dbId) || (dbId == authUtil.get().id() && requestURI.contains("/profile")))
                                 return;
                         }
                         errors.rejectValue("email", "", EXCEPTION_DUPLICATE_EMAIL);

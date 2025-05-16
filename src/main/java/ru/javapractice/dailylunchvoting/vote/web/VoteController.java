@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.javapractice.dailylunchvoting.app.AuthUtil;
+import ru.javapractice.dailylunchvoting.app.AuthUserProvider;
 import ru.javapractice.dailylunchvoting.vote.model.VoteResult;
 import ru.javapractice.dailylunchvoting.vote.service.VoteService;
 import ru.javapractice.dailylunchvoting.restaurant.to.VoteTo;
@@ -19,18 +19,19 @@ public class VoteController {
     static final String REST_URL = "/api/votes";
 
     private final VoteService service;
+    private final AuthUserProvider authUtil;
 
     @GetMapping("/for-today/me")
     @ResponseBody
     public VoteTo getTodayVote() {
-        return service.findByUserIdForToday(AuthUtil.get().id());
+        return service.findByUserIdForToday(authUtil.get().id());
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
     public ResponseEntity<VoteResult> vote(@RequestParam int restaurantId) {
-        var result = service.vote(restaurantId, AuthUtil.get().id());
-        if (result.isSuccess()) {
+        var result = service.vote(restaurantId, authUtil.get().id());
+        if (result.success()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body(result);

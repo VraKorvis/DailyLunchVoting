@@ -2,6 +2,7 @@ package ru.javapractice.dailylunchvoting.user.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -23,6 +24,7 @@ import static ru.javapractice.dailylunchvoting.user.web.AdminUserController.REST
 import static ru.javapractice.dailylunchvoting.user.web.UniqueMailValidator.EXCEPTION_DUPLICATE_EMAIL;
 
 @SpringBootTest
+@AutoConfigureMockMvc
 @Transactional
 class AdminUserControllerTest extends AbstractControllerTest {
 

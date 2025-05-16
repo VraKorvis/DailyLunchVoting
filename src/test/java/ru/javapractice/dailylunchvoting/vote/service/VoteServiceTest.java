@@ -63,10 +63,10 @@ public class VoteServiceTest {
             var newVote = getNew();
             newVote.setId(createdId);
             MATCHER_TO.assertMatch(createdTo, voteMapper.toVoteTo(newVote));
-            assertTrue(result.isSuccess(), "Expected the vote to be accepted during the voting period");
+            assertTrue(result.success(), "Expected the vote to be accepted during the voting period");
         } else {
-            assertFalse(result.isSuccess(), "Expected the vote to be rejected after the voting deadline");
-            assertNotNull(result.getMessage(), "An error message should be returned when voting is not allowed");
+            assertFalse(result.success(), "Expected the vote to be rejected after the voting deadline");
+            assertNotNull(result.message(), "An error message should be returned when voting is not allowed");
         }
     }
 
@@ -78,9 +78,9 @@ public class VoteServiceTest {
             voteService.vote(updated.getRestaurant().id(), UserData.USER_1_ID);
             VoteTo actual = voteService.findByUserIdForToday(UserData.USER_1_ID);
             MATCHER_TO.assertMatch(actual, voteMapper.toVoteTo(updated));
-            assertTrue(result.isSuccess(), "Expected the vote to be accepted during the voting period");
+            assertTrue(result.success(), "Expected the vote to be accepted during the voting period");
         } else {
-            assertFalse(result.isSuccess(), "Expected the vote to be rejected after the voting deadline");
-            assertNotNull(result.getMessage(), "An error message should be returned when voting is not allowed");        }
+            assertFalse(result.success(), "Expected the vote to be rejected after the voting deadline");
+            assertNotNull(result.message(), "An error message should be returned when voting is not allowed");        }
     }
 }

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.cache.Cache;
@@ -30,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javapractice.dailylunchvoting.user.UserData.*;
 
 @WebMvcTest(controllers = AdminUserController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @Import({
         AdminUserControllerCacheTest.TestConfig.class,
         TestCacheConfig.class,

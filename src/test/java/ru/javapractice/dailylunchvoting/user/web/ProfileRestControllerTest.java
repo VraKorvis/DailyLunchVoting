@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -31,6 +32,7 @@ import static ru.javapractice.dailylunchvoting.user.UserData.*;
 import static ru.javapractice.dailylunchvoting.user.web.ProfileController.REST_URL;
 
 @SpringBootTest
+@AutoConfigureMockMvc
 @Transactional
 @Import(TestCacheConfig.class)
 @Slf4j

@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javapractice.dailylunchvoting.AbstractControllerTest;
 import ru.javapractice.dailylunchvoting.app.config.AppConfig;
@@ -22,12 +22,14 @@ import ru.javapractice.dailylunchvoting.vote.model.VoteResult;
 import ru.javapractice.dailylunchvoting.vote.service.VoteService;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
 import static ru.javapractice.dailylunchvoting.user.UserData.*;
 import static ru.javapractice.dailylunchvoting.vote.VoteData.USER1_TODAY_VOTE;
 
 @WebMvcTest(controllers = VoteController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @Import({
         VoteControllerTest.TestConfig.class,
         AppConfig.class,
@@ -53,8 +55,7 @@ class VoteControllerTest extends AbstractControllerTest {
     private VoteService voteService;
 
     @Test
-//    @WithUserDetails(value = USER_1_MAIL)
-    @WithMockUser
+    @WithMockUser(value = USER_1_MAIL)
     void getTodayVote() throws Exception {
 
         VoteTo voteTo = voteMapper.toVoteTo(USER1_TODAY_VOTE);
@@ -67,7 +68,7 @@ class VoteControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = USER_1_MAIL)
+    @WithMockUser(value = USER_1_MAIL)
     void voteSuccess() throws Exception {
         int restaurantId = RESTAURANT_A_ID;
         VoteResult voteResult = new VoteResult(true, "Your vote has been successfully updated", restaurantId);
@@ -75,8 +76,8 @@ class VoteControllerTest extends AbstractControllerTest {
         when(voteService.vote(restaurantId, USER_1_ID)).thenReturn(voteResult);
 
         perform(MockMvcRequestBuilders.post(VoteController.REST_URL)
-                        .param("restaurantId", String.valueOf(restaurantId)))
-                .andExpect(jsonPath("$.success").value(true))
+                .param("restaurantId", String.valueOf(restaurantId)))
+                .andDo(print())
                 .andExpect(VoteData.MATCHER_VOTE_RESULT.contentJson(voteResult));
     }
 }

@@ -1,10 +1,7 @@
 package ru.javapractice.dailylunchvoting.vote.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@Data
-public class VoteResult {
-    private final boolean success;
-    private final String message;
-    private final int restaurantId;
+public record VoteResult(boolean success, String message, int restaurantId) {
 }

@@ -8,7 +8,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @ActiveProfiles("test")
-@AutoConfigureMockMvc
 public abstract class AbstractControllerTest {
 
     @Autowired
