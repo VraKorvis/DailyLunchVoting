@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.javapractice.dailylunchvoting.common.validation.ValidationUtil;
 import ru.javapractice.dailylunchvoting.mapper.MenuMapperService;
 import ru.javapractice.dailylunchvoting.restaurant.service.MenuService;
 import ru.javapractice.dailylunchvoting.restaurant.to.AssignedMenuTo;
@@ -40,6 +41,7 @@ public class AdminMenuAssignmentController {
     @PostMapping("/{id}/menu")
     public ResponseEntity<AssignedMenuTo> createAndAssignMenuToRestaurant(@Valid @RequestBody AssignedMenuTo menuTo, @PathVariable int id) {
 
+        ValidationUtil.checkIsNew(menuTo);
         var createdMenu = menuService.create(menuTo, id);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}/menu")

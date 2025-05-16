@@ -44,6 +44,14 @@ public class CacheManagerFactory {
         cacheManager.registerCustomCache(RESTAURANT_LIST, restaurantCacheBuilder.build());
         cacheManager.registerCustomCache(RESTAURANTS_WITH_TODAY_MENU, restaurantCacheBuilder.build());
 
+        var menuItemCacheBuilder = Caffeine.newBuilder()
+                .maximumSize(500)
+                .expireAfterWrite(15, TimeUnit.MINUTES);
+
+        cacheManager.registerCustomCache(MENU_ITEMS_LIST, menuItemCacheBuilder.build());
+        cacheManager.registerCustomCache(MENU_ITEMS_PAGE, menuItemCacheBuilder.build());
+        cacheManager.registerCustomCache(MENU_ITEM, menuItemCacheBuilder.build());
+
         return cacheManager;
     }
 
@@ -52,11 +60,15 @@ public class CacheManagerFactory {
                 USER_CACHE,
                 USERS_PAGE,
                 USERS_LIST,
+
                 RESTAURANT,
                 RESTAURANT_LIST,
                 RESTAURANTS_WITH_TODAY_MENU,
-                TODAY_MENUS
-        };
+                TODAY_MENUS,
 
+                MENU_ITEMS_LIST,
+                MENU_ITEMS_PAGE,
+                MENU_ITEM
+        };
     }
 }
