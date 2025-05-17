@@ -12,7 +12,6 @@ import ru.javapractice.dailylunchvoting.app.config.ConstConfig;
 import ru.javapractice.dailylunchvoting.common.exception.ConflictException;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
 import ru.javapractice.dailylunchvoting.restaurant.model.*;
-import ru.javapractice.dailylunchvoting.restaurant.repository.AssignedMenuItemRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.MenuItemRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.MenuRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.RestaurantRepository;
@@ -36,7 +35,6 @@ public class MenuService {
     private final MenuRepository menuRepository;
     private final RestaurantRepository restaurantRepository;
     private final MenuItemRepository menuItemRepository;
-    private final AssignedMenuItemRepository assignedMenuItemRepository;
     private final TimeProvider timeProvider;
 
     @Cacheable("todayMenus")
@@ -53,21 +51,28 @@ public class MenuService {
     public Menu create(AssignedMenuTo menuTo, int restaurantId) {
         Assert.notNull(menuTo, "menu must not be null");
 
-        LocalDate targetDate = menuTo.getMenuDate();
+        var targetDate = menuTo.getMenuDate();
         ensureMenuEditingPeriod(targetDate);
-        Restaurant restaurant = findRestaurantById(restaurantId);
+        var restaurant = findRestaurantById(restaurantId);
 
         if (existsMenu(restaurantId, targetDate)) {
             throw new ConflictException(MENU_ALREADY_EXISTS.formatted(restaurantId));
         }
 
-        Menu newMenu = new Menu(null, targetDate, restaurant, new ArrayList<>());
+        var newMenu = new Menu(null, targetDate, restaurant, new ArrayList<>());
         List<AssignedMenuItem> assignments = prepareAssignmentsFromTo(newMenu, menuTo);
+        checkPriceIsNull(assignments);
 
         newMenu.setAssignedMenuItems(assignments);
-        Menu savedMenu = menuRepository.save(newMenu);
-        saveAssignedMenuItems(assignments);
-        return savedMenu;
+
+        return menuRepository.save(newMenu);
+    }
+
+    private void checkPriceIsNull(List<AssignedMenuItem> assignments) {
+        assignments.forEach(assignedMenuItem -> {
+            Optional.ofNullable(assignedMenuItem.getPrice())
+                    .orElseThrow(() -> new IllegalArgumentException(MENU_ITEM_PRICE_NULL.formatted(assignedMenuItem.getMenuItem().getId())));
+        });
     }
 
     @Transactional
@@ -81,8 +86,8 @@ public class MenuService {
         var assignments = prepareAssignmentsFromTo(assignedMenu, menuTo);
 
         replaceAssignments(assignedMenu, assignments);
+        checkPriceIsNull(assignments);
         menuRepository.save(assignedMenu);
-        saveAssignedMenuItems(assignments);
     }
 
     public Menu fetchMenuOrThrow(int restaurantId, LocalDate menuDate) {
@@ -109,12 +114,14 @@ public class MenuService {
     }
 
     private Restaurant findRestaurantById(int restaurantId) {
-        return restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new NotFoundException(RESTAURANT_NOT_FOUND.formatted(restaurantId)));
+        if (!restaurantRepository.existsById(restaurantId)) {
+            throw new NotFoundException(RESTAURANT_NOT_FOUND.formatted(restaurantId));
+        }
+        return restaurantRepository.getReferenceById(restaurantId);
     }
 
     private boolean existsMenu(int restaurantId, LocalDate menuDate) {
-        return menuRepository.findByRestaurantIdAndMenuDate(restaurantId, menuDate).isPresent();
+        return menuRepository.existsByRestaurantIdAndMenuDate(restaurantId, menuDate);
     }
 
     private List<AssignedMenuItem> prepareAssignmentsFromTo(Menu menu, AssignedMenuTo assignedMenuTo) {
@@ -144,14 +151,5 @@ public class MenuService {
                     return new AssignedMenuItem(menu, menuItem, dto.getPrice());
                 })
                 .toList();
-    }
-
-    @Transactional
-    public void saveAssignedMenuItems(List<AssignedMenuItem> assignments) {
-        for (AssignedMenuItem assignment : assignments) {
-            Optional.ofNullable(assignment.getPrice())
-                    .orElseThrow(() -> new IllegalArgumentException(MENU_ITEM_PRICE_NULL.formatted(assignment.getMenuItem().getId())));
-            assignedMenuItemRepository.save(assignment);
-        }
     }
 }

@@ -15,4 +15,5 @@ public interface MenuRepository extends BaseRepository<Menu> {
     @Query("SELECT m FROM Menu m WHERE m.restaurant.id=:restaurantId AND m.menuDate =:menuDate")
     Optional<Menu> findByRestaurantIdAndMenuDate(@Param("restaurantId") Integer restaurantId, @Param("menuDate") LocalDate menuDate);
 
+    boolean existsByRestaurantIdAndMenuDate(Integer restaurantId, LocalDate menuDate);
 }
