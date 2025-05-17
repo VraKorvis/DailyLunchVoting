@@ -1,4 +1,22 @@
----
+engines:
+  security-code-scan:
+    enabled: true
+    exclude_paths:
+      - src/test/
+  semgrep:
+    enabled: true
+    exclude_paths:
+      - src/test/
+  pmd:
+    config:
+      rules:
+        - name: JUnitTestsShouldIncludeAssert
+          enabled: false
+        - name: CompareObjectsWithEquals
+          enabled: true
+          parameters:
+            typesThatCompareByReference: ["Throwable"]
+
 exclude_paths:
   - 'src/main/webapp/**'
   - '**.md'
