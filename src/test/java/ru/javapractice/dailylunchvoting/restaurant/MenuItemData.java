@@ -14,6 +14,7 @@ public class MenuItemData {
     public static final MatcherFactory.Matcher<MenuItem> MATCHER = MatcherFactory.usingEqualsComparator(MenuItem.class);
 
     public static final int BURGER_ID = START_SEQ + 7;
+    public static final int UNKNOWN_ID = 404;
     public static final MenuItem BURGER = new MenuItem(BURGER_ID, "Burger");
     public static final MenuItem PIZZA = new MenuItem(BURGER_ID + 1, "Pizza");
     public static final MenuItem SALAD = new MenuItem(BURGER_ID + 2, "Salad");

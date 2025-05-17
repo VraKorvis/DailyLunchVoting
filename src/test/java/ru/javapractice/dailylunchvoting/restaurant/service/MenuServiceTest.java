@@ -2,13 +2,10 @@ package ru.javapractice.dailylunchvoting.restaurant.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import ru.javapractice.dailylunchvoting.AbstractIntegrationServiceTest;
 import ru.javapractice.dailylunchvoting.AbstractUnitServiceTest;
 import ru.javapractice.dailylunchvoting.app.config.ConstConfig;
 import ru.javapractice.dailylunchvoting.common.exception.ConflictException;
@@ -36,7 +33,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static ru.javapractice.dailylunchvoting.common.MessageConstants.*;
 import static ru.javapractice.dailylunchvoting.restaurant.MenuItemData.BURGER;
+import static ru.javapractice.dailylunchvoting.restaurant.MenuItemData.UNKNOWN_ID;
 import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
 
 public class MenuServiceTest extends AbstractUnitServiceTest {
@@ -63,6 +62,7 @@ public class MenuServiceTest extends AbstractUnitServiceTest {
         Menu newMenu = MENU_1;
         AssignedMenuTo menuTo = menuMapperService.toAssignedMenuTo(newMenu);
 
+        var targetDate = menuTo.getMenuDate();
         try (MockedStatic<OperationTimeChecker> mockedOp = Mockito.mockStatic(OperationTimeChecker.class)) {
             mockedOp.when(() -> OperationTimeChecker.isPastDate(newMenu.getMenuDate(), mockedTimeProvider))
                     .thenReturn(false);
@@ -72,19 +72,16 @@ public class MenuServiceTest extends AbstractUnitServiceTest {
             when(restaurantRepository.findById(RESTAURANT_A_ID))
                     .thenReturn(Optional.of(newMenu.getRestaurant()));
 
-            when(menuRepository.findByRestaurantIdForToday(RESTAURANT_A_ID))
+            when(menuRepository.findByRestaurantIdAndMenuDate(RESTAURANT_A_ID, targetDate))
                     .thenReturn(Optional.of(newMenu));
 
             ConflictException ex = assertThrows(ConflictException.class, () ->
                     menuService.create(menuTo, RESTAURANT_A_ID)
             );
 
-            assertEquals(
-                    "Menu for restaurant with id=" + RESTAURANT_A_ID + " for today already exists",
-                    ex.getMessage()
-            );
+            assertEquals(MENU_ALREADY_EXISTS.formatted(RESTAURANT_A_ID), ex.getMessage());
 
-            Mockito.verify(menuRepository).findByRestaurantIdForToday(RESTAURANT_A_ID);
+            Mockito.verify(menuRepository).findByRestaurantIdAndMenuDate(RESTAURANT_A_ID, targetDate);
         }
     }
 
@@ -103,7 +100,7 @@ public class MenuServiceTest extends AbstractUnitServiceTest {
         ConflictException ex = assertThrows(ConflictException.class, () ->
                 menuService.create(menuTo, RESTAURANT_A_ID)
         );
-        assertEquals("Cannot create/edit menu for past date " + past, ex.getMessage());
+        assertEquals(CANNOT_MODIFY_PAST_DATE.formatted(past), ex.getMessage());
     }
 
     @Test
@@ -120,11 +117,7 @@ public class MenuServiceTest extends AbstractUnitServiceTest {
             ConflictException ex = assertThrows(ConflictException.class, () ->
                     menuService.create(menuTo, RESTAURANT_A_ID)
             );
-            assertEquals(
-                    "Cannot edit today's menu after voting has started at "
-                    + ConstConfig.VOTING_START_TIME,
-                    ex.getMessage()
-            );
+            assertEquals(CANNOT_MODIFY_AFTER_VOTING.formatted(ConstConfig.VOTING_START_TIME), ex.getMessage());
         }
     }
 
@@ -136,6 +129,7 @@ public class MenuServiceTest extends AbstractUnitServiceTest {
         newMenu.setMenuDate(menuDate);
 
         AssignedMenuTo menuTo = menuMapperService.toAssignedMenuTo(newMenu);
+        var targetDate = menuTo.getMenuDate();
 
         try (var mocked = Mockito.mockStatic(OperationTimeChecker.class)) {
             mocked.when(() -> OperationTimeChecker.isPastDate(menuDate, mockedTimeProvider)).thenReturn(false);
@@ -145,7 +139,7 @@ public class MenuServiceTest extends AbstractUnitServiceTest {
             when(restaurantRepository.findById(RESTAURANT_A_ID)).thenReturn(Optional.of(RESTAURANT_A));
             List<MenuItem> menuItems = menuMapperService.toMenuItems(menuTo.getPricedMenuItemTos());
             when(menuItemRepository.findAllById(any())).thenReturn(menuItems);
-            when(menuRepository.findByRestaurantIdForToday(RESTAURANT_A_ID)).thenReturn(Optional.empty());
+            when(menuRepository.findByRestaurantIdAndMenuDate(RESTAURANT_A_ID, targetDate)).thenReturn(Optional.empty());
 
             when(menuRepository.save(any(Menu.class))).thenAnswer(invocation -> {
                 Menu menu = invocation.getArgument(0);
@@ -182,9 +176,10 @@ public class MenuServiceTest extends AbstractUnitServiceTest {
             when(restaurantRepository.findById(restaurantId))
                     .thenReturn(Optional.empty());
 
-            assertThrows(NotFoundException.class, () ->
+            var ex = assertThrows(NotFoundException.class, () ->
                     menuService.create(menuTo, restaurantId));
 
+            assertEquals(RESTAURANT_NOT_FOUND.formatted(restaurantId), ex.getMessage());
             Mockito.verify(restaurantRepository).findById(restaurantId);
         }
     }
@@ -195,10 +190,11 @@ public class MenuServiceTest extends AbstractUnitServiceTest {
         Menu newMenu = getNewMenu();
 
         int restaurantId = RESTAURANT_A_ID;
-        int itemId = MENU_1.getId();
+        int unknownItemId = UNKNOWN_ID;
         AssignedMenuTo menuTo = new AssignedMenuTo(null, LocalDate.now(), List.of(
-                new PricedMenuItemTo(itemId, "Burger", BigDecimal.valueOf(100.00))
+                new PricedMenuItemTo(unknownItemId, "Unknown Item", BigDecimal.valueOf(100.00))
         ));
+        var targetDate = menuTo.getMenuDate();
 
         try (MockedStatic<OperationTimeChecker> mockedOp = Mockito.mockStatic(OperationTimeChecker.class)) {
             mockedOp.when(() -> OperationTimeChecker.isPastDate(newMenu.getMenuDate(), mockedTimeProvider))
@@ -206,17 +202,23 @@ public class MenuServiceTest extends AbstractUnitServiceTest {
             mockedOp.when(() -> OperationTimeChecker.hasVotingStarted(newMenu.getMenuDate(), mockedTimeProvider))
                     .thenReturn(false);
 
-            when(menuRepository.findByRestaurantIdForToday(restaurantId))
+            when(menuRepository.findByRestaurantIdAndMenuDate(restaurantId, targetDate))
                     .thenReturn(Optional.empty());
 
             when(restaurantRepository.findById(restaurantId))
                     .thenReturn(Optional.of(new Restaurant()));
 
-            when(menuItemRepository.findAllById(List.of(itemId)))
+            when(menuItemRepository.findAllById(List.of(unknownItemId)))
                     .thenReturn(List.of());
 
-            assertThrows(NotFoundException.class, () ->
+            var ex = assertThrows(NotFoundException.class, () ->
                     menuService.create(menuTo, restaurantId));
+
+            List<Integer> notFoundIds = menuTo.getPricedMenuItemTos().stream()
+                    .map(PricedMenuItemTo::getId)
+                    .toList();
+
+            assertEquals(MENU_ITEMS_NOT_FOUND.formatted(notFoundIds), ex.getMessage());
         }
     }
 
@@ -230,6 +232,7 @@ public class MenuServiceTest extends AbstractUnitServiceTest {
 
         PricedMenuItemTo dto = new PricedMenuItemTo(itemId, "null", null);
         AssignedMenuTo menuTo = new AssignedMenuTo(null, LocalDate.now(), List.of(dto));
+        var targetDate = menuTo.getMenuDate();
 
         try (MockedStatic<OperationTimeChecker> mockedOp = Mockito.mockStatic(OperationTimeChecker.class)) {
             mockedOp.when(() -> OperationTimeChecker.isPastDate(menuTo.getMenuDate(), mockedTimeProvider))
@@ -237,7 +240,7 @@ public class MenuServiceTest extends AbstractUnitServiceTest {
             mockedOp.when(() -> OperationTimeChecker.hasVotingStarted(menuTo.getMenuDate(), mockedTimeProvider))
                     .thenReturn(false);
 
-            when(menuRepository.findByRestaurantIdForToday(restaurantId))
+            when(menuRepository.findByRestaurantIdAndMenuDate(restaurantId, targetDate))
                     .thenReturn(Optional.empty());
             when(restaurantRepository.findById(restaurantId))
                     .thenReturn(Optional.of(new Restaurant()));

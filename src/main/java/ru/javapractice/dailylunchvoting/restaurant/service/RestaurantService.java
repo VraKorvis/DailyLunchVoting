@@ -14,6 +14,7 @@ import ru.javapractice.dailylunchvoting.restaurant.repository.RestaurantReposito
 import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantTo;
 import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantWithAssignedMenuTo;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -57,12 +58,16 @@ public class RestaurantService {
     }
 
     @Cacheable(CacheNames.RESTAURANTS_WITH_TODAY_MENU)
-    public List<RestaurantWithAssignedMenuTo> getAllWithAssignedMenuForToday() {
-        return restaurantMapperService.toWithAssignedMenuTos(repository.findAllWithAssignedMenuForToday());
+    public List<RestaurantWithAssignedMenuTo> findAllWithAssignedMenuForToday() {
+        return findAllWithAssignedMenuForDate(LocalDate.now());
     }
 
-    public List<RestaurantWithAssignedMenuTo> getAllWithoutAssignedMenuForToday() {
-        return restaurantMapperService.toWithAssignedMenuTos(repository.findAllWithoutAssignedMenuForToday());
+    public List<RestaurantWithAssignedMenuTo> findAllWithAssignedMenuForDate(LocalDate date) {
+        return restaurantMapperService.toWithAssignedMenuTos(repository.findAllWithAssignedMenuForToday(date));
+    }
+
+    public List<RestaurantWithAssignedMenuTo> findAllWithoutAssignedMenuForToday() {
+        return restaurantMapperService.toWithAssignedMenuTos(repository.findAllWithoutAssignedMenuForToday(LocalDate.now()));
     }
 
 }

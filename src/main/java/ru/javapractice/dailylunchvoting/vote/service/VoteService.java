@@ -2,6 +2,8 @@ package ru.javapractice.dailylunchvoting.vote.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
@@ -33,9 +35,17 @@ public class VoteService {
         return voteMapper.toVoteTos(voteRepository.findAllByUserId(userId));
     }
 
-    public List<VoteTo> getAllForToday() {
-        return voteMapper.toVoteTos(voteRepository.findAllForToday());
+    public List<VoteTo> findAllForToday() {
+        return findAllForDate(LocalDate.now());
     }
+
+    public List<VoteTo> findAllForDate(LocalDate date) {
+        return voteMapper.toVoteTos(voteRepository.findAllByVotedAtOrderByVotedAtDesc(date));
+    }
+
+    public Page<VoteTo> findAllForToday(Pageable pageable) {
+        Page<Vote> page = voteRepository.findAllByVotedAtOrderByVotedAtDesc(LocalDate.now(), pageable);
+        return page.map(voteMapper::toVoteTo);    }
 
     public List<Vote> getAllWithRestaurantByUserId(int userId) {
         return voteRepository.findAllByUserId(userId);

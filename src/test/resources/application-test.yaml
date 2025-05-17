@@ -10,6 +10,7 @@ logging:
     org.springframework.jdbc.datasource.init.ScriptUtils: DEBUG
     org.springframework.test.context.cache: DEBUG
     org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
     com.github.benmanes.caffeine.cache: DEBUG
     org.springframework.cache.interceptor.CacheInterceptor: DEBUG
     org.springframework.cache.caffeine.CaffeineCache: DEBUG

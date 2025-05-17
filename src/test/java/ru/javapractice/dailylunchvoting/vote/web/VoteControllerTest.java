@@ -24,6 +24,7 @@ import ru.javapractice.dailylunchvoting.vote.service.VoteService;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ru.javapractice.dailylunchvoting.common.MessageConstants.VOTE_UPDATED;
 import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
 import static ru.javapractice.dailylunchvoting.user.UserData.*;
 import static ru.javapractice.dailylunchvoting.vote.VoteData.USER1_TODAY_VOTE;
@@ -71,7 +72,7 @@ class VoteControllerTest extends AbstractControllerTest {
     @WithMockUser
     void voteSuccess() throws Exception {
         int restaurantId = RESTAURANT_A_ID;
-        VoteResult voteResult = new VoteResult(true, "Your vote has been successfully updated", restaurantId);
+        VoteResult voteResult = new VoteResult(true, VOTE_UPDATED, restaurantId);
 
         when(voteService.vote(restaurantId, USER_1_ID)).thenReturn(voteResult);
 

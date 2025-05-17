@@ -46,8 +46,8 @@ public class RestaurantServiceTest extends AbstractIntegrationServiceTest {
     }
 
     @Test
-    public void getAllWithAssignedMenuForToday() {
-        var restaurants = service.getAllWithAssignedMenuForToday();
+    public void findAllWithAssignedMenuForDate() {
+        var restaurants = service.findAllWithAssignedMenuForToday();
         List<RestaurantWithAssignedMenuTo> restaurantWithMenuTos = Stream.of(RESTAURANT_A, RESTAURANT_B)
                 .map((r) -> restaurantMapperService.toWithAssignedMenuTo(r) )
                 .toList();

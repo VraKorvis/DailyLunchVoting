@@ -26,6 +26,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static ru.javapractice.dailylunchvoting.common.MessageConstants.*;
+
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -55,8 +57,8 @@ public class MenuService {
         ensureMenuEditingPeriod(targetDate);
         Restaurant restaurant = findRestaurantById(restaurantId);
 
-        if (isMenuAssignedForToday(restaurantId)) {
-            throw new ConflictException("Menu for restaurant with id=" + restaurantId + " for today already exists");
+        if (existsMenu(restaurantId, targetDate)) {
+            throw new ConflictException(MENU_ALREADY_EXISTS.formatted(restaurantId));
         }
 
         Menu newMenu = new Menu(null, targetDate, restaurant, new ArrayList<>());
@@ -75,7 +77,7 @@ public class MenuService {
 
         var targetDate = menuTo.getMenuDate();
         ensureMenuEditingPeriod(targetDate);
-        var assignedMenu = getTodayMenuForRestaurantOrThrow(restaurantId);
+        var assignedMenu = fetchMenuOrThrow(restaurantId, targetDate);
         var assignments = prepareAssignmentsFromTo(assignedMenu, menuTo);
 
         replaceAssignments(assignedMenu, assignments);
@@ -83,10 +85,9 @@ public class MenuService {
         saveAssignedMenuItems(assignments);
     }
 
-    public Menu getTodayMenuForRestaurantOrThrow(int restaurantId) {
-        return menuRepository.findByRestaurantIdForToday(restaurantId)
-                .orElseThrow(() -> new NotFoundException(
-                        "Menu for restaurant with id=" + restaurantId + " for today has not been assigned yet"));
+    public Menu fetchMenuOrThrow(int restaurantId, LocalDate menuDate) {
+        return menuRepository.findByRestaurantIdAndMenuDate(restaurantId, menuDate)
+                .orElseThrow(() -> new NotFoundException(MENU_NOT_ASSIGNED.formatted(restaurantId)));
     }
 
     private void replaceAssignments(Menu assignedMenu, List<AssignedMenuItem> assignments) {
@@ -97,25 +98,23 @@ public class MenuService {
 
     private void ensureMenuEditingPeriod(LocalDate menuDate) {
         if (OperationTimeChecker.isPastDate(menuDate, timeProvider)) {
-            throw new ConflictException("Cannot create/edit menu for past date " + menuDate);
+            throw new ConflictException(CANNOT_MODIFY_PAST_DATE.formatted(menuDate));
         }
         if (OperationTimeChecker.isFutureDate(menuDate, timeProvider)) {
             return;
         }
         if (OperationTimeChecker.hasVotingStarted(menuDate, timeProvider)) {
-            throw new ConflictException(
-                    "Cannot edit today's menu after voting has started at " + ConstConfig.VOTING_START_TIME
-            );
+            throw new ConflictException(CANNOT_MODIFY_AFTER_VOTING.formatted(ConstConfig.VOTING_START_TIME));
         }
     }
 
     private Restaurant findRestaurantById(int restaurantId) {
         return restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new NotFoundException("Restaurant with id=" + restaurantId + " not found"));
+                .orElseThrow(() -> new NotFoundException(RESTAURANT_NOT_FOUND.formatted(restaurantId)));
     }
 
-    private boolean isMenuAssignedForToday(int restaurantId) {
-        return menuRepository.findByRestaurantIdForToday(restaurantId).isPresent();
+    private boolean existsMenu(int restaurantId, LocalDate menuDate) {
+        return menuRepository.findByRestaurantIdAndMenuDate(restaurantId, menuDate).isPresent();
     }
 
     private List<AssignedMenuItem> prepareAssignmentsFromTo(Menu menu, AssignedMenuTo assignedMenuTo) {
@@ -133,7 +132,7 @@ public class MenuService {
             var notFoundIds = ids.stream()
                     .filter(id -> !foundIds.contains(id))
                     .toList();
-            throw new NotFoundException("MenuItems not found for IDs: " + notFoundIds);
+            throw new NotFoundException(MENU_ITEMS_NOT_FOUND.formatted(notFoundIds));
         }
 
         Map<Integer, MenuItem> dbItemsById = dbItems.stream()
@@ -151,9 +150,7 @@ public class MenuService {
     public void saveAssignedMenuItems(List<AssignedMenuItem> assignments) {
         for (AssignedMenuItem assignment : assignments) {
             Optional.ofNullable(assignment.getPrice())
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "Price must not be null (menuItem id=" + assignment.getMenuItem().getId() + ")"
-                    ));
+                    .orElseThrow(() -> new IllegalArgumentException(MENU_ITEM_PRICE_NULL.formatted(assignment.getMenuItem().getId())));
             assignedMenuItemRepository.save(assignment);
         }
     }

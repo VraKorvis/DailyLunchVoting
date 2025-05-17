@@ -41,14 +41,14 @@ public class VoteServiceTest extends AbstractIntegrationServiceTest {
     }
 
     @Test
-    public void getAllForToday() {
-        var actual = voteService.getAllForToday();
+    public void findAllForToday() {
+        var actual = voteService.findAllForToday();
         var expected = voteMapper.toVoteTos(Arrays.asList(ADMIN_TODAY_VOTE_1, USER1_TODAY_VOTE));
         MATCHER_TO.assertMatch(actual, expected);
     }
 
     @Test
-    public void getAllForTodayByUserId() {
+    public void findAllForTodayByUserId() {
         var actual = voteService.getAllWithRestaurantByUserId(UserData.USER_1_ID);
         var expected = List.of(USER1_TODAY_VOTE, USER1_VOTE3, USER1_VOTE2);
         MATCHER.assertMatch(actual, expected);

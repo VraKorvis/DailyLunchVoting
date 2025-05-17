@@ -40,7 +40,7 @@ public class AdminRestaurantRestController {
 
     @GetMapping("/without-assigned-menu")
     public List<RestaurantWithAssignedMenuTo> getAllWithoutAssignedMenuForToday() {
-        return service.getAllWithoutAssignedMenuForToday();
+        return service.findAllWithoutAssignedMenuForToday();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

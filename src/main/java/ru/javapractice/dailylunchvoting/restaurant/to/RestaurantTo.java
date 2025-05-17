@@ -1,7 +1,6 @@
 package ru.javapractice.dailylunchvoting.restaurant.to;
 
 import lombok.*;
-import org.checkerframework.checker.units.qual.A;
 import ru.javapractice.dailylunchvoting.common.to.NamedTo;
 
 @Value

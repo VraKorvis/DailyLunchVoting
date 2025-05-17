@@ -22,6 +22,6 @@ public class RestaurantRestController {
 
     @GetMapping("/with-assigned-menu")
     public List<RestaurantWithAssignedMenuTo> getAllWithMenuForToday() {
-        return service.getAllWithAssignedMenuForToday();
+        return service.findAllWithAssignedMenuForToday();
     }
 }

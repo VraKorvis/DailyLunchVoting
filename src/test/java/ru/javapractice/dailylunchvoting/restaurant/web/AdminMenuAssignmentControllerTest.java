@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javapractice.dailylunchvoting.AbstractControllerTest;
 import ru.javapractice.dailylunchvoting.app.config.AppConfig;
 import ru.javapractice.dailylunchvoting.app.config.SecurityTestConfig;
+import ru.javapractice.dailylunchvoting.common.exception.ConflictException;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
 import ru.javapractice.dailylunchvoting.common.util.JsonUtil;
 import ru.javapractice.dailylunchvoting.mapper.MenuMapperService;
@@ -26,6 +28,8 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ru.javapractice.dailylunchvoting.common.MessageConstants.*;
+import static ru.javapractice.dailylunchvoting.common.error.ErrorType.*;
 import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
 
 @WebMvcTest(AdminMenuAssignmentController.class)
@@ -58,8 +62,8 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
 
     @Test
     @WithMockUser
-    @DisplayName("create(): succeeds when creating and assigning menu to restaurant")
-    void createAndAssignMenuToRestaurant() throws Exception {
+    @DisplayName("create(): succeeds when creating and assigning menu to restaurant for today")
+    void createAndAssignMenuToRestaurantForToday() throws Exception {
 
         var newMenu = MENU_1;
         var restaurant = MENU_1.getRestaurant();
@@ -70,7 +74,7 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
 
         when(menuService.create(any(AssignedMenuTo.class), anyInt()))
                 .thenReturn(newMenu);
-        when(menuService.getTodayMenuForRestaurantOrThrow(restaurant.id()))
+        when(menuService.fetchMenuOrThrow(restaurant.id(),newMenuTo.getMenuDate()))
                 .thenReturn(newMenu);
 
         ResultActions resultActions = perform(MockMvcRequestBuilders.post(REST_URL + id + "/menu")
@@ -86,7 +90,7 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
         newMenuTo.setId(createdMenuTo.getId());
         MENU_TO_MATCHER.assertMatch(createdMenuTo, newMenuTo);
 
-        Menu actualMenu = menuService.getTodayMenuForRestaurantOrThrow(restaurant.id());
+        Menu actualMenu = menuService.fetchMenuOrThrow(restaurant.id(), newMenuTo.getMenuDate());
         MENU_TO_MATCHER.assertMatch(createNewMenuTo(actualMenu), newMenuTo);
     }
 
@@ -96,20 +100,24 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
 
     @Test
     @WithMockUser
-    @DisplayName("create(): fails when creating menu for non-existing restaurant")
+    @DisplayName("create(): fails with 404 when creating menu for non-existing restaurant")
     void createMenuForNonExistingRestaurant() throws Exception {
 
-        var id = RESTAURANT_NOT_FOUND_ID;
+        var restaurantId = RESTAURANT_NOT_FOUND_ID;
         AssignedMenuTo newMenuTo = createNewMenuTo(MENU_1);
         newMenuTo.setId(null);
 
-        when(menuService.create(any(AssignedMenuTo.class), eq(id)))
-                .thenThrow(new NotFoundException("Restaurant with id=" + id + " not found"));
+        when(menuService.create(any(AssignedMenuTo.class), eq(restaurantId)))
+                .thenThrow(new NotFoundException(RESTAURANT_NOT_FOUND.formatted(restaurantId)));
 
-        perform(MockMvcRequestBuilders.post(REST_URL + id + "/menu")
+        perform(MockMvcRequestBuilders.post(REST_URL + restaurantId + "/menu")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newMenuTo)))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
+                .andExpect(jsonPath("$.title").value(NOT_FOUND.title))
+                .andExpect(jsonPath("$.detail").value(RESTAURANT_NOT_FOUND.formatted(restaurantId)));
+
     }
 
     @Test
@@ -123,13 +131,35 @@ class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
 
         AssignedMenuTo updatedMenuTo = createNewMenuTo(updatedMenu);
 
-        when(menuService.create(any(AssignedMenuTo.class), anyInt()))
-                .thenReturn(updatedMenu);
+        doNothing().when(menuService).update(updatedMenuTo, id);
 
         perform(MockMvcRequestBuilders.put(REST_URL + id + "/menu")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedMenuTo)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
+
+        verify(menuService).update(updatedMenuTo, id);
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("update(): fails with 409 when menu already exists for given restaurant")
+    void updateFailsWhenMenuAlreadyExists() throws Exception {
+        int restaurantId = 100003;
+        AssignedMenuTo menuTo = createNewMenuTo(MENU_1);
+        menuTo.setId(null);
+
+        doThrow(new ConflictException(MENU_ALREADY_EXISTS.formatted(restaurantId)))
+                .when(menuService).update(any(AssignedMenuTo.class), eq(restaurantId));
+
+        perform(MockMvcRequestBuilders.put(REST_URL + restaurantId + "/menu")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(menuTo)))
+                .andExpect(status().isConflict())
+                .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
+                .andExpect(jsonPath("$.status").value(HttpStatus.CONFLICT.value()))
+                .andExpect(jsonPath("$.title").value(DATA_CONFLICT.title))
+                .andExpect(jsonPath("$.detail").value(MENU_ALREADY_EXISTS.formatted(restaurantId)));
     }
 }
