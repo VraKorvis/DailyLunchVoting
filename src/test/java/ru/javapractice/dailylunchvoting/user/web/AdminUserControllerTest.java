@@ -34,7 +34,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     private UserRepository repository;
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_EMAIL)
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + ADMIN_ID))
                 .andExpect(status().isOk())
@@ -44,7 +44,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_EMAIL)
     void getNotFound() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + NOT_FOUND))
                 .andDo(print())
@@ -52,7 +52,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_EMAIL)
     void getByEmail() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "by-email?email=" + ADMIN.getEmail()))
                 .andExpect(status().isOk())
@@ -61,7 +61,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_EMAIL)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + USER_1_ID))
                 .andDo(print())
@@ -70,7 +70,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_EMAIL)
     void enableNotFound() throws Exception {
         perform(MockMvcRequestBuilders.patch(REST_URL_SLASH + NOT_FOUND)
                 .param("enabled", "false")
@@ -87,14 +87,14 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = USER_1_MAIL)
+    @WithUserDetails(value = USER_1_EMAIL)
     void getForbidden() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_EMAIL)
     void update() throws Exception {
         var updated = getUpdated(USER_1);
         updated.setId(null);
@@ -108,7 +108,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_EMAIL)
     void createWithLocation() throws Exception {
         var newUser = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
@@ -124,7 +124,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_EMAIL)
     void getAll() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
@@ -133,7 +133,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_EMAIL)
     void enable() throws Exception {
         perform(MockMvcRequestBuilders.patch(REST_URL_SLASH + USER_1_ID)
                 .param("enabled", "false")
@@ -145,7 +145,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_EMAIL)
     void createInvalid() throws Exception {
         var invalid = new User(null, null, "", "newPass", Role.USER, Role.ADMIN);
         perform(MockMvcRequestBuilders.post(REST_URL)
@@ -156,7 +156,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_EMAIL)
     void updateInvalid() throws Exception {
         var invalid = new User(USER_1);
         invalid.setName("");
@@ -168,7 +168,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_EMAIL)
     void updateHtmlUnsafe() throws Exception {
         var updated = new User(USER_1);
         updated.setName("<script>alert(123)</script>");
@@ -180,10 +180,10 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_EMAIL)
     void updateDuplicate() throws Exception {
         var updated = new User(USER_1);
-        updated.setEmail(ADMIN_MAIL);
+        updated.setEmail(ADMIN_EMAIL);
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + USER_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(updated, "password")))
@@ -193,9 +193,9 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_EMAIL)
     void createDuplicate() throws Exception {
-        var expected = new User(null, "New", USER_1_MAIL, "newPass", Role.USER, Role.ADMIN);
+        var expected = new User(null, "New", USER_1_EMAIL, "newPass", Role.USER, Role.ADMIN);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(expected, "newPass")))

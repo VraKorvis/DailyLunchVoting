@@ -54,7 +54,7 @@ class VoteControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithMockUser(value = USER_1_MAIL)
+    @WithMockUser(value = USER_1_EMAIL)
     void getTodayVote() throws Exception {
 
         VoteTo voteTo = voteMapper.toVoteTo(USER1_TODAY_VOTE);
@@ -67,7 +67,7 @@ class VoteControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithMockUser(value = USER_1_MAIL)
+    @WithMockUser(value = USER_1_EMAIL)
     void voteSuccess() throws Exception {
         int restaurantId = RESTAURANT_A_ID;
         VoteResult voteResult = new VoteResult(true, "Your vote has been successfully updated", restaurantId);

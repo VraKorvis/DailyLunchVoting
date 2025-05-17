@@ -55,7 +55,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = USER_1_MAIL)
+    @WithUserDetails(value = USER_1_EMAIL)
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
@@ -70,7 +70,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = USER_1_MAIL)
+    @WithUserDetails(value = USER_1_EMAIL)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL))
                 .andDo(print())
@@ -96,9 +96,9 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = USER_1_MAIL)
+    @WithUserDetails(value = USER_1_EMAIL)
     void update() throws Exception {
-        var updatedTo = new UserTo(null, "newName", USER_1_MAIL, "newPassword");
+        var updatedTo = new UserTo(null, "newName", USER_1_EMAIL, "newPassword");
         perform(MockMvcRequestBuilders.put(REST_URL).contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())
@@ -120,7 +120,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = USER_1_MAIL)
+    @WithUserDetails(value = USER_1_EMAIL)
     void updateInvalid() throws Exception {
         var updatedTo = new UserTo(null, null, "password", null);
         perform(MockMvcRequestBuilders.put(REST_URL)
@@ -131,9 +131,9 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = USER_1_MAIL)
+    @WithUserDetails(value = USER_1_EMAIL)
     void updateDuplicate() throws Exception {
-        var updatedTo = new UserTo(null, "newName", ADMIN_MAIL, "newPassword");
+        var updatedTo = new UserTo(null, "newName", ADMIN_EMAIL, "newPassword");
         perform(MockMvcRequestBuilders.put(REST_URL).contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())

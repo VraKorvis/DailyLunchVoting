@@ -20,38 +20,37 @@ public class UserData {
     public static final int GUEST_ID = START_SEQ + 3;
     public static final int NOT_FOUND = 10;
 
-    public static final String USER_1_MAIL = "user1@gmail.com";
-    public static final String USER_2_MAIL = "user2@gmail.com";
-    public static final String ADMIN_MAIL = "admin@gmail.com";
-    public static final String GUEST_MAIL = "guest@gmail.com";
+    public static final String USER_1_EMAIL = "user1@gmail.com";
+    public static final String USER_2_EMAIL = "user2@gmail.com";
+    public static final String ADMIN_EMAIL = "admin@gmail.com";
+    public static final String GUEST_EMAIL = "guest@gmail.com";
 
     public static final String USER_PASS = "{noop}user";
     public static final String ADMIN_PASS = "{noop}admin";
 
-    public static final User USER_1 = new User(USER_1_ID, "User1", USER_1_MAIL, USER_PASS, Role.USER);
-    public static final User USER_2 = new User(USER_2_ID, "User2", USER_2_MAIL, ADMIN_PASS, Role.USER);
-    public static final User ADMIN = new User(ADMIN_ID, "Admin", ADMIN_MAIL, "admin", Role.ADMIN);
-    public static final User GUEST = new User(GUEST_ID, "Guest", GUEST_MAIL, "guest");
-    public static final String USER_1_EMAIL = "user1@yandex.ru";
+    public static final User USER_1 = new User(USER_1_ID, "User1", USER_1_EMAIL, USER_PASS, Role.USER);
+    public static final User USER_2 = new User(USER_2_ID, "User2", USER_2_EMAIL, ADMIN_PASS, Role.USER);
+    public static final User ADMIN = new User(ADMIN_ID, "Admin", ADMIN_EMAIL, "admin", Role.ADMIN);
+    public static final User GUEST = new User(GUEST_ID, "Guest", GUEST_EMAIL, "guest");
 
     private UserData() {
     }
 
     public static User getNew() {
-        return new User(null, "New", "new@gmail.com", "newPass", false, new Date(), Collections.singleton(Role.USER));
+        return new User(null, "New", "new@gmail.com", "test-pass", false, new Date(), Collections.singleton(Role.USER));
     }
 
     public static User getUpdated(User u) {
         var updated = new User(u);
         updated.setEmail("update@gmail.com");
         updated.setName("UpdatedName");
-        updated.setPassword("newPass");
+        updated.setPassword("test-pass");
         updated.setEnabled(false);
         updated.setRoles(Set.of(Role.ADMIN));
         return updated;
     }
 
-    public static String jsonWithPassword(User user, String passw) {
-        return JsonUtil.writeAdditionProps(user, "password", passw);
+    public static String jsonWithPassword(User user, String pass) {
+        return JsonUtil.writeAdditionProps(user, "password", pass);
     }
 }

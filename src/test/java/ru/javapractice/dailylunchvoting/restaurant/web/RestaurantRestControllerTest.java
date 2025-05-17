@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
-import static ru.javapractice.dailylunchvoting.user.UserData.USER_1_MAIL;
+import static ru.javapractice.dailylunchvoting.user.UserData.USER_1_EMAIL;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
@@ -28,7 +28,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
     private RestaurantMapperService restaurantMapperService;
 
     @Test
-    @WithUserDetails(value = USER_1_MAIL)
+    @WithUserDetails(value = USER_1_EMAIL)
     void getAllWithMenuForToday() throws Exception {
         perform(MockMvcRequestBuilders.get(RestaurantRestController.REST_URL + "/with-assigned-menu"))
                 .andDo(print())
