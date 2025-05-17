@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javapractice.dailylunchvoting.AbstractControllerTest;
 import ru.javapractice.dailylunchvoting.app.config.AppConfig;
@@ -37,7 +38,7 @@ import static ru.javapractice.dailylunchvoting.vote.VoteData.USER1_TODAY_VOTE;
 class VoteControllerTest extends AbstractControllerTest {
 
     @Autowired
-    VoteMapper voteMapper;
+    private VoteMapper voteMapper;
     @Autowired
     private VoteService voteService;
 
@@ -54,9 +55,8 @@ class VoteControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithMockUser(value = USER_1_EMAIL)
+    @WithUserDetails(value = USER_1_EMAIL)
     void getTodayVote() throws Exception {
-
         VoteTo voteTo = voteMapper.toVoteTo(USER1_TODAY_VOTE);
 
         when(voteService.findByUserIdForToday(USER_1_ID)).thenReturn(voteTo);
@@ -67,7 +67,8 @@ class VoteControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithMockUser(value = USER_1_EMAIL)
+    @WithUserDetails(value = USER_1_EMAIL)
+    @WithMockUser
     void voteSuccess() throws Exception {
         int restaurantId = RESTAURANT_A_ID;
         VoteResult voteResult = new VoteResult(true, "Your vote has been successfully updated", restaurantId);

@@ -87,7 +87,7 @@ public class AdminUserController extends AbstractUserController {
     })
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody User user, @PathVariable int id) {
+    public void update(@PathVariable int id, @Valid @RequestBody User user) {
         log.info("update {} with id={}", user, id);
         assureIdConsistent(user, id);
         repository.prepareAndSave(user);

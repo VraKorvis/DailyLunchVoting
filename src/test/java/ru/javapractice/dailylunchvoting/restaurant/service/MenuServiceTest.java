@@ -1,6 +1,5 @@
 package ru.javapractice.dailylunchvoting.restaurant.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +8,8 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.javapractice.dailylunchvoting.AbstractIntegrationServiceTest;
+import ru.javapractice.dailylunchvoting.AbstractUnitServiceTest;
 import ru.javapractice.dailylunchvoting.app.config.ConstConfig;
 import ru.javapractice.dailylunchvoting.common.exception.ConflictException;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
@@ -28,7 +29,6 @@ import ru.javapractice.dailylunchvoting.util.TimeProvider;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,9 +39,7 @@ import static org.mockito.Mockito.when;
 import static ru.javapractice.dailylunchvoting.restaurant.MenuItemData.BURGER;
 import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
 
-@Slf4j
-@ExtendWith(MockitoExtension.class)
-public class MenuServiceTest {
+public class MenuServiceTest extends AbstractUnitServiceTest {
 
     @Mock
     private MenuRepository menuRepository;

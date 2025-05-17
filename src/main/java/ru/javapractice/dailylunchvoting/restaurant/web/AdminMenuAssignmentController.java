@@ -39,7 +39,7 @@ public class AdminMenuAssignmentController {
     }
 
     @PostMapping("/{id}/menu")
-    public ResponseEntity<AssignedMenuTo> createAndAssignMenuToRestaurant(@Valid @RequestBody AssignedMenuTo menuTo, @PathVariable int id) {
+    public ResponseEntity<AssignedMenuTo> createAndAssignMenuToRestaurant(@PathVariable int id, @Valid @RequestBody AssignedMenuTo menuTo) {
 
         ValidationUtil.checkIsNew(menuTo);
         var createdMenu = menuService.create(menuTo, id);
@@ -53,7 +53,7 @@ public class AdminMenuAssignmentController {
 
     @PutMapping("/{id}/menu")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateAssignedMenu(@PathVariable int id, @RequestBody AssignedMenuTo menuTo) {
+    public void updateAssignedMenu(@PathVariable int id, @Valid @RequestBody AssignedMenuTo menuTo) {
         menuService.update(menuTo, id);
     }
 }

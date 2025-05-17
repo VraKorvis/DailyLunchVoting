@@ -2,17 +2,14 @@ package ru.javapractice.dailylunchvoting.restaurant.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import ru.javapractice.dailylunchvoting.AbstractIntegrationServiceTest;
 import ru.javapractice.dailylunchvoting.restaurant.model.MenuItem;
 
 import java.util.List;
 
 import static ru.javapractice.dailylunchvoting.restaurant.MenuItemData.*;
 
-@SpringBootTest
-@Transactional
-public class MenuItemServiceTest {
+public class MenuItemServiceTest extends AbstractIntegrationServiceTest {
 
     @Autowired
     private MenuItemService service;

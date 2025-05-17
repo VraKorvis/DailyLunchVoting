@@ -1,6 +1,5 @@
 package ru.javapractice.dailylunchvoting.user.web;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +34,6 @@ import static ru.javapractice.dailylunchvoting.user.UserData.*;
         AppConfig.class,
         SecurityTestConfig.class,
 })
-@Slf4j
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class AdminUserControllerCacheTest extends AbstractControllerTest {
 
     public static final String REST_URL = AdminUserController.REST_URL;

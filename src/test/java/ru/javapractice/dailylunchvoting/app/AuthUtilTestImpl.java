@@ -11,16 +11,17 @@ import ru.javapractice.dailylunchvoting.user.model.User;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
+import static ru.javapractice.dailylunchvoting.user.UserData.*;
 
 @Component
 @Profile("test")
 @Slf4j
 public class AuthUtilTestImpl implements AuthUserProvider {
-    private static final User DEFAULT_USER = new User(UserData.USER_1);
+    private static final User DEFAULT_USER = new User(USER_1);
 
     private static final Map<String, User> TEST_USERS = Map.of(
-            UserData.USER_1.getEmail(), DEFAULT_USER,
-            UserData.ADMIN.getEmail(), new User(UserData.ADMIN)
+            USER_1_EMAIL, DEFAULT_USER,
+            ADMIN_EMAIL, new User(ADMIN)
     );
 
     @Override

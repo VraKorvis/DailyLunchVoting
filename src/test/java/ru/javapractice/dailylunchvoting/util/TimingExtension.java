@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.*;
 import org.springframework.util.StopWatch;
 
-@Slf4j(topic = "result")
+@Slf4j
 public class TimingExtension implements
         BeforeTestExecutionCallback, AfterTestExecutionCallback, BeforeAllCallback, AfterAllCallback {
 
@@ -18,7 +18,7 @@ public class TimingExtension implements
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) {
         String testName = extensionContext.getDisplayName();
-        log.info("\nStart {}", testName);
+        log.debug("\nStart {}", testName);
         stopWatch.start(testName);
     }
 
@@ -29,7 +29,7 @@ public class TimingExtension implements
 
     @Override
     public void afterAll(ExtensionContext extensionContext) {
-        log.info("""
+        log.debug("""
                 
                 {}
                 """, stopWatch.prettyPrint());

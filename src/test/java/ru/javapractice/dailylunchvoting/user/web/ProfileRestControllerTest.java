@@ -34,8 +34,6 @@ import static ru.javapractice.dailylunchvoting.user.web.ProfileController.REST_U
 @AutoConfigureMockMvc
 @Transactional
 @Import(TestCacheConfig.class)
-@Slf4j
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class ProfileRestControllerTest extends AbstractControllerTest {
     @Autowired
     private CacheManager cacheManager;

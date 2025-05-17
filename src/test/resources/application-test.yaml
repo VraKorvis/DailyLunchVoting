@@ -2,3 +2,14 @@ spring:
   cache:
     type: none
 
+logging:
+  level:
+    root: WARN
+    ru.javapractice.dailylunchvoting: DEBUG
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
+    org.springframework.jdbc.datasource.init.ScriptUtils: DEBUG
+    org.springframework.test.context.cache: DEBUG
+    org.hibernate.SQL: DEBUG
+    com.github.benmanes.caffeine.cache: DEBUG
+    org.springframework.cache.interceptor.CacheInterceptor: DEBUG
+    org.springframework.cache.caffeine.CaffeineCache: DEBUG

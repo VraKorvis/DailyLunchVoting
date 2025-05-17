@@ -12,7 +12,6 @@ import ru.javapractice.dailylunchvoting.restaurant.repository.RestaurantReposito
 import ru.javapractice.dailylunchvoting.vote.model.VoteResult;
 import ru.javapractice.dailylunchvoting.vote.repository.VoteRepository;
 import ru.javapractice.dailylunchvoting.restaurant.to.VoteTo;
-import ru.javapractice.dailylunchvoting.user.model.User;
 import ru.javapractice.dailylunchvoting.user.repository.UserRepository;
 import ru.javapractice.dailylunchvoting.util.OperationTimeChecker;
 
@@ -30,8 +29,8 @@ public class VoteService {
     private final VoteMapper voteMapper;
     private final TimeProvider timeProvider;
 
-    public List<Vote> getAllByUserId(int userId) {
-        return voteRepository.findAllByUserId(userId);
+    public List<VoteTo> findAllByUserId(int userId) {
+        return voteMapper.toVoteTos(voteRepository.findAllByUserId(userId));
     }
 
     public List<VoteTo> getAllForToday() {

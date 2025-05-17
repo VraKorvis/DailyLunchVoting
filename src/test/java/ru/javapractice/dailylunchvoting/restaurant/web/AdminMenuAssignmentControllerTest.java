@@ -1,6 +1,5 @@
 package ru.javapractice.dailylunchvoting.restaurant.web;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,6 @@ import static ru.javapractice.dailylunchvoting.restaurant.RestaurantMenuData.*;
         AppConfig.class,
         SecurityTestConfig.class,
 })
-@Slf4j
 class AdminMenuAssignmentControllerTest extends AbstractControllerTest {
     private static final String REST_URL = AdminMenuAssignmentController.REST_URL + '/';
 
