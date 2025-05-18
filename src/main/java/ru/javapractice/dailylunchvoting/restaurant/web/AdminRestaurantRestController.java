@@ -3,6 +3,7 @@ package ru.javapractice.dailylunchvoting.restaurant.web;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantTo;
 import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantWithAssignedMenuTo;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 import static ru.javapractice.dailylunchvoting.restaurant.web.AdminRestaurantRestController.REST_URL;
@@ -38,9 +40,14 @@ public class AdminRestaurantRestController {
         return service.get(id);
     }
 
-    @GetMapping("/without-assigned-menu")
-    public List<RestaurantWithAssignedMenuTo> getAllWithoutAssignedMenuForToday() {
+    @GetMapping("/without-assigned-menu/today")
+    public List<RestaurantTo> getAllWithoutAssignedMenuForToday() {
         return service.findAllWithoutAssignedMenuForToday();
+    }
+
+    @GetMapping("/without-assigned-menu")
+    public List<RestaurantTo> getAllWithoutAssignedMenuForDate(@RequestParam("date") LocalDate date) {
+        return service.findAllWithoutAssignedMenuForDate(date);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

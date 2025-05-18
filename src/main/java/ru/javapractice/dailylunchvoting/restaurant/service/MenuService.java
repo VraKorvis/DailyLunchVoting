@@ -69,10 +69,8 @@ public class MenuService {
     }
 
     private void checkPriceIsNull(List<AssignedMenuItem> assignments) {
-        assignments.forEach(assignedMenuItem -> {
-            Optional.ofNullable(assignedMenuItem.getPrice())
-                    .orElseThrow(() -> new IllegalArgumentException(MENU_ITEM_PRICE_NULL.formatted(assignedMenuItem.getMenuItem().getId())));
-        });
+        assignments.forEach(assignedMenuItem -> Optional.ofNullable(assignedMenuItem.getPrice())
+                .orElseThrow(() -> new IllegalArgumentException(MENU_ITEM_PRICE_NULL.formatted(assignedMenuItem.getMenuItem().getId()))));
     }
 
     @Transactional
