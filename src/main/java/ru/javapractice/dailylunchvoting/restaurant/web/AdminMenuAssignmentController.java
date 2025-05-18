@@ -27,17 +27,6 @@ public class AdminMenuAssignmentController {
     private final MenuMapperService menuMapper;
     private final MenuService menuService;
 
-    @GetMapping("/{id}/menu")
-    public ResponseEntity<AssignedMenuTo> getMenu(@PathVariable int id) {
-        var menu = menuService.get(id);
-        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/{id}/menu")
-                .buildAndExpand(id)
-                .toUri();
-
-        return ResponseEntity.created(uriOfNewResource).body(menuMapper.toAssignedMenuTo(menu));
-    }
-
     @PostMapping("/{id}/menu")
     public ResponseEntity<AssignedMenuTo> createAndAssignMenuToRestaurant(@PathVariable int id, @Valid @RequestBody AssignedMenuTo menuTo) {
 

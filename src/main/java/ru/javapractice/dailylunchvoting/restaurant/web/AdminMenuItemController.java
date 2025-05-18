@@ -36,9 +36,15 @@ public class AdminMenuItemController {
         return ResponseEntity.ok(item);
     }
 
+    @GetMapping
+    public List<MenuItem> getAll() {
+        log.info("get all menu items");
+        return menuItemService.findAll();
+    }
+
     @GetMapping("/page")
     public List<MenuItem> getMenuItemsPage(@RequestParam int page, @RequestParam int size) {
-        log.info("get users page {} with size {}", page, size);
+        log.info("get menu items page {} with size {}", page, size);
         Pageable pageable = PageRequest.of(page, size);
         return menuItemService.findAll(pageable).getContent();
     }

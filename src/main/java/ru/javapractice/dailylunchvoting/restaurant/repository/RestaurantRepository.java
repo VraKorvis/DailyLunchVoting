@@ -13,9 +13,9 @@ import java.util.List;
 public interface RestaurantRepository extends BaseRepository<Restaurant> {
 
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m WHERE m.menuDate=:menuDate ORDER BY r.name ASC")
-    List<Restaurant> findAllWithAssignedMenuForToday(@Param("menuDate") LocalDate menuDate);
+    List<Restaurant> findAllWithAssignedMenuForDate(@Param("menuDate") LocalDate menuDate);
 
     @Query("SELECT DISTINCT r FROM Restaurant r LEFT JOIN FETCH r.menus m WHERE m.menuDate IS NULL OR m.menuDate=:menuDate")
-    List<Restaurant> findAllWithoutAssignedMenuForToday(@Param("menuDate") LocalDate menuDate);
+    List<Restaurant> findAllWithoutAssignedMenuForDate(@Param("menuDate") LocalDate menuDate);
 
 }

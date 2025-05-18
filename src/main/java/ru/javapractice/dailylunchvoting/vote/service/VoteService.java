@@ -20,6 +20,8 @@ import ru.javapractice.dailylunchvoting.util.OperationTimeChecker;
 import java.time.LocalDate;
 import java.util.List;
 
+import static ru.javapractice.dailylunchvoting.common.MessageConstants.*;
+
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -45,7 +47,8 @@ public class VoteService {
 
     public Page<VoteTo> findAllForToday(Pageable pageable) {
         Page<Vote> page = voteRepository.findAllByVotedAtOrderByVotedAtDesc(LocalDate.now(), pageable);
-        return page.map(voteMapper::toVoteTo);    }
+        return page.map(voteMapper::toVoteTo);
+    }
 
     public List<Vote> getAllWithRestaurantByUserId(int userId) {
         return voteRepository.findAllByUserId(userId);
@@ -60,29 +63,29 @@ public class VoteService {
     @Transactional
     public VoteResult vote(int restaurantId, int userId) {
 
-        var refRestaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new NotFoundException("Restaurant with id=" + restaurantId + " not found"));
+        var restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new NotFoundException(RESTAURANT_NOT_FOUND.formatted(restaurantId)));
 
         var refUser = userRepository.getReferenceById(userId);
 
         return voteRepository.findByUserIdForToday(userId)
                 .map(existingVote -> {
                     if (!OperationTimeChecker.canUpdateVote(existingVote.getVotedAt(), timeProvider)) {
-                        return createVoteResult(false, "Voting period has ended, you can no longer change your vote", restaurantId);
+                        return createVoteResult(false, VOTING_ENDED_CANNOT_CHANGE, restaurantId);
                     }
-                    existingVote.setRestaurant(refRestaurant);
-                    return new VoteResult(true, "Your vote has been successfully updated", restaurantId);
+                    existingVote.setRestaurant(restaurant);
+                    return createVoteResult(true, VOTE_UPDATED, restaurantId);
                 })
                 .orElseGet(() -> {
                     if (!OperationTimeChecker.canVote(timeProvider)) {
-                        return createVoteResult(false, "Voting period has ended, you can no longer vote", restaurantId);
+                        return createVoteResult(false, VOTING_ENDED_CANNOT_VOTE, restaurantId);
                     }
                     var vote = new Vote();
                     vote.setUser(refUser);
                     vote.setVotedAt(LocalDate.now());
-                    vote.setRestaurant(refRestaurant);
+                    vote.setRestaurant(restaurant);
                     voteRepository.save(vote);
-                    return createVoteResult(true, "Your vote has been successfully accepted", restaurantId);
+                    return createVoteResult(true, VOTE_ACCEPTED, restaurantId);
                 });
     }
 

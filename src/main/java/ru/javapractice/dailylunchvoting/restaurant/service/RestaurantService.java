@@ -63,11 +63,11 @@ public class RestaurantService {
     }
 
     public List<RestaurantWithAssignedMenuTo> findAllWithAssignedMenuForDate(LocalDate date) {
-        return restaurantMapperService.toWithAssignedMenuTos(repository.findAllWithAssignedMenuForToday(date));
+        return restaurantMapperService.toWithAssignedMenuTos(repository.findAllWithAssignedMenuForDate(date));
     }
 
     public List<RestaurantWithAssignedMenuTo> findAllWithoutAssignedMenuForToday() {
-        return restaurantMapperService.toWithAssignedMenuTos(repository.findAllWithoutAssignedMenuForToday(LocalDate.now()));
+        return restaurantMapperService.toWithAssignedMenuTos(repository.findAllWithoutAssignedMenuForDate(LocalDate.now()));
     }
 
 }

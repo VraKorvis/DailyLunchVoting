@@ -92,7 +92,7 @@ public class MenuService {
 
     public Menu fetchMenuOrThrow(int restaurantId, LocalDate menuDate) {
         return menuRepository.findByRestaurantIdAndMenuDate(restaurantId, menuDate)
-                .orElseThrow(() -> new NotFoundException(MENU_NOT_ASSIGNED.formatted(restaurantId)));
+                .orElseThrow(() -> new NotFoundException(MENU_NOT_ASSIGNED.formatted(restaurantId, menuDate)));
     }
 
     private void replaceAssignments(Menu assignedMenu, List<AssignedMenuItem> assignments) {

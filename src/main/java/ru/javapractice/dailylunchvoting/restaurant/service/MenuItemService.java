@@ -38,7 +38,7 @@ public class MenuItemService {
     }
 
     @Cacheable(value = CacheNames.MENU_ITEMS_LIST)
-    public List<MenuItem> getAll() {
+    public List<MenuItem> findAll() {
         return repository.findAll();
     }
 

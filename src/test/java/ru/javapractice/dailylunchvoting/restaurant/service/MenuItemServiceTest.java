@@ -29,8 +29,8 @@ public class MenuItemServiceTest extends AbstractIntegrationServiceTest {
     }
 
     @Test
-    public void getAll() {
-        List<MenuItem> items = service.getAll();
+    public void findAll() {
+        List<MenuItem> items = service.findAll();
         MATCHER.assertMatch(items, getAllSorted());
     }
 

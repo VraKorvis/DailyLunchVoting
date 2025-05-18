@@ -31,7 +31,7 @@ public class RestaurantMapperService {
         );
     }
 
-    public List<RestaurantWithAssignedMenuTo> toWithAssignedMenuTos(List<Restaurant> restaurants) {
+    public List<RestaurantWithAssignedMenuTo> toWithAssignedMenuTos(@NonNull List<Restaurant> restaurants) {
         return restaurants.stream()
                 .map(this::toWithAssignedMenuTo)
                 .toList();
