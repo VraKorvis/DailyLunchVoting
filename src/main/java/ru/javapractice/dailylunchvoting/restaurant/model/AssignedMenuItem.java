@@ -2,10 +2,11 @@ package ru.javapractice.dailylunchvoting.restaurant.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Persistable;
+import ru.javapractice.dailylunchvoting.common.validation.NoHtml;
 
 import java.math.BigDecimal;
 
@@ -15,7 +16,12 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Entity
 @Table(name = "menu_item_assignment")
-public class AssignedMenuItem {
+@Slf4j
+public class AssignedMenuItem implements Persistable<AssignmentMenuItemId> {
+
+    @Version
+    @Column(name = "version")
+    private Integer version;
 
     @EmbeddedId
     private AssignmentMenuItemId id;
@@ -26,10 +32,10 @@ public class AssignedMenuItem {
     @JsonBackReference
     private Menu menu;
 
-    @ManyToOne
-    @MapsId("menuItemId")
-    @JoinColumn(name = "menu_item_id")
-    private MenuItem menuItem;
+    @NotBlank
+    @Size(min = 2, max = 128)
+    @NoHtml
+    protected String name;
 
     @DecimalMin(value = "0.01", message = "Price must be greater than zero")
     @DecimalMax(value = "100000", message = "Price cannot be greater than 10000")
@@ -38,12 +44,17 @@ public class AssignedMenuItem {
 
     public AssignedMenuItem(Menu menu, MenuItem menuItem, BigDecimal price) {
         this.menu = menu;
-        this.menuItem = menuItem;
+        this.name = menuItem.getName();
         this.price = price;
-        this.id = createAssignedMenuItemId(menu, menuItem);
+        this.id = createAssignedMenuItemId(menu, menuItem.getId());
     }
 
-    private AssignmentMenuItemId createAssignedMenuItemId(Menu menu, MenuItem menuItem) {
-        return new AssignmentMenuItemId(menu.getId(), menuItem.getId(), menu.getMenuDate());
+    private AssignmentMenuItemId createAssignedMenuItemId(Menu menu, Integer id) {
+        return new AssignmentMenuItemId(menu.getId(), id, menu.getMenuDate());
+    }
+
+    @Override
+    public boolean isNew() {
+        return this.version == null;
     }
 }

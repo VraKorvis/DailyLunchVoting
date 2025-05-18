@@ -39,7 +39,7 @@ CREATE TABLE restaurant
 CREATE TABLE vote
 (
     id            INTEGER DEFAULT NEXT VALUE FOR global_seq PRIMARY KEY,
-    voted_at     DATE    DEFAULT CURRENT_DATE NOT NULL,
+    voted_at      DATE    DEFAULT CURRENT_DATE NOT NULL,
     user_id       INTEGER                      NOT NULL,
     restaurant_id INTEGER                      NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
@@ -65,11 +65,13 @@ CREATE TABLE menu_item
 
 CREATE TABLE menu_item_assignment
 (
-    menu_date   DATE           NOT NULL,
-    menu_id     INTEGER        NOT NULL,
+    menu_date    DATE           NOT NULL,
+    menu_id      INTEGER        NOT NULL,
     menu_item_id INTEGER        NOT NULL,
-    price       DECIMAL(10, 2) NOT NULL,
-    PRIMARY KEY (menu_id, menu_item_id, menu_date),
+    name         VARCHAR(255)   NOT NULL,
+    price        DECIMAL(10, 2) NOT NULL,
+    version      INTEGER DEFAULT 0,
+    PRIMARY KEY (menu_id, menu_item_id),
     FOREIGN KEY (menu_id) REFERENCES menu (id),
     FOREIGN KEY (menu_item_id) REFERENCES menu_item (id)
 );

@@ -10,8 +10,8 @@ public class MessageConstants {
     public static final String RESTAURANT_NOT_FOUND = "Restaurant with id=%d not found";
 
     public static final String MENU_ITEMS_NOT_FOUND = "MenuItems not found for IDs: %s";
-    public static final String MENU_ITEM_PRICE_NULL = "Price must not be null (menuItem id=%d)";
-
+    public static final String MENU_ITEM_NOT_FOUND = "MenuItem with id=%d not found";
+    public static final String MENU_ITEM_PRICE_NULL = "Price must not be null (menuItem id=%s)";
     public static final String CANNOT_MODIFY_PAST_DATE = "Cannot create/edit menu for past date %s";
     public static final String CANNOT_MODIFY_AFTER_VOTING = "Menu for today cannot be modified or added after %s";
 

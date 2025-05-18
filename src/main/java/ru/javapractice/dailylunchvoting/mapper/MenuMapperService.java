@@ -11,6 +11,7 @@ import ru.javapractice.dailylunchvoting.restaurant.to.PricedMenuItemTo;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -26,8 +27,8 @@ public class MenuMapperService {
 
     public PricedMenuItemTo toPricedMenuItemTo(@NonNull AssignedMenuItem item) {
         return new PricedMenuItemTo(
-                item.getMenuItem().getId(),
-                item.getMenuItem().getName(),
+                Objects.requireNonNull(item.getId()).getMenuItemId(),
+                item.getName(),
                 item.getPrice()
         );
     }

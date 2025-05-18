@@ -24,7 +24,7 @@ public class Menu extends BaseEntity {
     @Column(name = "menu_date", nullable = false)
     private LocalDate menuDate;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     @BatchSize(size = 20)
     @JsonManagedReference
     private List<AssignedMenuItem> assignedMenuItems;

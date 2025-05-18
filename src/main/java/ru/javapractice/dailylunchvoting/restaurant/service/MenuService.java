@@ -12,6 +12,7 @@ import ru.javapractice.dailylunchvoting.app.config.ConstConfig;
 import ru.javapractice.dailylunchvoting.common.exception.ConflictException;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
 import ru.javapractice.dailylunchvoting.restaurant.model.*;
+import ru.javapractice.dailylunchvoting.restaurant.repository.AssignedMenuItemRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.MenuItemRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.MenuRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.RestaurantRepository;
@@ -22,8 +23,6 @@ import ru.javapractice.dailylunchvoting.util.TimeProvider;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static ru.javapractice.dailylunchvoting.common.MessageConstants.*;
 
@@ -32,9 +31,11 @@ import static ru.javapractice.dailylunchvoting.common.MessageConstants.*;
 @Slf4j
 public class MenuService {
 
+    private final MenuItemService menuItemService;
     private final MenuRepository menuRepository;
     private final RestaurantRepository restaurantRepository;
     private final MenuItemRepository menuItemRepository;
+    private final AssignedMenuItemRepository assignedMenuItemRepository;
     private final TimeProvider timeProvider;
 
     @Cacheable("todayMenus")
@@ -53,24 +54,26 @@ public class MenuService {
 
         var targetDate = menuTo.getMenuDate();
         ensureMenuEditingPeriod(targetDate);
-        var restaurant = findRestaurantById(restaurantId);
+        var restaurant = restaurantRepository.getExisted(restaurantId);
 
         if (existsMenu(restaurantId, targetDate)) {
             throw new ConflictException(MENU_ALREADY_EXISTS.formatted(restaurantId));
         }
 
         var newMenu = new Menu(null, targetDate, restaurant, new ArrayList<>());
-        List<AssignedMenuItem> assignments = prepareAssignmentsFromTo(newMenu, menuTo);
+        var savedMenu = menuRepository.save(newMenu);
+        List<AssignedMenuItem> assignments = prepareAssignmentsFromTo(savedMenu, menuTo);
         checkPriceIsNull(assignments);
+        assignedMenuItemRepository.saveAll(assignments);
 
-        newMenu.setAssignedMenuItems(assignments);
-
-        return menuRepository.save(newMenu);
+        savedMenu.getAssignedMenuItems().clear();
+        savedMenu.getAssignedMenuItems().addAll(assignments);
+        return savedMenu;
     }
 
     private void checkPriceIsNull(List<AssignedMenuItem> assignments) {
         assignments.forEach(assignedMenuItem -> Optional.ofNullable(assignedMenuItem.getPrice())
-                .orElseThrow(() -> new IllegalArgumentException(MENU_ITEM_PRICE_NULL.formatted(assignedMenuItem.getMenuItem().getId()))));
+                .orElseThrow(() -> new IllegalArgumentException(MENU_ITEM_PRICE_NULL.formatted(assignedMenuItem.getPrice()))));
     }
 
     @Transactional
@@ -111,13 +114,6 @@ public class MenuService {
         }
     }
 
-    private Restaurant findRestaurantById(int restaurantId) {
-        if (!restaurantRepository.existsById(restaurantId)) {
-            throw new NotFoundException(RESTAURANT_NOT_FOUND.formatted(restaurantId));
-        }
-        return restaurantRepository.getReferenceById(restaurantId);
-    }
-
     private boolean existsMenu(int restaurantId, LocalDate menuDate) {
         return menuRepository.existsByRestaurantIdAndMenuDate(restaurantId, menuDate);
     }
@@ -128,24 +124,18 @@ public class MenuService {
                 .map(PricedMenuItemTo::getId)
                 .toList();
 
-        var dbItems = menuItemRepository.findAllById(ids);
+        Map<Integer, MenuItem> itemsById = menuItemService.getItemMap();
+        var notFoundIds = ids.stream()
+                .filter(id -> !itemsById.containsKey(id))
+                .toList();
 
-        if (dbItems.size() != ids.size()) {
-            var foundIds = dbItems.stream()
-                    .map(MenuItem::getId)
-                    .collect(Collectors.toSet());
-            var notFoundIds = ids.stream()
-                    .filter(id -> !foundIds.contains(id))
-                    .toList();
+        if (!notFoundIds.isEmpty()) {
             throw new NotFoundException(MENU_ITEMS_NOT_FOUND.formatted(notFoundIds));
         }
 
-        Map<Integer, MenuItem> dbItemsById = dbItems.stream()
-                .collect(Collectors.toMap(MenuItem::getId, Function.identity()));
-
         return itemTos.stream()
                 .map(dto -> {
-                    MenuItem menuItem = dbItemsById.get(dto.getId());
+                    MenuItem menuItem = itemsById.get(dto.getId());
                     return new AssignedMenuItem(menu, menuItem, dto.getPrice());
                 })
                 .toList();

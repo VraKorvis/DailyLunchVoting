@@ -1,10 +1,17 @@
-DELETE FROM vote;
-DELETE FROM menu_item_assignment;
-DELETE FROM menu_item;
-DELETE FROM menu;
-DELETE FROM restaurant;
-DELETE FROM user_role;
-DELETE FROM users;
+DELETE
+FROM vote;
+DELETE
+FROM menu_item_assignment;
+DELETE
+FROM menu_item;
+DELETE
+FROM menu;
+DELETE
+FROM restaurant;
+DELETE
+FROM user_role;
+DELETE
+FROM users;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO users (name, email, password)
@@ -40,18 +47,18 @@ VALUES (CURRENT_DATE, 100004),
        (CURRENT_DATE, 100005),
        ('2025-03-20', 100006);
 
-INSERT INTO menu_item_assignment (menu_id, menu_item_id, menu_date, price)
-VALUES (100017, 100007, CURRENT_DATE, 450),
-       (100017, 100008, CURRENT_DATE, 800),
-       (100017, 100009, CURRENT_DATE, 250),
-       (100017, 100010, CURRENT_DATE, 350),
-       (100018, 100011, CURRENT_DATE, 200),
-       (100018, 100012, CURRENT_DATE, 150),
-       (100019, 100013, '2025-03-20', 900),
-       (100019, 100014, '2025-03-20', 750),
-       (100019, 100010, '2025-03-20', 400),
-       (100019, 100016, '2025-03-20', 100),
-       (100019, 100012, '2025-03-20', 150);
+INSERT INTO menu_item_assignment (menu_id, menu_item_id, menu_date, name, price)
+VALUES (100017, 100007, CURRENT_DATE, 'Burger', 450),
+       (100017, 100008, CURRENT_DATE, 'Pizza', 800),
+       (100017, 100009, CURRENT_DATE, 'Salad', 250),
+       (100017, 100010, CURRENT_DATE, 'Dessert', 350),
+       (100018, 100011, CURRENT_DATE, 'Soup', 200),
+       (100018, 100012, CURRENT_DATE, 'Eggs', 150),
+       (100019, 100013, '2025-03-20', 'Steak', 900),
+       (100019, 100014, '2025-03-20', 'Sushi', 750),
+       (100019, 100010, '2025-03-20', 'Dessert', 400),
+       (100019, 100016, '2025-03-20', 'Coffee', 100),
+       (100019, 100012, '2025-03-20', 'Eggs', 150);
 
 INSERT INTO vote (voted_at, user_id, restaurant_id)
 VALUES (CURRENT_DATE, '100000', '100005'),

@@ -34,26 +34,30 @@ public class CacheManagerFactory {
                 .expireAfterWrite(1, TimeUnit.MINUTES)
                 .build());
 
+        cacheManager.registerCustomCache(MENU_ITEMS_MAP, Caffeine.newBuilder()
+                .maximumSize(1)
+                .expireAfterAccess(1, TimeUnit.MINUTES)
+                .build());
+
         cacheManager.registerCustomCache(USERS_PAGE, Caffeine.newBuilder()
                 .maximumSize(100)
                 .expireAfterAccess(1, TimeUnit.MINUTES)
                 .build());
 
         var restaurantCacheBuilder = Caffeine.newBuilder()
-                .maximumSize(500)
-                .expireAfterWrite(5, TimeUnit.MINUTES);
+                .maximumSize(1);
 
         cacheManager.registerCustomCache(RESTAURANT, restaurantCacheBuilder.build());
         cacheManager.registerCustomCache(RESTAURANT_LIST, restaurantCacheBuilder.build());
         cacheManager.registerCustomCache(RESTAURANTS_WITH_TODAY_MENU, restaurantCacheBuilder.build());
 
         var menuItemCacheBuilder = Caffeine.newBuilder()
-                .maximumSize(500)
-                .expireAfterWrite(15, TimeUnit.MINUTES);
+                .maximumSize(1);
 
         cacheManager.registerCustomCache(MENU_ITEMS_LIST, menuItemCacheBuilder.build());
         cacheManager.registerCustomCache(MENU_ITEMS_PAGE, menuItemCacheBuilder.build());
         cacheManager.registerCustomCache(MENU_ITEM, menuItemCacheBuilder.build());
+        cacheManager.registerCustomCache(MENU_ITEMS_MAP, menuItemCacheBuilder.build());
 
         log.info("[CACHE] >>> Available cache names: {}", Arrays.toString(cacheManager.getCacheNames().toArray()));
         return cacheManager;
@@ -72,6 +76,7 @@ public class CacheManagerFactory {
 
                 MENU_ITEMS_LIST,
                 MENU_ITEMS_PAGE,
+                MENU_ITEMS_MAP,
                 MENU_ITEM
         };
     }

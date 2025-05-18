@@ -16,6 +16,12 @@ import ru.javapractice.dailylunchvoting.restaurant.model.MenuItem;
 import ru.javapractice.dailylunchvoting.restaurant.repository.MenuItemRepository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static ru.javapractice.dailylunchvoting.app.config.CacheNames.MENU_ITEMS_MAP;
+import static ru.javapractice.dailylunchvoting.common.MessageConstants.MENU_ITEM_NOT_FOUND;
 
 @Service
 @AllArgsConstructor
@@ -27,6 +33,7 @@ public class MenuItemService {
     @Caching(evict = {
             @CacheEvict(value = CacheNames.MENU_ITEMS_LIST, allEntries = true),
             @CacheEvict(value = CacheNames.MENU_ITEMS_PAGE, allEntries = true),
+            @CacheEvict(value = CacheNames.MENU_ITEMS_MAP, allEntries = true),
     })    public MenuItem create(MenuItem menuItem) {
         Assert.notNull(menuItem, "menuItem must not be null");
         return repository.save(menuItem);
@@ -51,12 +58,13 @@ public class MenuItemService {
     @Caching(evict = {
             @CacheEvict(value = CacheNames.MENU_ITEMS_LIST, allEntries = true),
             @CacheEvict(value = CacheNames.MENU_ITEMS_PAGE, allEntries = true),
+            @CacheEvict(value = CacheNames.MENU_ITEMS_MAP, allEntries = true),
             @CacheEvict(value = CacheNames.MENU_ITEM, key = CacheKeys.MENU_ITEM_ID)
     })
     public void update(MenuItem menuItem) {
         Assert.notNull(menuItem, "menuItem must not be null");
         if (!repository.existsById(menuItem.getId())) {
-            throw new NotFoundException("MenuItem with id=" + menuItem.getId() + " not found");
+            throw new NotFoundException(MENU_ITEM_NOT_FOUND.formatted(menuItem.getId()));
         }
         repository.save(menuItem);
     }
@@ -64,9 +72,17 @@ public class MenuItemService {
     @Caching(evict = {
             @CacheEvict(value = CacheNames.MENU_ITEMS_LIST, allEntries = true),
             @CacheEvict(value = CacheNames.MENU_ITEMS_PAGE, allEntries = true),
+            @CacheEvict(value = CacheNames.MENU_ITEMS_MAP, allEntries = true),
             @CacheEvict(value = CacheNames.MENU_ITEM, key = CacheKeys.ID)
     })
     public void delete(int id) {
         repository.delete(id);
     }
+
+    @Cacheable(MENU_ITEMS_MAP)
+    public Map<Integer, MenuItem> getItemMap() {
+        return repository.findAll().stream()
+                .collect(Collectors.toMap(MenuItem::getId, Function.identity()));
+    }
+
 }

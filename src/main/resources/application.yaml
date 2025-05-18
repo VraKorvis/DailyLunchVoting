@@ -52,6 +52,8 @@ logging:
     org.hibernate.stat: DEBUG
     org.hibernate.engine.jdbc.batch.internal.BatchingBatch: TRACE
     org.hibernate.engine.jdbc.batch.internal.BatchImpl: TRACE
+    org.hibernate.engine.jdbc.batch.internal.BatchBuilderImpl: TRACE
+    org.hibernate.engine.jdbc.batch.internal.AbstractBatchImpl: TRACE
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     org.hibernate.type.descriptor.sql: TRACE
     com.github.benmanes.caffeine.cache: DEBUG
