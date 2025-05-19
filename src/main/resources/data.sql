@@ -1,17 +1,3 @@
-DELETE
-FROM vote;
-DELETE
-FROM menu_item_assignment;
-DELETE
-FROM menu_item;
-DELETE
-FROM menu;
-DELETE
-FROM restaurant;
-DELETE
-FROM user_role;
-DELETE
-FROM users;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO users (name, email, password)

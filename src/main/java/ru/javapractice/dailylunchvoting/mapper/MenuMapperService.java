@@ -11,7 +11,6 @@ import ru.javapractice.dailylunchvoting.restaurant.to.PricedMenuItemTo;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @AllArgsConstructor
