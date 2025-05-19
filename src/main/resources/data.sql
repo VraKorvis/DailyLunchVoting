@@ -15,8 +15,8 @@ FROM users;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO users (name, email, password)
-VALUES ('User1', 'user1@gmail.com', '{noop}password'),
-       ('User2', 'user2@gmail.com', '{noop}password'),
+VALUES ('User1', 'user1@gmail.com', '{noop}user'),
+       ('User2', 'user2@gmail.com', '{noop}user'),
        ('Admin', 'admin@gmail.com', '{noop}admin'),
        ('Guest', 'guest@gmail.com', '{noop}guest');
 

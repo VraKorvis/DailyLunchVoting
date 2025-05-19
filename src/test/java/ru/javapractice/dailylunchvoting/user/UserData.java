@@ -37,14 +37,14 @@ public class UserData {
     }
 
     public static User getNew() {
-        return new User(null, "New", "new@gmail.com", "dummyPass", false, new Date(), Collections.singleton(Role.USER));
+        return new User(null, "New", "new@gmail.com", "dummy", false, new Date(), Collections.singleton(Role.USER));
     }
 
     public static User getUpdated(User u) {
         var updated = new User(u);
         updated.setEmail("update@gmail.com");
         updated.setName("UpdatedName");
-        updated.setPassword("dummyPass");
+        updated.setPassword("dummy");
         updated.setEnabled(false);
         updated.setRoles(Set.of(Role.ADMIN));
         return updated;

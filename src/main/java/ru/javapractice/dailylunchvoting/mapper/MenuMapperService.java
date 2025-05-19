@@ -27,7 +27,7 @@ public class MenuMapperService {
 
     public PricedMenuItemTo toPricedMenuItemTo(@NonNull AssignedMenuItem item) {
         return new PricedMenuItemTo(
-                Objects.requireNonNull(item.getId()).getMenuItemId(),
+                item.id().getMenuItemId(),
                 item.getName(),
                 item.getPrice()
         );

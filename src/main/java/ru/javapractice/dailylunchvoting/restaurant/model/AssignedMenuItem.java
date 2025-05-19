@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Persistable;
+import ru.javapractice.dailylunchvoting.common.HasCompositeId;
 import ru.javapractice.dailylunchvoting.common.validation.NoHtml;
 
 import java.math.BigDecimal;
@@ -17,7 +18,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "menu_item_assignment")
 @Slf4j
-public class AssignedMenuItem implements Persistable<AssignmentMenuItemId> {
+public class AssignedMenuItem implements Persistable<AssignmentMenuItemId>, HasCompositeId<AssignmentMenuItemId> {
 
     @Version
     @Column(name = "version")
