@@ -233,15 +233,21 @@ curl -u user1@gmail.com:user -X GET 'http://localhost:8080/api/votes/for-today/m
 ---
 ### 🗳️🍽️Available Restaurants for Voting (public)
 - 🔍 **Get all restaurants with today's assigned menu (for voting)** — Retrieve all restaurants that have menus assigned for today and are available for voting.
-- 📊 **Get all users' votes for today** — Retrieve the votes cast by all users for today's menus.
-- 📄 **Get a paginated list of all users' votes for today** — Retrieve a paginated list of votes from all users for today.
+- 🔍 **Get paginated restaurants with today's assigned menu** — Retrieve a paginated list of restaurants that have menus assigned for today.
 
 🔍 Get all restaurants with today's assigned menu (for voting)
 ```bash
 curl -u user1@gmail.com:user -X GET "http://localhost:8080/api/restaurants/with-assigned-menu" -H "accept: application/json"
 ```
+🔍 Get paginated restaurants with today's assigned menu
+```bash
+curl -u user1@gmail.com:user -X GET 'http://localhost:8080/api/restaurants/with-assigned-menu/page?page=0&size=1' -H 'accept: application/json'
+```
 ---
 ### 🗳️📊"Admin: Votes overview”
+- 📊 **Get all users' votes for today** — Retrieve the votes cast by all users for today's menus.
+- 📄 **Get a paginated list of all users' votes for today** — Retrieve a paginated list of votes from all users for today.
+
  📊 Get all users' votes for today
 ```bash
 curl -u admin@gmail.com:admin -X GET "http://localhost:8080/api/admin/votes/for-today" -H "accept: application/json"
