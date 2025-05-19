@@ -4,16 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import ru.javapractice.dailylunchvoting.app.config.CacheNames;
 import ru.javapractice.dailylunchvoting.app.config.ConstConfig;
 import ru.javapractice.dailylunchvoting.common.exception.ConflictException;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
 import ru.javapractice.dailylunchvoting.restaurant.model.*;
 import ru.javapractice.dailylunchvoting.restaurant.repository.AssignedMenuItemRepository;
-import ru.javapractice.dailylunchvoting.restaurant.repository.MenuItemRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.MenuRepository;
 import ru.javapractice.dailylunchvoting.restaurant.repository.RestaurantRepository;
 import ru.javapractice.dailylunchvoting.restaurant.to.AssignedMenuTo;
@@ -24,6 +23,8 @@ import ru.javapractice.dailylunchvoting.util.TimeProvider;
 import java.time.LocalDate;
 import java.util.*;
 
+import static ru.javapractice.dailylunchvoting.app.config.CacheKeys.*;
+import static ru.javapractice.dailylunchvoting.app.config.CacheNames.*;
 import static ru.javapractice.dailylunchvoting.common.MessageConstants.*;
 
 @Service
@@ -34,7 +35,6 @@ public class MenuService {
     private final MenuItemService menuItemService;
     private final MenuRepository menuRepository;
     private final RestaurantRepository restaurantRepository;
-    private final MenuItemRepository menuItemRepository;
     private final AssignedMenuItemRepository assignedMenuItemRepository;
     private final TimeProvider timeProvider;
 
@@ -48,7 +48,11 @@ public class MenuService {
     }
 
     @Transactional
-    @CacheEvict(value = {CacheNames.RESTAURANTS_WITH_TODAY_MENU, CacheNames.RESTAURANT}, allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = RESTAURANTS_WITH_TODAY_MENU_LIST, allEntries = true, beforeInvocation = true),
+            @CacheEvict(value = RESTAURANTS_WITH_TODAY_MENU_PAGE, allEntries = true, beforeInvocation = true),
+            @CacheEvict(value = RESTAURANT, key = ID, beforeInvocation = true)
+    })
     public Menu create(AssignedMenuTo menuTo, int restaurantId) {
         Assert.notNull(menuTo, "menu must not be null");
 
@@ -77,7 +81,11 @@ public class MenuService {
     }
 
     @Transactional
-    @CacheEvict(value = {CacheNames.RESTAURANTS_WITH_TODAY_MENU, CacheNames.RESTAURANT}, beforeInvocation = true, allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = RESTAURANTS_WITH_TODAY_MENU_LIST, allEntries = true, beforeInvocation = true),
+            @CacheEvict(value = RESTAURANTS_WITH_TODAY_MENU_PAGE, allEntries = true, beforeInvocation = true),
+            @CacheEvict(value = RESTAURANT, key = ID, beforeInvocation = true)
+    })
     public void update(AssignedMenuTo menuTo, int restaurantId) {
         Assert.notNull(menuTo, "menuTo must not be null");
 

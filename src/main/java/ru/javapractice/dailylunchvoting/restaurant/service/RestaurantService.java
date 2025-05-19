@@ -3,10 +3,11 @@ package ru.javapractice.dailylunchvoting.restaurant.service;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.javapractice.dailylunchvoting.app.config.CacheKeys;
-import ru.javapractice.dailylunchvoting.app.config.CacheNames;
 import ru.javapractice.dailylunchvoting.mapper.RestaurantMapper;
 import ru.javapractice.dailylunchvoting.mapper.RestaurantMapperService;
 import ru.javapractice.dailylunchvoting.restaurant.model.Restaurant;
@@ -16,6 +17,9 @@ import ru.javapractice.dailylunchvoting.restaurant.to.RestaurantWithAssignedMenu
 
 import java.time.LocalDate;
 import java.util.List;
+
+import static ru.javapractice.dailylunchvoting.app.config.CacheKeys.*;
+import static ru.javapractice.dailylunchvoting.app.config.CacheNames.*;
 
 @Service
 @AllArgsConstructor
@@ -28,9 +32,9 @@ public class RestaurantService {
     private final RestaurantRepository repository;
 
     @CacheEvict(value = {
-            CacheNames.RESTAURANT_LIST,
-            CacheNames.RESTAURANTS_WITH_TODAY_MENU,
-            CacheNames.RESTAURANT
+            RESTAURANT_LIST,
+            RESTAURANTS_WITH_TODAY_MENU_LIST,
+            RESTAURANT
     },
             allEntries = true)
     public Restaurant create(RestaurantTo restaurantDto) {
@@ -38,26 +42,37 @@ public class RestaurantService {
     }
 
     @CacheEvict(value = {
-            CacheNames.RESTAURANT_LIST,
-            CacheNames.RESTAURANTS_WITH_TODAY_MENU,
-            CacheNames.RESTAURANT
+            RESTAURANT_LIST,
+            RESTAURANTS_WITH_TODAY_MENU_LIST,
+            RESTAURANT
     },
             allEntries = true)
     public void update(Restaurant restaurant) {
         repository.save(restaurant);
     }
 
-    @Cacheable(value = CacheNames.RESTAURANT, key = CacheKeys.ID)
+    @Cacheable(value = RESTAURANT, key = ID)
     public RestaurantTo get(int id) {
         return restaurantMapper.toRestaurantTo(repository.getExisted(id));
     }
 
-    @Cacheable(CacheNames.RESTAURANT_LIST)
+    @Cacheable(RESTAURANT_LIST)
     public List<RestaurantTo> getAll() {
         return restaurantMapper.toRestaurantTos(repository.findAll(SORT_NAME));
     }
 
-    @Cacheable(CacheNames.RESTAURANTS_WITH_TODAY_MENU)
+    @Cacheable(value = RESTAURANTS_WITH_TODAY_MENU_PAGE, key = PAGEABLE)
+    public Page<RestaurantWithAssignedMenuTo> findAllWithAssignedMenuForToday(Pageable pageable) {
+        return findAllWithAssignedMenuForDate(LocalDate.now(), pageable);
+    }
+
+    public Page<RestaurantWithAssignedMenuTo> findAllWithAssignedMenuForDate(LocalDate menuDate, Pageable pageable) {
+        Page<Restaurant> page = repository.findPageWithAssignedMenuForDate(menuDate, pageable);
+        List<RestaurantWithAssignedMenuTo> mapped = restaurantMapperService.toWithAssignedMenuTos(page.getContent());
+        return new PageImpl<>(mapped, pageable, page.getTotalElements());
+    }
+
+    @Cacheable(RESTAURANTS_WITH_TODAY_MENU_LIST)
     public List<RestaurantWithAssignedMenuTo> findAllWithAssignedMenuForToday() {
         return findAllWithAssignedMenuForDate(LocalDate.now());
     }

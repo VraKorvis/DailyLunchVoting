@@ -10,7 +10,8 @@ public class CacheNames {
 
     public static final String RESTAURANT = "restaurant";
     public static final String RESTAURANT_LIST = "restaurantsList";
-    public static final String RESTAURANTS_WITH_TODAY_MENU = "restaurantsWithTodayMenu";
+    public static final String RESTAURANTS_WITH_TODAY_MENU_LIST = "restaurantsWithTodayMenuList";
+    public static final String RESTAURANTS_WITH_TODAY_MENU_PAGE = "restaurantsWithTodayMenuPage";
 
     public static final String TODAY_MENUS = "todayMenus";
 

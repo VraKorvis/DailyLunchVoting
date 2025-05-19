@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.cache.annotation.Cacheable;
 
-import ru.javapractice.dailylunchvoting.app.config.CacheKeys;
-import ru.javapractice.dailylunchvoting.app.config.CacheNames;
 import ru.javapractice.dailylunchvoting.user.model.User;
 
 import java.net.URI;
 import java.util.List;
 
+import static ru.javapractice.dailylunchvoting.app.config.CacheKeys.*;
+import static ru.javapractice.dailylunchvoting.app.config.CacheNames.*;
 import static ru.javapractice.dailylunchvoting.common.validation.ValidationUtil.assureIdConsistent;
 import static ru.javapractice.dailylunchvoting.common.validation.ValidationUtil.checkIsNew;
 
@@ -32,7 +32,7 @@ public class AdminUserController extends AbstractUserController {
     private static final Sort SORT = Sort.by(Sort.Direction.ASC, "name", "email");
 
     @Override
-    @Cacheable(value = CacheNames.USER_CACHE, key = CacheKeys.ID)
+    @Cacheable(value = USER_CACHE, key = ID)
     @GetMapping("/{id}")
     public User get(@PathVariable int id) {
         return super.get(id);
@@ -40,9 +40,9 @@ public class AdminUserController extends AbstractUserController {
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = CacheNames.USERS_LIST, allEntries = true, beforeInvocation = true),
-            @CacheEvict(value = CacheNames.USERS_PAGE, allEntries = true, beforeInvocation = true),
-            @CacheEvict(value = CacheNames.USER_CACHE, key = CacheKeys.ID, beforeInvocation = true)
+            @CacheEvict(value = USERS_LIST, allEntries = true, beforeInvocation = true),
+            @CacheEvict(value = USERS_PAGE, allEntries = true, beforeInvocation = true),
+            @CacheEvict(value = USER_CACHE, key = ID, beforeInvocation = true)
     })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -50,14 +50,14 @@ public class AdminUserController extends AbstractUserController {
         super.delete(id);
     }
 
-    @Cacheable(value = CacheNames.USERS_LIST, key = CacheKeys.ALL_USERS)
+    @Cacheable(value = USERS_LIST, key = ALL_USERS)
     @GetMapping
     public List<User> getAll() {
         log.info("getAll");
         return repository.findAll(SORT);
     }
 
-    @Cacheable(value = CacheNames.USERS_PAGE, key = CacheKeys.PAGE)
+    @Cacheable(value = USERS_PAGE, key = PAGE)
     @GetMapping("/page")
     public List<User> getUsersPage(@RequestParam int page, @RequestParam int size) {
         log.info("get users page {} with size {}", page, size);
@@ -66,8 +66,8 @@ public class AdminUserController extends AbstractUserController {
     }
 
     @Caching(evict = {
-            @CacheEvict(value = CacheNames.USERS_LIST, allEntries = true),
-            @CacheEvict(value = CacheNames.USERS_PAGE, allEntries = true),
+            @CacheEvict(value = USERS_LIST, allEntries = true),
+            @CacheEvict(value = USERS_PAGE, allEntries = true),
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createWithLocation(@Valid @RequestBody User user) {
@@ -81,9 +81,9 @@ public class AdminUserController extends AbstractUserController {
     }
 
     @Caching(evict = {
-            @CacheEvict(value = CacheNames.USERS_LIST, allEntries = true, beforeInvocation = true),
-            @CacheEvict(value = CacheNames.USERS_PAGE, allEntries = true, beforeInvocation = true),
-            @CacheEvict(value = CacheNames.USER_CACHE, key = CacheKeys.ID, beforeInvocation = true),
+            @CacheEvict(value = USERS_LIST, allEntries = true, beforeInvocation = true),
+            @CacheEvict(value = USERS_PAGE, allEntries = true, beforeInvocation = true),
+            @CacheEvict(value = USER_CACHE, key = ID, beforeInvocation = true),
     })
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -100,9 +100,9 @@ public class AdminUserController extends AbstractUserController {
     }
 
     @Caching(evict = {
-            @CacheEvict(value = CacheNames.USERS_LIST, allEntries = true),
-            @CacheEvict(value = CacheNames.USERS_PAGE, allEntries = true),
-            @CacheEvict(value = CacheNames.USER_CACHE, key = CacheKeys.ID),
+            @CacheEvict(value = USERS_LIST, allEntries = true),
+            @CacheEvict(value = USERS_PAGE, allEntries = true),
+            @CacheEvict(value = USER_CACHE, key = ID),
     })
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

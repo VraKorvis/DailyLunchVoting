@@ -1,5 +1,7 @@
 package ru.javapractice.dailylunchvoting.restaurant.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +17,10 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m WHERE m.menuDate=:menuDate ORDER BY r.name ASC")
     List<Restaurant> findAllWithAssignedMenuForDate(@Param("menuDate") LocalDate menuDate);
 
-    @Query("SELECT r FROM Restaurant r WHERE r.id NOT IN (SELECT r2.id FROM Restaurant r2 JOIN r2.menus m WHERE m.menuDate = :date)")
-    List<Restaurant> findAllWithoutAssignedMenuForDate(@Param("date") LocalDate date);
+    @Query("SELECT r FROM Restaurant r WHERE r.id NOT IN (SELECT r2.id FROM Restaurant r2 JOIN r2.menus m WHERE m.menuDate = :menuDate)")
+    List<Restaurant> findAllWithoutAssignedMenuForDate(@Param("menuDate") LocalDate menuDate);
+
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m WHERE m.menuDate = :menuDate")
+    Page<Restaurant> findPageWithAssignedMenuForDate(@Param("menuDate") LocalDate menuDate, Pageable pageable);
 
 }

@@ -34,14 +34,9 @@ public class CacheManagerFactory {
                 .expireAfterWrite(1, TimeUnit.MINUTES)
                 .build());
 
-        cacheManager.registerCustomCache(MENU_ITEMS_MAP, Caffeine.newBuilder()
-                .maximumSize(1)
-                .expireAfterAccess(1, TimeUnit.MINUTES)
-                .build());
-
         cacheManager.registerCustomCache(USERS_PAGE, Caffeine.newBuilder()
                 .maximumSize(100)
-                .expireAfterAccess(1, TimeUnit.MINUTES)
+                .expireAfterAccess(5, TimeUnit.MINUTES)
                 .build());
 
         var restaurantCacheBuilder = Caffeine.newBuilder()
@@ -49,15 +44,25 @@ public class CacheManagerFactory {
 
         cacheManager.registerCustomCache(RESTAURANT, restaurantCacheBuilder.build());
         cacheManager.registerCustomCache(RESTAURANT_LIST, restaurantCacheBuilder.build());
-        cacheManager.registerCustomCache(RESTAURANTS_WITH_TODAY_MENU, restaurantCacheBuilder.build());
+        cacheManager.registerCustomCache(RESTAURANTS_WITH_TODAY_MENU_LIST, restaurantCacheBuilder.build());
+        cacheManager.registerCustomCache(RESTAURANTS_WITH_TODAY_MENU_PAGE, Caffeine.newBuilder()
+                .maximumSize(100)
+                .expireAfterAccess(5, TimeUnit.MINUTES)
+                .build());
 
         var menuItemCacheBuilder = Caffeine.newBuilder()
-                .maximumSize(1);
+                .maximumSize(1)
+                .expireAfterAccess(15, TimeUnit.MINUTES);
 
         cacheManager.registerCustomCache(MENU_ITEMS_LIST, menuItemCacheBuilder.build());
-        cacheManager.registerCustomCache(MENU_ITEMS_PAGE, menuItemCacheBuilder.build());
         cacheManager.registerCustomCache(MENU_ITEM, menuItemCacheBuilder.build());
-        cacheManager.registerCustomCache(MENU_ITEMS_MAP, menuItemCacheBuilder.build());
+        cacheManager.registerCustomCache(MENU_ITEMS_MAP, Caffeine.newBuilder()
+                .maximumSize(1)
+                .build());
+        cacheManager.registerCustomCache(MENU_ITEMS_PAGE, Caffeine.newBuilder()
+                .maximumSize(100)
+                .expireAfterAccess(5, TimeUnit.MINUTES)
+                .build());
 
         log.info("[CACHE] >>> Available cache names: {}", Arrays.toString(cacheManager.getCacheNames().toArray()));
         return cacheManager;
@@ -71,7 +76,8 @@ public class CacheManagerFactory {
 
                 RESTAURANT,
                 RESTAURANT_LIST,
-                RESTAURANTS_WITH_TODAY_MENU,
+                RESTAURANTS_WITH_TODAY_MENU_LIST,
+                RESTAURANTS_WITH_TODAY_MENU_PAGE,
                 TODAY_MENUS,
 
                 MENU_ITEMS_LIST,

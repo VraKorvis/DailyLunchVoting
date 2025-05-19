@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import ru.javapractice.dailylunchvoting.app.config.CacheKeys;
 import ru.javapractice.dailylunchvoting.common.exception.NotFoundException;
 import ru.javapractice.dailylunchvoting.restaurant.model.MenuItem;
 import ru.javapractice.dailylunchvoting.restaurant.repository.MenuItemRepository;
@@ -19,6 +18,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static ru.javapractice.dailylunchvoting.app.config.CacheKeys.*;
 import static ru.javapractice.dailylunchvoting.app.config.CacheNames.*;
 import static ru.javapractice.dailylunchvoting.common.MessageConstants.MENU_ITEM_NOT_FOUND;
 
@@ -38,7 +38,7 @@ public class MenuItemService {
         return repository.save(menuItem);
     }
 
-    @Cacheable(value = MENU_ITEM, key = CacheKeys.ID)
+    @Cacheable(value = MENU_ITEM, key = ID)
     public MenuItem get(int id) {
         return repository.getExisted(id);
     }
@@ -48,9 +48,8 @@ public class MenuItemService {
         return repository.findAll();
     }
 
-    @Cacheable(value = MENU_ITEMS_PAGE, key = CacheKeys.PAGEABLE)
+    @Cacheable(value = MENU_ITEMS_PAGE, key = PAGEABLE)
     public Page<MenuItem> findAll(Pageable pageable) {
-        log.debug("[CACHE] ENTER Service.findAll, pageable = {}", pageable);
         return repository.findAll(pageable);
     }
 
@@ -58,7 +57,7 @@ public class MenuItemService {
             @CacheEvict(value = MENU_ITEMS_LIST, allEntries = true),
             @CacheEvict(value = MENU_ITEMS_PAGE, allEntries = true),
             @CacheEvict(value = MENU_ITEMS_MAP, allEntries = true),
-            @CacheEvict(value = MENU_ITEM, key = CacheKeys.MENU_ITEM_ID)
+            @CacheEvict(value = MENU_ITEM, key = MENU_ITEM_ID)
     })
     public void update(MenuItem menuItem) {
         Assert.notNull(menuItem, "menuItem must not be null");
@@ -72,7 +71,7 @@ public class MenuItemService {
             @CacheEvict(value = MENU_ITEMS_LIST, allEntries = true),
             @CacheEvict(value = MENU_ITEMS_PAGE, allEntries = true),
             @CacheEvict(value = MENU_ITEMS_MAP, allEntries = true),
-            @CacheEvict(value = MENU_ITEM, key = CacheKeys.ID)
+            @CacheEvict(value = MENU_ITEM, key = ID)
     })
     public void delete(int id) {
         repository.delete(id);
