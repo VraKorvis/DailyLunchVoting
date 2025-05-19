@@ -21,6 +21,10 @@ Each restaurant provides a new menu each day.
 -----------------------------
 ## 📘 Swagger UI
 ### API доступен через [Swagger UI](http://localhost:8080/swagger-ui/index.html)
+**Credentials:**  
+User1 / user1@gmail.com / user  
+User2 / user2@gmail.com / user  
+Admin / admin@gmail.com / admin
 
 ### 👤 User Profile Endpoints (`/api/profile`)
 Endpoints to manage your user profile:
@@ -31,16 +35,16 @@ Endpoints to manage your user profile:
 
 🔍 Get user profile
 ```bash
-curl -u user1@gmail.com:password -X GET 'http://localhost:8080/api/profile' -H 'accept: application/json'
+curl -u user1@gmail.com:user -X GET 'http://localhost:8080/api/profile' -H 'accept: application/json'
 ```
   
 ✏️ Update user profile
 ```bash 
-curl -u user1@gmail.com:password -X PUT 'http://localhost:8080/api/profile' -H 'accept: */*' -H 'Content-Type: application/json' -d '{"name":"Updated User","email":"user1@gmail.com","password":"password"}'
+curl -u user1@gmail.com:user -X PUT 'http://localhost:8080/api/profile' -H 'accept: */*' -H 'Content-Type: application/json' -d '{"name":"Updated User","email":"user1@gmail.com","password":"user"}'
 ```
 ✍️ Register user
 ```bash
-curl -X POST 'http://localhost:8080/api/profile' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"name":"user3","email":"user3@gmail.com","password":"password"}'
+curl -X POST 'http://localhost:8080/api/profile' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"name":"user3","email":"user3@gmail.com","password":"user"}'
 ```
 ---
 ### 👤 Admin: User Management APIs (`/api/admin/`)
@@ -58,7 +62,7 @@ curl -u admin@gmail.com:admin -X GET 'http://localhost:8080/api/admin/users/1000
 ```
 ✏️ Edit user by id
 ```bash
-curl -u admin@gmail.com:admin -X PUT 'http://localhost:8080/api/admin/users/100000' -H 'accept: */*' -H 'Content-Type: application/json' -d '{"id":100000,"name":"Updated User by Admin","email":"user1@gmail.com","password":"password","enabled":true,"roles":["USER"]}'
+curl -u admin@gmail.com:admin -X PUT 'http://localhost:8080/api/admin/users/100000' -H 'accept: */*' -H 'Content-Type: application/json' -d '{"id":100000,"name":"Updated User by Admin","email":"user1@gmail.com","password":"user","enabled":true,"roles":["USER"]}'
 ```
 ✏️ Enable/disable user by id
 ```bash
@@ -70,7 +74,7 @@ curl -u admin@gmail.com:admin -X GET 'http://localhost:8080/api/admin/users' -H 
 ```
 ➕ Add user
 ```bash
-curl -u admin@gmail.com:admin -X POST 'http://localhost:8080/api/admin/users' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"name":"user4","email":"user4@gmail.com","password":"password","enabled":true,"roles":["USER"]}'
+curl -u admin@gmail.com:admin -X POST 'http://localhost:8080/api/admin/users' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"name":"user4","email":"user4@gmail.com","password":"user","enabled":true,"roles":["USER"]}'
 ```
 🔍 Get users with pagination
 ```bash
@@ -214,17 +218,17 @@ curl -u admin@gmail.com:admin -X GET 'http://localhost:8080/api/admin/menu-item-
 
 🔍 Get all votes of the current user
 ```bash
-curl -u user1@gmail.com:password -X GET 'http://localhost:8080/api/votes' -H 'accept: application/json'
+curl -u user1@gmail.com:user -X GET 'http://localhost:8080/api/votes' -H 'accept: application/json'
 ```
 ➕ Submit or change a vote for a restaurant (before deadline)
 
 📌 Note: You can submit a new vote or change your existing vote for the given restaurant until the voting deadline configured as VOTING_END_TIME on the backend (11:00).
 ```bash
-curl -u user1@gmail.com:password -X POST 'http://localhost:8080/api/votes?restaurantId=100006' -H 'accept: application/json' -d ''
+curl -u user1@gmail.com:user -X POST 'http://localhost:8080/api/votes?restaurantId=100006' -H 'accept: application/json' -d ''
 ```
 🔍 Get current user's vote for today
 ```bash
-curl -u user1@gmail.com:password -X GET 'http://localhost:8080/api/votes/for-today/me' -H 'accept: application/json'
+curl -u user1@gmail.com:user -X GET 'http://localhost:8080/api/votes/for-today/me' -H 'accept: application/json'
 ```
 ---
 ### 🗳️🍽️Available Restaurants for Voting (public)
@@ -234,7 +238,7 @@ curl -u user1@gmail.com:password -X GET 'http://localhost:8080/api/votes/for-tod
 
 🔍 Get all restaurants with today's assigned menu (for voting)
 ```bash
-curl -u user1@gmail.com:password -X GET "http://localhost:8080/api/restaurants/with-assigned-menu" -H "accept: application/json"
+curl -u user1@gmail.com:user -X GET "http://localhost:8080/api/restaurants/with-assigned-menu" -H "accept: application/json"
 ```
 ---
 ### 🗳️📊"Admin: Votes overview”
