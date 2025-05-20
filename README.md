@@ -19,8 +19,15 @@ Build a voting system for deciding where to have lunch.
 Each restaurant provides a new menu each day.
 
 -----------------------------
-## 📘 Swagger UI
-### API доступен через [Swagger UI](http://localhost:8080/swagger-ui/index.html)
+## 📘 **Swagger UI**  
+
+The API can be explored and tested via [Swagger UI](http://localhost:8080/swagger-ui/index.html)
+
+#### Application Website  
+The main site is available at: [https://dailylunchvoting.onrender.com](https://dailylunchvoting.onrender.com/swagger-ui/index.html)
+
+    Note: The website is hosted on a free tier and may take a few minutes to start after deployment or inactivity. Please be patient while it boots up.
+
 **Credentials:**  
 User1 / user1@gmail.com / user  
 User2 / user2@gmail.com / user  
