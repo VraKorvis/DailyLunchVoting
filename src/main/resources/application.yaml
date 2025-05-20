@@ -66,4 +66,7 @@ server.servlet:
     enabled: true
     force: true
 
+server:
+  port: ${PORT:8080}
+
 springdoc.swagger-ui.path: /
