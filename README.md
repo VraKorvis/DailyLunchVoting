@@ -16,17 +16,33 @@ Build a voting system for deciding where to have lunch.
     - If it is before 11:00 we assume that he changed his mind.
     - If it is after 11:00 then it is too late, vote can't be changed
 
-Each restaurant provides a new menu each day.
+ Each restaurant provides a new menu each day.
 
------------------------------
+---
+
+**Stack:** Spring Boot, Spring Data JPA, Hibernate, PostgreSQL, Spring Security, Caffeine Cache, Lombok, JUnit, Mockito, Docker, Swagger UI.
+
+**Description:**
+This stack indicates a robust backend application leveraging Spring Boot for RESTful API development, with data persistence managed via JPA and Hibernate connected to a PostgreSQL database. Security is enforced using Spring Security, and performance is optimized through Caffeine caching. Docker is employed for containerization, facilitating deployment, while Swagger UI provides interactive API documentation.
+The project includes integration tests using JUnit and Mockito for unit and service-level testing.
+---
+
 ## 📘 **Swagger UI**  
 
 The API can be explored and tested via [Swagger UI](http://localhost:8080/swagger-ui/index.html)
 
-#### Application Website  
-The main site is available at: [https://dailylunchvoting.onrender.com](https://dailylunchvoting.onrender.com/swagger-ui/index.html)
+### 🚀 Deployment
 
-    Note: The website is hosted on a free tier and may take a few minutes to start after deployment or inactivity. Please be patient while it boots up.
+The project is deployed to [Render](https://dailylunchvoting.onrender.com) using Docker:
+
+- Dockerfile is included in the repository
+- Automatic deployment on push to develop
+
+Deployment stack:
+- Docker
+- Render  
+
+**Note:** The website is hosted on a free tier and may take a few minutes to start after deployment or inactivity. Please be patient while it boots up.
 
 **Credentials:**  
 User1 / user1@gmail.com / user  
