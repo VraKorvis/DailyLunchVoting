@@ -22,7 +22,7 @@ Build a voting system for deciding where to have lunch.
 
 **Stack:** Spring Boot, Spring Data JPA, Hibernate, PostgreSQL, Spring Security, Caffeine Cache, Lombok, JUnit, Mockito, Docker, Swagger UI.
 
-**Description:**
+**Description:**  
 This stack indicates a robust backend application leveraging Spring Boot for RESTful API development, with data persistence managed via JPA and Hibernate connected to a PostgreSQL database. Security is enforced using Spring Security, and performance is optimized through Caffeine caching. Docker is employed for containerization, facilitating deployment, while Swagger UI provides interactive API documentation.
 The project includes integration tests using JUnit and Mockito for unit and service-level testing.
 ---
