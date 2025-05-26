@@ -20,12 +20,13 @@ Build a voting system for deciding where to have lunch.
 
 ---
 
-**Stack:** Spring Boot, Spring Data JPA, Hibernate, PostgreSQL, Spring Security, Caffeine Cache, Lombok, JUnit, Mockito, Docker, Swagger UI.
+**Stack:** Spring Boot, Spring Data JPA, Hibernate, H2, Spring Security, Caffeine Cache, Lombok, JUnit, Mockito, Docker, Swagger UI.
 
 **Description:**  
-This stack indicates a robust backend application leveraging Spring Boot for RESTful API development, with data persistence managed via JPA and Hibernate connected to a PostgreSQL database. Security is enforced using Spring Security, and performance is optimized through Caffeine caching. Docker is employed for containerization, facilitating deployment, while Swagger UI provides interactive API documentation.
-The project includes integration tests using JUnit and Mockito for unit and service-level testing.
-
+A RESTful backend application for daily lunch voting without frontend. 
+It uses Spring Boot for API development, with secure authentication (Spring Security), data persistence (JPA/Hibernate, H2), caching (Caffeine), and interactive API docs (Swagger UI). 
+The app is containerized with Docker and covered by unit and integration tests using JUnit and Mockito.
+  
 
 ---
 
@@ -74,13 +75,13 @@ curl -X POST 'http://localhost:8080/api/profile' -H 'accept: application/json' -
 ---
 ### 👤 Admin: User Management APIs (`/api/admin/`)
 Endpoints for admins to manage users:
-- 🔍 **Get user by ID** — **Retrieve details of a user by their ID.**
-- ✏️ **Edit user by ID** — **Update user information, roles, and status.**
-- ✏️ **Enable/disable user by ID** — **Activate or deactivate a user account.**
-- 🔍 **Get all users** — **List all users in the system.**
-- ➕ **Add new user** — **Create a new user account.**
-- 🔍 **Get users with pagination** — **Retrieve users in paginated form.**
-- 🔍 **Get user by email** — **Find a user by their email address.**
+- 🔍 **Get user by ID** — Retrieve details of a user by their ID.
+- ✏️ **Edit user by ID** — Update user information, roles, and status.
+- ✏️ **Enable/disable user by ID** — Activate or deactivate a user account.
+- 🔍 **Get all users** — List all users in the system.
+- ➕ **Add new user** — Create a new user account.
+- 🔍 **Get users with pagination** — Retrieve users in paginated form.
+- 🔍 **Get user by email** — Find a user by their email address.
 - 
 ```bash
 curl -u admin@gmail.com:admin -X GET 'http://localhost:8080/api/admin/users/100000' -H 'accept: application/json'
